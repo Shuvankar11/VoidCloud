@@ -13,28 +13,28 @@
 
 **VoidCloud** is a next-generation, zero-knowledge decentralized cloud storage network built on the **Midnight Network**. Traditional cloud providers surveil file metadata, access patterns, and user quotas. VoidCloud solves this by combining **user account authentication (Firebase Auth & Web3)**, **client-side AES-256-GCM envelope encryption**, **Midnight Compact smart contracts**, and **Halo2 zero-knowledge proofs**.
 
-Users authenticate via **Email/Password, Google Sign-In, or Instant Guest Mode**. Each user is provisioned a completely isolated shielded vault with **20 GB of free baseline quota**. Through an advanced ZK-nullifier circuit (`claimTestnetBonus`), users can claim a **1-time +20 GB Testnet Faucet Bonus** (expanding their shielded capacity to 40 GB) while mathematically guaranteeing that no user can claim the bonus multiple times. The ecosystem includes an award-winning Cyberpunk 3D interface, tactical HUD reticle cursor, and a standalone **Antigravity Node.js CLI** for developer operations.
+Users authenticate via **Email/Password or Web3 Wallet (Midnight Lace, MetaMask)**. Each user is provisioned a completely isolated shielded vault with **20 GB of free baseline quota**. Through an advanced ZK-nullifier circuit (`claimTestnetBonus`), users can claim a **1-time +20 GB Testnet Faucet Bonus** (expanding their shielded capacity to 40 GB) while mathematically guaranteeing that no user can claim the bonus multiple times. The ecosystem includes an award-winning Cyberpunk 3D interface, tactical HUD reticle cursor, and a standalone **Antigravity Node.js CLI** for developer operations.
 
 ```mermaid
 flowchart TD
-    subgraph Auth["🔐 User Authentication (Firebase / Local)"]
-        UserLogin["👤 User Sign In (Email / Google / Guest)"] -->|Derive Account Shard| UserVault["📦 Isolated Account Vault"]
+    subgraph Auth["User Authentication & Partitioning"]
+        UserLogin["User Sign In (Email / Web3)"] -->|"Derive Account Shard"| UserVault["Isolated Account Vault"]
     end
 
-    subgraph Client["🛡️ Client-Side Boundary (Zero-Leakage)"]
-        RawFile["📄 Plaintext File"] -->|AES-256-GCM Key Wrap| EncFile["🔒 Encrypted Shards (Tagged with ownerEmail)"]
-        UserSecret["🔑 Private Witness (userSecret)"] -->|Offline Halo2 Prover| ZKProof["⚡ ZK-SNARK Proof"]
-        UserSecret -->|Persistent Hash| Nullifier["🛡️ Deterministic Nullifier"]
+    subgraph Client["Client-Side Boundary (Zero-Leakage)"]
+        RawFile["Plaintext File"] -->|"AES-256-GCM Key Wrap"| EncFile["Encrypted Shards"]
+        UserSecret["Private Witness (userSecret)"] -->|"Offline Halo2 Prover"| ZKProof["ZK-SNARK Proof"]
+        UserSecret -->|"Persistent Hash"| Nullifier["Deterministic Nullifier"]
     end
 
-    subgraph ProofServer["⚡ Midnight Proof Server (localhost:6300)"]
-        ZKProof -->|Synthesize R1CS Constraints| ProverOutput["📜 Verifiable Proof Payload"]
+    subgraph ProofServer["Midnight Proof Server (Port 6300)"]
+        ZKProof -->|"Synthesize R1CS Constraints"| ProverOutput["Verifiable Proof Payload"]
     end
 
-    subgraph MidnightLedger["🌌 Midnight Network Preprod Ledger"]
-        ProverOutput -->|Verify Circuit| VoidContract["contracts/voidcloud.compact"]
-        Nullifier -->|Check !member(nullifier)| NullifierSet["Set<Bytes<32>> bonusNullifiers"]
-        VoidContract -->|State Increment| Counters["Counter totalShieldedStorageAllocated (+20GB)"]
+    subgraph MidnightLedger["Midnight Network Preprod Ledger"]
+        ProverOutput -->|"Verify Circuit"| VoidContract["voidcloud.compact Smart Contract"]
+        Nullifier -->|"Check Nullifier Membership"| NullifierSet["Set of Bonus Nullifiers"]
+        VoidContract -->|"State Increment"| Counters["Total Allocated Storage (+20GB)"]
     end
 ```
 
@@ -64,7 +64,8 @@ VoidCloud/
 │   └── voidcloud.test.ts          # Vitest Automated Test Suite (10 unit tests)
 ├── scripts/
 │   ├── compile-compact.ts         # Compact compilation wrapper & AST generator
-│   └── deploy.ts                  # Midnight Preprod deployment & receipt logger
+│   ├── deploy.ts                  # Midnight Preprod deployment & receipt logger
+│   └── test-telegram.ts           # Telegram Bot & private channel verification script
 ├── cli/
 │   └── void.js                    # Standalone Antigravity Node.js CLI tool
 ├── src/
@@ -72,29 +73,32 @@ VoidCloud/
 │   │   └── firebase.ts            # Firebase Auth & Firestore client configuration
 │   ├── context/
 │   │   ├── AuthContext.tsx        # User authentication & account isolation state
-│   │   └── VaultContext.tsx       # Web Crypto API, ZK pipeline, and storage state
+│   │   ├── VaultContext.tsx       # Web Crypto API, ZK pipeline, and storage state
+│   │   └── WalletContext.tsx      # Web3 multi-wallet & token pricing state
 │   ├── components/
-│   │   ├── AuthModal.tsx          # Cyberpunk Login, Signup & Google Auth modal
+│   │   ├── AuthModal.tsx          # Clean Login & Signup authentication modal
 │   │   ├── CustomCursor.tsx       # Cyberpunk Tactical HUD Reticle with quantum trail
 │   │   ├── TopMarquee.tsx         # Live simulated ZK-proof & Midnight Preprod ticker
-│   │   ├── Navbar.tsx             # Brand header with user profile & auth trigger
+│   │   ├── Navbar.tsx             # Brand header with user profile & wallet status
 │   │   ├── HeroSection.tsx        # Cyberpunk hero section with live CTAs
 │   │   ├── Hero3DCanvas.tsx       # Three.js 3D WebGL Canvas
-│   │   ├── ObsidianCore3D.tsx     # 3D Obsidian Core & anti-gravity data particle physics
-│   │   ├── StorageVisualizer.tsx  # Dynamic neon gauge & +20GB faucet bonus claimer
+│   │   ├── InteractiveCloudDriveHero.tsx # Real Cloud Drive card with live upload progress
+│   │   ├── StorageVisualizer.tsx  # Dynamic gauge & +20GB faucet bonus claimer
+│   │   ├── StoragePricingModal.tsx # Multi-token 50GB-500GB storage upgrade tiers
+│   │   ├── WalletConnectModal.tsx # Midnight Lace & multi-chain wallet connect
 │   │   ├── ShieldedFileManager.tsx# Client AES-256-GCM encryption & user file ownership
 │   │   ├── FeatureGrid.tsx        # Zero-knowledge privacy architecture cards
-│   │   ├── LiveTerminalWidget.tsx # Embedded interactive cyberpunk web terminal
-│   │   ├── CompactContractViewer.tsx # Compact source code viewer & state matrix
 │   │   ├── ZKProofModal.tsx       # Real-time multi-phase ZK proof generation modal
 │   │   └── Footer.tsx             # Perspective grid footer with network metrics
+│   ├── services/
+│   │   └── telegramStorage.ts     # Decentralized storage sharding relay
 │   ├── types/
 │   │   └── index.ts               # TypeScript data definitions (files, auth, metrics)
 │   ├── App.tsx                    # Main Web Application component
 │   ├── main.tsx                   # React DOM root entry
 │   └── index.css                  # Cyberpunk design system & cursor:none rule
 ├── package.json                   # Dependencies & npm scripts
-├── vite.config.ts                 # Vite bundler configuration
+├── vite.config.ts                 # Vite bundler configuration & /tg-api proxy
 ├── tailwind.config.js             # Cyberpunk palette & animations
 ├── tsconfig.json                  # TypeScript compiler settings
 └── README.md                      # Level 1 Hackathon Specification Document
@@ -113,12 +117,11 @@ VoidCloud/
 npm install
 ```
 
-### Step 2: (Optional) Configure Firebase
-To connect your own Firebase project, copy `.env.example` to `.env` and fill in your Firebase Web App credentials:
+### Step 2: Configure Environment
+Copy `.env.example` to `.env` and fill in your Firebase & Telegram Bot credentials:
 ```bash
 cp .env.example .env
 ```
-*(Note: If left blank, VoidCloud runs in smart local mode with full account persistence and mock Google Auth out-of-the-box!)*
 
 ### Step 3: Compile Midnight Compact Smart Contract
 ```bash
@@ -135,7 +138,7 @@ npm test
 npm run deploy
 ```
 
-### Step 6: Launch the Cyberpunk Web Application
+### Step 6: Launch the Web Application
 ```bash
 npm run dev
 ```
