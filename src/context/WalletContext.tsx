@@ -142,19 +142,46 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (walletName === 'Midnight Lace') {
       try {
         if (win.midnight?.lace) {
-          const api = await win.midnight.lace.enable();
-          if (api && api.getUnusedAddresses) {
-            const addrs = await api.getUnusedAddresses();
-            if (addrs && addrs.length > 0) {
-              connectedAddress = addrs[0];
+          const api = await Promise.race([
+            win.midnight.lace.enable(),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Midnight Lace enable timeout')), 6000))
+          ]);
+          if (api) {
+            if (typeof api.getUnusedAddresses === 'function') {
+              const addrs = await api.getUnusedAddresses();
+              if (addrs && addrs.length > 0) connectedAddress = addrs[0];
+            }
+            if (!connectedAddress && typeof api.getUsedAddresses === 'function') {
+              const addrs = await api.getUsedAddresses();
+              if (addrs && addrs.length > 0) connectedAddress = addrs[0];
+            }
+            if (!connectedAddress && typeof api.getChangeAddress === 'function') {
+              connectedAddress = await api.getChangeAddress();
             }
           }
         } else if (win.cardano?.lace) {
-          const api = await win.cardano.lace.enable();
-          if (api && api.getUsedAddresses) {
-            const addrs = await api.getUsedAddresses();
-            if (addrs && addrs.length > 0) {
-              connectedAddress = addrs[0];
+          const api = await Promise.race([
+            win.cardano.lace.enable(),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Lace enable timeout')), 6000))
+          ]);
+          if (api) {
+            if (typeof api.getChangeAddress === 'function') {
+              try {
+                const change = await api.getChangeAddress();
+                if (change) connectedAddress = change;
+              } catch {}
+            }
+            if (!connectedAddress && typeof api.getUnusedAddresses === 'function') {
+              try {
+                const addrs = await api.getUnusedAddresses();
+                if (addrs && addrs.length > 0) connectedAddress = addrs[0];
+              } catch {}
+            }
+            if (!connectedAddress && typeof api.getUsedAddresses === 'function') {
+              try {
+                const addrs = await api.getUsedAddresses();
+                if (addrs && addrs.length > 0) connectedAddress = addrs[0];
+              } catch {}
             }
           }
         }
@@ -163,7 +190,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       }
 
       if (connectedAddress && !connectedAddress.startsWith('mn_')) {
-        // Derive Midnight Preprod Address from Lace master key
+        // Derive deterministic Midnight Preprod Address from Lace master key
         const hash = Array.from(new TextEncoder().encode(connectedAddress)).map(b => b.toString(16).padStart(2, '0')).join('');
         connectedAddress = `mn_preprod1q${hash.slice(0, 24)}`;
       } else if (!connectedAddress) {

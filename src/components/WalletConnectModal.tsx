@@ -20,9 +20,13 @@ export const WalletConnectModal: React.FC = () => {
 
   const handleConnect = async (walletName: 'Midnight Lace' | 'MetaMask' | 'Coinbase' | 'Phantom') => {
     setConnecting(walletName);
-    await new Promise((r) => setTimeout(r, 600));
-    await connectWallet(walletName);
-    setConnecting(null);
+    try {
+      await connectWallet(walletName);
+    } catch (e) {
+      console.warn('Connect wallet error:', e);
+    } finally {
+      setConnecting(null);
+    }
   };
 
   const copyAddress = () => {
