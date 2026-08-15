@@ -212,7 +212,10 @@ Screenshot anchor placeholder:
 💾 Receipt Saved To   : deployed-contract.json
 ======================================================
 ```
-*(Screenshot anchor placeholder: 
+Screenshot anchor placeholder: 
+
+<img width="1190" height="205" alt="{297688A1-9956-45D4-8004-EE0CECB1A12F}" src="https://github.com/user-attachments/assets/fd620f1c-0c23-4ed5-8f70-df5f38ef77dc" />
+
 
 ---
 
