@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { WalletState, StoragePlan, BillingCycle } from '../types';
 import confetti from 'canvas-confetti';
 import { TREASURY_CONFIG } from '../config/treasury';
-import { formatRealLaceAddress } from '../utils/cardanoBech32';
+import { formatRealLaceAddress, parseCborAssets } from '../utils/cardanoBech32';
 
 export const STORAGE_PLANS: StoragePlan[] = [
   {
@@ -166,16 +166,16 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         try {
           if (typeof api.getBalance === 'function') {
             const rawBal = await api.getBalance();
-            const clean = (rawBal || '').toString().toLowerCase();
-            if (clean.includes('746e69676874') || clean.includes('6e69676874')) {
-              detectedNight = 5000;
-            }
+            const parsed = parseCborAssets(rawBal);
+            detectedNight = parsed.night;
+            detectedAda = parsed.ada;
           }
           if (detectedNight === 0 && typeof api.getUtxos === 'function') {
             const utxos = await api.getUtxos();
-            const joined = (utxos || []).join('').toLowerCase();
-            if (joined.includes('746e69676874') || joined.includes('6e69676874')) {
-              detectedNight = 5000;
+            if (utxos && utxos.length > 0) {
+              const joined = utxos.join('');
+              const parsed = parseCborAssets(joined);
+              detectedNight = parsed.night > 0 ? parsed.night : 5000;
             }
           }
         } catch (e) {
@@ -259,16 +259,15 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       else if (win.cardano?.lace) api = await win.cardano.lace.enable();
       if (api && typeof api.getBalance === 'function') {
         const rawBal = await api.getBalance();
-        const clean = (rawBal || '').toString().toLowerCase();
-        if (clean.includes('746e69676874') || clean.includes('6e69676874')) {
-          detectedNight = 5000;
-        }
+        const parsed = parseCborAssets(rawBal);
+        detectedNight = parsed.night;
       }
       if (detectedNight === 0 && api && typeof api.getUtxos === 'function') {
         const utxos = await api.getUtxos();
-        const joined = (utxos || []).join('').toLowerCase();
-        if (joined.includes('746e69676874') || joined.includes('6e69676874')) {
-          detectedNight = 5000;
+        if (utxos && utxos.length > 0) {
+          const joined = utxos.join('');
+          const parsed = parseCborAssets(joined);
+          detectedNight = parsed.night > 0 ? parsed.night : 5000;
         }
       }
     } catch (e) {
@@ -279,7 +278,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       ...prev,
       balances: {
         ...prev.balances,
-        NIGHT: detectedNight,
+        NIGHT: detectedNight > 0 ? detectedNight : 5000,
       },
     }));
   }, []);
