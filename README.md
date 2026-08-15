@@ -1,11 +1,15 @@
 # 🌌 VoidCloud // Privacy-First Decentralized Cloud Storage on Midnight Network
 
+[![Live Demo](https://img.shields.io/badge/Live%20dApp-void--cloude.vercel.app-00F2FE?style=for-the-badge&logo=vercel)](https://void-cloude.vercel.app/)
 [![Midnight Network](https://img.shields.io/badge/Midnight-Preprod-7F00FF?style=for-the-badge&logo=shield)](https://midnight.network)
 [![ZK-SNARK](https://img.shields.io/badge/ZK--SNARK-Halo2%20%2F%20PLONK-00F2FE?style=for-the-badge)](https://midnight.network)
 [![Smart Contract](https://img.shields.io/badge/Compact-v0.20.4-10B981?style=for-the-badge)](https://midnight.network)
 [![Authentication](https://img.shields.io/badge/Auth-Firebase%20%2B%20Web3-FFA611?style=for-the-badge&logo=firebase)](https://firebase.google.com)
 [![Hackathon Level](https://img.shields.io/badge/Hackathon-Level%201%20Compliant-F59E0B?style=for-the-badge)]()
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)]()
+
+> 🌐 **Live Production dApp**: [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/)  
+> 🛡️ **Zero-Knowledge Privacy Vault, 20GB Shielded Faucet Bonus & Client-Side AES-256 Encryption**
 
 ---
 
@@ -143,6 +147,8 @@ npm run deploy
 npm run dev
 ```
 Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+> 🌐 **Live Cloud Deployment**: [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/)
 
 ---
 
