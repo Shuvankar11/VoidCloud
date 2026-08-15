@@ -1,0 +1,74 @@
+{
+  "contractName": "VoidCloud",
+  "version": "1.0.0",
+  "languageVersion": "0.20.4",
+  "compiledAt": "2026-08-15T09:40:01.750Z",
+  "circuits": [
+    {
+      "name": "initializeUserStorage",
+      "inputs": [],
+      "witnesses": [
+        "userSecret"
+      ],
+      "publicStateModifications": [
+        "totalRegisteredUsers",
+        "totalShieldedStorageAllocated"
+      ],
+      "constraintsCount": 1420
+    },
+    {
+      "name": "claimTestnetBonus",
+      "inputs": [
+        {
+          "name": "nullifier",
+          "type": "Bytes<32>"
+        }
+      ],
+      "witnesses": [
+        "userSecret"
+      ],
+      "publicStateModifications": [
+        "bonusNullifiers",
+        "totalShieldedStorageAllocated"
+      ],
+      "constraintsCount": 2180
+    },
+    {
+      "name": "verifyStorageQuotaCommitment",
+      "inputs": [
+        {
+          "name": "userNullifier",
+          "type": "Bytes<32>"
+        },
+        {
+          "name": "fileCommitment",
+          "type": "Bytes<32>"
+        },
+        {
+          "name": "isBonusClaimed",
+          "type": "Boolean"
+        }
+      ],
+      "witnesses": [
+        "fileCommitmentSecret"
+      ],
+      "publicStateModifications": [],
+      "constraintsCount": 1850
+    }
+  ],
+  "stateSchema": {
+    "totalRegisteredUsers": {
+      "type": "Counter",
+      "initial": 0
+    },
+    "totalShieldedStorageAllocated": {
+      "type": "Counter",
+      "initial": 0
+    },
+    "bonusNullifiers": {
+      "type": "Set<Bytes<32>>",
+      "initial": []
+    }
+  },
+  "verificationKeyHash": "0x3a79d2ec9b1c73f4e8b82093da4c1e8273619fa10b981258d4a9f0e1c2d3e4f5"
+}
