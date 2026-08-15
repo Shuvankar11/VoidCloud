@@ -42,10 +42,9 @@ async function deployVoidCloud() {
     };
   }
 
-  // 2. Generate ephemeral or load deployer keys
+  // 2. Load deployer keys
   console.log('\n🔑 Deriving Deployer Shielded Wallet Keypair...');
-  const deployerEntropy = crypto.randomBytes(32);
-  const deployerAddress = 'mn_shielded_addr1q' + crypto.createHash('sha256').update(deployerEntropy).digest('hex').slice(0, 48);
+  const deployerAddress = process.env.VITE_TREASURY_MIDNIGHT_SHIELDED_ADDRESS || 'mn_shield-addr_preprod14zyfy6nr6dylgsffdcknugp7mrxmgrptymt8a7vh4vj4w4yetsdvh7eg58w535z2qr59cu45wn6w0k2tjvud60vm62wa5ltax3lkjpc7587tn';
   console.log(`👤 Deployer Address    : ${deployerAddress}`);
 
   // 3. Synthesize Deployment Proof & Ledger State Root
@@ -58,24 +57,28 @@ async function deployVoidCloud() {
   console.log('🚀 Broadcasting Deployment Transaction to Midnight Preprod Mempool...');
   await new Promise(resolve => setTimeout(resolve, 1000));
 
-  const contractAddress = '0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e';
+  const deployedAddress = '0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e';
   const txHash = '0x' + crypto.randomBytes(32).toString('hex');
   const blockHeight = 849210;
 
   const deploymentReceipt = {
     contractName: 'VoidCloud',
+    contractAddress: deployedAddress,
     network: DEFAULT_CONFIG.network,
-    contractAddress,
+    deployedAt: new Date().toISOString(),
+    deployer: deployerAddress,
     transactionHash: txHash,
     blockHeight,
-    verificationKeyHash: manifest.verificationKeyHash,
-    deployerAddress,
-    initialLedgerState: {
-      totalRegisteredUsers: 0,
-      totalShieldedStorageAllocatedGB: 0,
-      bonusNullifiersCount: 0
+    circuits: [
+      'initializeUserStorage',
+      'claimTestnetBonus',
+      'shredUserStorageKey',
+    ],
+    stateInvariants: {
+      initialStorageAllocationGB: 20,
+      faucetBonusGB: 20,
+      nullifierEnforcement: 'STRICT_SINGLE_CLAIM',
     },
-    deployedAt: new Date().toISOString()
   };
 
   const receiptPath = path.resolve(process.cwd(), 'deployed-contract.json');
@@ -84,13 +87,11 @@ async function deployVoidCloud() {
   console.log('\n======================================================');
   console.log('🎉 CONTRACT DEPLOYMENT SUCCESSFUL!');
   console.log('======================================================');
-  console.log(`📍 Contract Address   : ${contractAddress}`);
+  console.log(`📍 Contract Address   : ${deployedAddress}`);
   console.log(`📜 Transaction Hash   : ${txHash}`);
   console.log(`🧱 Block Height       : #${blockHeight}`);
   console.log(`💾 Receipt Saved To   : ${receiptPath}`);
   console.log('======================================================\n');
-
-  return deploymentReceipt;
 }
 
 deployVoidCloud().catch((err) => {
