@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { WalletState, StoragePlan, BillingCycle } from '../types';
 import confetti from 'canvas-confetti';
 import { TREASURY_CONFIG } from '../config/treasury';
+import { formatRealLaceAddress } from '../utils/cardanoBech32';
 
 export const STORAGE_PLANS: StoragePlan[] = [
   {
@@ -187,11 +188,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         return;
       }
 
-      if (!connectedAddress.startsWith('mn_')) {
-        // Derive deterministic Midnight Preprod Address from Lace master key
-        const hash = Array.from(new TextEncoder().encode(connectedAddress)).map(b => b.toString(16).padStart(2, '0')).join('');
-        connectedAddress = `mn_preprod1q${hash.slice(0, 24)}`;
-      }
+      connectedAddress = formatRealLaceAddress(connectedAddress);
     } else if (walletName === 'MetaMask') {
       if (!win.ethereum) {
         alert('MetaMask extension is not installed.');
