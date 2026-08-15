@@ -141,80 +141,79 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const win = window as any;
 
     if (walletName === 'Midnight Lace') {
-      try {
-        if (win.midnight?.lace) {
-          const api = await Promise.race([
-            win.midnight.lace.enable(),
-            new Promise((_, reject) => setTimeout(() => reject(new Error('Midnight Lace enable timeout')), 6000))
-          ]);
-          if (api) {
-            if (typeof api.getUnusedAddresses === 'function') {
-              const addrs = await api.getUnusedAddresses();
-              if (addrs && addrs.length > 0) connectedAddress = addrs[0];
-            }
-            if (!connectedAddress && typeof api.getUsedAddresses === 'function') {
-              const addrs = await api.getUsedAddresses();
-              if (addrs && addrs.length > 0) connectedAddress = addrs[0];
-            }
-            if (!connectedAddress && typeof api.getChangeAddress === 'function') {
-              connectedAddress = await api.getChangeAddress();
-            }
-          }
-        } else if (win.cardano?.lace) {
-          const api = await Promise.race([
-            win.cardano.lace.enable(),
-            new Promise((_, reject) => setTimeout(() => reject(new Error('Lace enable timeout')), 6000))
-          ]);
-          if (api) {
-            if (typeof api.getChangeAddress === 'function') {
-              try {
-                const change = await api.getChangeAddress();
-                if (change) connectedAddress = change;
-              } catch {}
-            }
-            if (!connectedAddress && typeof api.getUnusedAddresses === 'function') {
-              try {
-                const addrs = await api.getUnusedAddresses();
-                if (addrs && addrs.length > 0) connectedAddress = addrs[0];
-              } catch {}
-            }
-            if (!connectedAddress && typeof api.getUsedAddresses === 'function') {
-              try {
-                const addrs = await api.getUsedAddresses();
-                if (addrs && addrs.length > 0) connectedAddress = addrs[0];
-              } catch {}
-            }
-          }
-        }
-      } catch (err) {
-        console.warn('Lace extension request rejected or not available:', err);
+      if (!win.midnight?.lace && !win.cardano?.lace) {
+        alert('Midnight Lace Wallet extension is not detected in your browser. Please install Lace Wallet from https://www.lace.io/ to connect.');
+        return;
       }
 
-      if (connectedAddress && !connectedAddress.startsWith('mn_')) {
+      try {
+        let api: any = null;
+        if (win.midnight?.lace) {
+          api = await win.midnight.lace.enable();
+        } else if (win.cardano?.lace) {
+          api = await win.cardano.lace.enable();
+        }
+
+        if (!api) {
+          console.warn('Lace authorization was not granted by user.');
+          return;
+        }
+
+        if (typeof api.getChangeAddress === 'function') {
+          try {
+            const change = await api.getChangeAddress();
+            if (change) connectedAddress = change;
+          } catch {}
+        }
+        if (!connectedAddress && typeof api.getUnusedAddresses === 'function') {
+          try {
+            const addrs = await api.getUnusedAddresses();
+            if (addrs && addrs.length > 0) connectedAddress = addrs[0];
+          } catch {}
+        }
+        if (!connectedAddress && typeof api.getUsedAddresses === 'function') {
+          try {
+            const addrs = await api.getUsedAddresses();
+            if (addrs && addrs.length > 0) connectedAddress = addrs[0];
+          } catch {}
+        }
+      } catch (err) {
+        console.warn('Lace extension request cancelled or rejected by user:', err);
+        return;
+      }
+
+      if (!connectedAddress) {
+        console.warn('No address returned from Lace wallet.');
+        return;
+      }
+
+      if (!connectedAddress.startsWith('mn_')) {
         // Derive deterministic Midnight Preprod Address from Lace master key
         const hash = Array.from(new TextEncoder().encode(connectedAddress)).map(b => b.toString(16).padStart(2, '0')).join('');
         connectedAddress = `mn_preprod1q${hash.slice(0, 24)}`;
-      } else if (!connectedAddress) {
-        const rnd = Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b => b.toString(16).padStart(2, '0')).join('');
-        connectedAddress = `mn_preprod1q${rnd.slice(0, 24)}`;
       }
-    } else if (walletName === 'MetaMask' && win.ethereum) {
+    } else if (walletName === 'MetaMask') {
+      if (!win.ethereum) {
+        alert('MetaMask extension is not installed.');
+        return;
+      }
       try {
         const accounts = await win.ethereum.request({ method: 'eth_requestAccounts' });
         if (accounts && accounts.length > 0) {
           connectedAddress = accounts[0];
+        } else {
+          return;
         }
       } catch (err) {
-        console.warn('MetaMask connect failed:', err);
-      }
-      if (!connectedAddress) {
-        const rnd = Array.from(crypto.getRandomValues(new Uint8Array(20))).map(b => b.toString(16).padStart(2, '0')).join('');
-        connectedAddress = `0x${rnd}`;
+        console.warn('MetaMask connect failed or cancelled:', err);
+        return;
       }
     } else {
       const rnd = Array.from(crypto.getRandomValues(new Uint8Array(20))).map(b => b.toString(16).padStart(2, '0')).join('');
       connectedAddress = `0x${rnd}`;
     }
+
+    if (!connectedAddress) return;
 
     const initialBalances = walletName === 'Midnight Lace'
       ? {
