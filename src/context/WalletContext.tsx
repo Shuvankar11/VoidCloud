@@ -102,40 +102,19 @@ interface WalletContextType {
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  useEffect(() => {
-    try {
-      localStorage.removeItem('voidcloud_web3_wallet');
-    } catch {}
-  }, []);
-
-  const [wallet, setWallet] = useState<WalletState>(() => {
-    try {
-      const saved = localStorage.getItem(LOCAL_WALLET_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        return {
-          ...DEFAULT_WALLET,
-          ...parsed,
-          balances: {
-            NIGHT: typeof parsed.balances?.NIGHT === 'number' ? parsed.balances.NIGHT : 0,
-            tDUST: typeof parsed.balances?.tDUST === 'number' ? parsed.balances.tDUST : 0,
-            ADA: typeof parsed.balances?.ADA === 'number' ? parsed.balances.ADA : 0,
-            USDT: typeof parsed.balances?.USDT === 'number' ? parsed.balances.USDT : 0,
-            ETH: typeof parsed.balances?.ETH === 'number' ? parsed.balances.ETH : 0,
-          },
-        };
-      }
-    } catch {}
-    return DEFAULT_WALLET;
-  });
+  // Clean all previous cached wallet sessions on mount so it NEVER auto-connects
+  const [wallet, setWallet] = useState<WalletState>(DEFAULT_WALLET);
 
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
   const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<StoragePlan | null>(STORAGE_PLANS[0]);
 
   useEffect(() => {
-    localStorage.setItem(LOCAL_WALLET_KEY, JSON.stringify(wallet));
-  }, [wallet]);
+    try {
+      localStorage.removeItem('voidcloud_web3_wallet');
+      localStorage.removeItem('voidcloud_v2_web3_wallet');
+    } catch {}
+  }, []);
 
   const connectWallet = useCallback(async (walletName: WalletState['walletName']) => {
     let connectedAddress = '';
