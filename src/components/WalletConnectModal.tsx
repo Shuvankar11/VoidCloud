@@ -18,24 +18,18 @@ export const WalletConnectModal: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
 
+  const isLaceDetected = typeof window !== 'undefined' && !!((window as any).midnight?.lace || (window as any).cardano?.lace);
+
   const handleSync = async () => {
     setIsSyncing(true);
     await syncLiveBalance();
     setTimeout(() => setIsSyncing(false), 500);
   };
 
-  useEffect(() => {
-    if (wallet.isConnected && wallet.walletName === 'Midnight Lace' && wallet.balances.NIGHT === 0) {
-      syncLiveBalance();
-    }
-  }, [wallet.isConnected, wallet.walletName, wallet.balances.NIGHT, syncLiveBalance]);
-
-  if (!isWalletModalOpen) return null;
-
-  const handleConnect = async (walletName: 'Midnight Lace' | 'MetaMask' | 'Coinbase' | 'Phantom') => {
+  const handleConnect = async (walletName: 'Midnight Lace' | 'MetaMask' | 'Coinbase' | 'Phantom', allowFallback: boolean = false) => {
     setConnecting(walletName);
     try {
-      await connectWallet(walletName);
+      await connectWallet(walletName, allowFallback);
     } catch (e) {
       console.warn('Connect wallet error:', e);
     } finally {
@@ -50,6 +44,8 @@ export const WalletConnectModal: React.FC = () => {
       setTimeout(() => setCopied(false), 2000);
     }
   };
+
+  if (!isWalletModalOpen) return null;
 
   return (
     <AnimatePresence>
@@ -204,34 +200,73 @@ export const WalletConnectModal: React.FC = () => {
           ) : (
             /* Wallet Provider Selection List */
             <div className="space-y-3">
-              {/* Midnight Lace Wallet (Recommended) */}
-              <button
-                onClick={() => handleConnect('Midnight Lace')}
-                disabled={!!connecting}
-                className="w-full p-4 rounded-xl bg-[#080D1A] hover:bg-[#0E1424] border border-sky-500/40 hover:border-sky-400 text-left transition-all flex items-center justify-between group"
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-xl bg-sky-500/20 border border-sky-500/40 flex items-center justify-center group-hover:scale-105 transition-transform">
-                    <ShieldCheck className="w-5 h-5 text-sky-400" />
-                  </div>
-                  <div>
-                    <div className="flex items-center space-x-2">
-                      <span className="font-semibold text-white text-sm">Midnight Lace Wallet</span>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-500/40 text-emerald-400">
-                        NATIVE
+              {/* Midnight Lace Wallet */}
+              <div className="rounded-xl bg-[#080D1A] border border-sky-500/40 p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 rounded-xl bg-sky-500/20 border border-sky-500/40 flex items-center justify-center flex-shrink-0">
+                      <ShieldCheck className="w-5 h-5 text-sky-400" />
+                    </div>
+                    <div>
+                      <div className="flex items-center space-x-2">
+                        <span className="font-semibold text-white text-sm">Midnight Lace Wallet</span>
+                        <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full ${
+                          isLaceDetected
+                            ? 'bg-emerald-950 border border-emerald-500/40 text-emerald-400'
+                            : 'bg-amber-950 border border-amber-500/40 text-amber-400'
+                        }`}>
+                          {isLaceDetected ? 'EXTENSION READY' : 'NO EXTENSION'}
+                        </span>
+                      </div>
+                      <span className="text-xs text-slate-400 block font-mono">
+                        {isLaceDetected
+                          ? 'Official Midnight Preprod ZK Wallet (Click to Authorize)'
+                          : 'Lace extension not installed in this browser.'}
                       </span>
                     </div>
-                    <span className="text-xs text-slate-400 block font-mono">
-                      Official Midnight Preprod ZK Wallet (Select Cardano #0 to authorize)
-                    </span>
                   </div>
                 </div>
-                {connecting === 'Midnight Lace' ? (
-                  <RefreshCw className="w-4 h-4 text-sky-400 animate-spin" />
+
+                {isLaceDetected ? (
+                  <button
+                    onClick={() => handleConnect('Midnight Lace')}
+                    disabled={!!connecting}
+                    className="w-full py-2.5 px-4 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-mono font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(56,189,248,0.3)]"
+                  >
+                    {connecting === 'Midnight Lace' ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                        <span>Opening Lace Extension...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Authorize with Lace Extension</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
                 ) : (
-                  <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-sky-400 transition-colors" />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                    <button
+                      onClick={() => handleConnect('Midnight Lace', true)}
+                      disabled={!!connecting}
+                      className="w-full py-2 px-3 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/50 text-sky-300 font-mono font-bold text-xs transition-all flex items-center justify-center gap-1.5"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Testnet Web Wallet (5k NIGHT)</span>
+                    </button>
+                    <a
+                      href="https://www.lace.io/"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="w-full py-2 px-3 rounded-xl bg-[#0E1424] hover:bg-[#141D30] border border-slate-700 hover:border-sky-500 text-slate-300 hover:text-white font-mono text-xs transition-all flex items-center justify-center gap-1.5"
+                    >
+                      <span>Install Lace Extension</span>
+                      <span>↗</span>
+                    </a>
+                  </div>
                 )}
-              </button>
+              </div>
 
               {/* MetaMask */}
               <button

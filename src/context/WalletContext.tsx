@@ -88,7 +88,7 @@ interface WalletContextType {
   setIsPricingModalOpen: (open: boolean) => void;
   selectedPlan: StoragePlan | null;
   setSelectedPlan: (plan: StoragePlan | null) => void;
-  connectWallet: (walletName: WalletState['walletName']) => Promise<void>;
+  connectWallet: (walletName: WalletState['walletName'], fallbackIfNoExt?: boolean) => Promise<void>;
   disconnectWallet: () => void;
   claimTestnetTokens: (token: 'NIGHT' | 'tDUST' | 'USDT') => void;
   syncLiveBalance: () => Promise<void>;
@@ -116,58 +116,59 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     } catch {}
   }, []);
 
-  const connectWallet = useCallback(async (walletName: WalletState['walletName']) => {
+  const connectWallet = useCallback(async (walletName: WalletState['walletName'], fallbackIfNoExt: boolean = false) => {
     let connectedAddress = '';
     const win = window as any;
 
     if (walletName === 'Midnight Lace') {
-      if (!win.midnight?.lace && !win.cardano?.lace) {
-        alert('Midnight Lace Wallet extension is not detected in your browser. Please install Lace Wallet from https://www.lace.io/ to connect.');
-        return;
-      }
+      const hasLace = !!(win.midnight?.lace || win.cardano?.lace);
 
-      try {
-        let api: any = null;
-        if (win.midnight?.lace) {
-          api = await win.midnight.lace.enable();
-        } else if (win.cardano?.lace) {
-          api = await win.cardano.lace.enable();
-        }
+      if (hasLace) {
+        try {
+          let api: any = null;
+          if (win.midnight?.lace) {
+            api = await win.midnight.lace.enable();
+          } else if (win.cardano?.lace) {
+            api = await win.cardano.lace.enable();
+          }
 
-        if (!api) {
-          console.warn('Lace authorization was not granted by user.');
+          if (!api) {
+            console.warn('Lace authorization was not granted by user.');
+            return;
+          }
+
+          if (typeof api.getChangeAddress === 'function') {
+            try {
+              const change = await api.getChangeAddress();
+              if (change) connectedAddress = change;
+            } catch {}
+          }
+          if (!connectedAddress && typeof api.getUnusedAddresses === 'function') {
+            try {
+              const addrs = await api.getUnusedAddresses();
+              if (addrs && addrs.length > 0) connectedAddress = addrs[0];
+            } catch {}
+          }
+          if (!connectedAddress && typeof api.getUsedAddresses === 'function') {
+            try {
+              const addrs = await api.getUsedAddresses();
+              if (addrs && addrs.length > 0) connectedAddress = addrs[0];
+            } catch {}
+          }
+        } catch (err) {
+          console.warn('Lace extension request cancelled or rejected by user:', err);
           return;
         }
 
-        if (typeof api.getChangeAddress === 'function') {
-          try {
-            const change = await api.getChangeAddress();
-            if (change) connectedAddress = change;
-          } catch {}
+        if (connectedAddress) {
+          connectedAddress = formatRealLaceAddress(connectedAddress);
         }
-        if (!connectedAddress && typeof api.getUnusedAddresses === 'function') {
-          try {
-            const addrs = await api.getUnusedAddresses();
-            if (addrs && addrs.length > 0) connectedAddress = addrs[0];
-          } catch {}
-        }
-        if (!connectedAddress && typeof api.getUsedAddresses === 'function') {
-          try {
-            const addrs = await api.getUsedAddresses();
-            if (addrs && addrs.length > 0) connectedAddress = addrs[0];
-          } catch {}
-        }
-      } catch (err) {
-        console.warn('Lace extension request cancelled or rejected by user:', err);
+      } else if (fallbackIfNoExt) {
+        const rnd = Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b => b.toString(16).padStart(2, '0')).join('');
+        connectedAddress = `mn_preprod1q${rnd.slice(0, 24)}`;
+      } else {
         return;
       }
-
-      if (!connectedAddress) {
-        console.warn('No address returned from Lace wallet.');
-        return;
-      }
-
-      connectedAddress = formatRealLaceAddress(connectedAddress);
     } else if (walletName === 'MetaMask') {
       if (!win.ethereum) {
         alert('MetaMask extension is not installed.');
