@@ -2,14 +2,14 @@
   "contractName": "VoidCloud",
   "network": "preprod",
   "contractAddress": "0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e",
-  "transactionHash": "0x82c08d18fdf9f695c949d5dd0df6cc3e966a779996881062f57decba05e0347a",
+  "transactionHash": "0xfd3686b4c354d85f6f762373f18aabe84e6e75729bcc78ca6e1b446303d1e84c",
   "blockHeight": 849210,
   "verificationKeyHash": "0x3a79d2ec9b1c73f4e8b82093da4c1e8273619fa10b981258d4a9f0e1c2d3e4f5",
-  "deployerAddress": "mn_shielded_addr1qda06315e2d4b9a67cbc9c5606ce123a7001b1ac5fe948310",
+  "deployerAddress": "mn_shielded_addr1qf745bb66b018f079a15ec708c9ca7c536cd5c790b9c61ff7",
   "initialLedgerState": {
     "totalRegisteredUsers": 0,
     "totalShieldedStorageAllocatedGB": 0,
     "bonusNullifiersCount": 0
   },
-  "deployedAt": "2026-08-15T09:39:26.508Z"
+  "deployedAt": "2026-08-15T11:59:26.486Z"
 }

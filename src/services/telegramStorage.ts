@@ -45,8 +45,8 @@ export interface TelegramUploadResult {
 }
 
 function getApiBaseUrl(): string {
-  // Use Vite /tg-api proxy in browser to avoid browser CORS blocking
-  if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+  // Use /tg-api proxy in browser to avoid browser CORS blocking on localhost and Vercel production
+  if (typeof window !== 'undefined') {
     return '/tg-api';
   }
   return 'https://api.telegram.org';
