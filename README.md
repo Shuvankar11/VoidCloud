@@ -210,7 +210,8 @@ node cli/void.js shred <fileId>
 💾 Receipt Saved To   : deployed-contract.json
 ======================================================
 ```
-*(Screenshot anchor placeholder: `deployment-preprod.png`)*
+*(Screenshot anchor placeholder: `<img width="1919" height="1097" alt="{B12E360C-AA51-402E-9C56-B790FE651D04}" src="https://github.com/user-attachments/assets/882387ad-d4dd-41ce-b8c5-36f19962268e" />
+`)*
 
 ---
 
