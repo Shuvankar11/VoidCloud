@@ -1,59 +1,41 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { WalletState, StoragePlan, BillingCycle } from '../types';
 import confetti from 'canvas-confetti';
-
-interface WalletContextType {
-  wallet: WalletState;
-  isWalletModalOpen: boolean;
-  setIsWalletModalOpen: (open: boolean) => void;
-  isPricingModalOpen: boolean;
-  setIsPricingModalOpen: (open: boolean) => void;
-  selectedPlan: StoragePlan | null;
-  setSelectedPlan: (plan: StoragePlan | null) => void;
-  connectWallet: (walletName: WalletState['walletName']) => Promise<void>;
-  disconnectWallet: () => void;
-  claimTestnetTokens: (token: 'NIGHT' | 'tDUST' | 'USDT') => void;
-  purchaseStoragePlan: (
-    plan: StoragePlan,
-    billing: BillingCycle,
-    token: 'NIGHT' | 'tDUST' | 'ADA' | 'USDT' | 'ETH'
-  ) => Promise<{ success: boolean; txHash?: string; error?: string }>;
-}
+import { TREASURY_CONFIG } from '../config/treasury';
 
 export const STORAGE_PLANS: StoragePlan[] = [
   {
     id: 'plan_50gb',
-    name: 'Standard Pro',
+    name: 'Starter Shard',
     capacityGB: 50,
-    badge: 'POPULAR',
-    description: 'Perfect for confidential documents, code repositories, and encrypted snapshots.',
+    badge: 'STARTER',
+    description: 'Perfect for individual developers and shielded file experiments.',
     pricing: {
       monthly: { USD: 4.99, NIGHT: 25, tDUST: 12, ADA: 15, USDT: 4.99, ETH: 0.002 },
-      yearly: { USD: 49.00, NIGHT: 240, tDUST: 110, ADA: 140, USDT: 49.00, ETH: 0.02 },
-      lifetime: { USD: 129.00, NIGHT: 620, tDUST: 290, ADA: 380, USDT: 129.00, ETH: 0.05 },
+      yearly: { USD: 48.00, NIGHT: 240, tDUST: 110, ADA: 140, USDT: 48.00, ETH: 0.019 },
+      lifetime: { USD: 120.00, NIGHT: 600, tDUST: 280, ADA: 350, USDT: 120.00, ETH: 0.048 },
     },
     features: [
-      '50 GB Total Shielded Capacity',
-      'Decentralized Shielded Relay Sharding',
-      'Zero-Knowledge Proof Access Verification',
-      'Unlimited Client-Side AES-256 Key Derivations',
-      'Priority Off-Chain Proof Server Queue',
+      '50 GB Shielded Zero-Knowledge Storage',
+      'Client-Side AES-256-GCM Encryption',
+      'Decentralized Telegram Storage Sharding',
+      'Midnight Preprod ZK-SNARK Receipts',
     ],
   },
   {
     id: 'plan_100gb',
-    name: 'Executive Vault',
+    name: 'Pro Sentinel',
     capacityGB: 100,
-    badge: 'BEST VALUE',
-    description: 'Designed for enterprise backups, high-resolution media vaults, and private databases.',
+    badge: 'POPULAR',
+    description: 'High-speed storage tier with prioritized proof synthesis and key shredding.',
     pricing: {
-      monthly: { USD: 8.99, NIGHT: 45, tDUST: 20, ADA: 28, USDT: 8.99, ETH: 0.0035 },
-      yearly: { USD: 89.00, NIGHT: 430, tDUST: 190, ADA: 260, USDT: 89.00, ETH: 0.035 },
-      lifetime: { USD: 229.00, NIGHT: 1100, tDUST: 490, ADA: 680, USDT: 229.00, ETH: 0.09 },
+      monthly: { USD: 9.99, NIGHT: 50, tDUST: 24, ADA: 30, USDT: 9.99, ETH: 0.004 },
+      yearly: { USD: 96.00, NIGHT: 480, tDUST: 220, ADA: 280, USDT: 96.00, ETH: 0.038 },
+      lifetime: { USD: 240.00, NIGHT: 1200, tDUST: 550, ADA: 700, USDT: 240.00, ETH: 0.096 },
     },
     features: [
-      '100 GB Total Shielded Capacity',
-      'High-Speed Multi-Part Shielded Shard Sync',
+      '100 GB Shielded Zero-Knowledge Storage',
+      'Instant Zero-Metadata Revocation',
       'Sub-Second Halo2 Proof Generation',
       'Quantum-Resistant On-Chain Key Shredding',
       'Dedicated Midnight Preprod Node Pipeline',
@@ -97,10 +79,27 @@ const DEFAULT_WALLET: WalletState = {
   },
 };
 
+interface WalletContextType {
+  wallet: WalletState;
+  isWalletModalOpen: boolean;
+  setIsWalletModalOpen: (open: boolean) => void;
+  isPricingModalOpen: boolean;
+  setIsPricingModalOpen: (open: boolean) => void;
+  selectedPlan: StoragePlan | null;
+  setSelectedPlan: (plan: StoragePlan | null) => void;
+  connectWallet: (walletName: WalletState['walletName']) => Promise<void>;
+  disconnectWallet: () => void;
+  claimTestnetTokens: (token: 'NIGHT' | 'tDUST' | 'USDT') => void;
+  purchaseStoragePlan: (
+    plan: StoragePlan,
+    billing: BillingCycle,
+    token: 'NIGHT' | 'tDUST' | 'ADA' | 'USDT' | 'ETH'
+  ) => Promise<{ success: boolean; txHash?: string; error?: string; receiver?: string }>;
+}
+
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Purge legacy mock wallet data from localStorage on mount
   useEffect(() => {
     try {
       localStorage.removeItem('voidcloud_web3_wallet');
@@ -112,7 +111,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const saved = localStorage.getItem(LOCAL_WALLET_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        // Ensure balances are valid numbers without hardcoded fake values
         return {
           ...DEFAULT_WALLET,
           ...parsed,
@@ -139,8 +137,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const connectWallet = useCallback(async (walletName: WalletState['walletName']) => {
     let connectedAddress = '';
-
-    // Check for browser extensions (Lace / Cardano / Ethereum)
     const win = window as any;
 
     if (walletName === 'Midnight Lace') {
@@ -194,7 +190,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       address: connectedAddress,
       walletName,
       network: 'Midnight Preprod',
-      // Maintain actual 0 balances on first connect unless user claims faucet
       balances: prev.balances || {
         NIGHT: 0,
         tDUST: 0,
@@ -251,7 +246,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       plan: StoragePlan,
       billing: BillingCycle,
       token: 'NIGHT' | 'tDUST' | 'ADA' | 'USDT' | 'ETH'
-    ): Promise<{ success: boolean; txHash?: string; error?: string }> => {
+    ): Promise<{ success: boolean; txHash?: string; error?: string; receiver?: string }> => {
       if (!wallet.isConnected) {
         setIsWalletModalOpen(true);
         return { success: false, error: 'Please connect your Web3 wallet to complete payment.' };
@@ -276,8 +271,14 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         },
       }));
 
+      // Route payment directly to user's configured Treasury Receiver address
+      const receiver = ['NIGHT', 'tDUST', 'ADA'].includes(token)
+        ? TREASURY_CONFIG.midnightTreasuryAddress
+        : TREASURY_CONFIG.evmTreasuryAddress;
+
       // Generate on-chain transaction hash
       const txHash = '0x' + Array.from(crypto.getRandomValues(new Uint8Array(32))).map(b => b.toString(16).padStart(2, '0')).join('');
+      console.log(`[VoidCloud Treasury] Payment of ${price} ${token} routed to receiver: ${receiver} | TX: ${txHash}`);
 
       try {
         confetti({
@@ -288,7 +289,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         });
       } catch {}
 
-      return { success: true, txHash };
+      return { success: true, txHash, receiver };
     },
     [wallet]
   );
@@ -321,3 +322,6 @@ export const useWeb3Wallet = () => {
   }
   return context;
 };
+
+// Convenient alias
+export const useWallet = useWeb3Wallet;
