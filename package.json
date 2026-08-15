@@ -1,0 +1,70 @@
+{
+  "name": "voidcloud",
+  "version": "1.0.0",
+  "description": "Privacy-First Decentralized Cloud Storage on the Midnight Network",
+  "main": "cli/void.js",
+  "bin": {
+    "void": "./cli/void.js",
+    "voidcloud": "./cli/void.js"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "cli": "node cli/void.js",
+    "deploy": "tsx scripts/deploy.ts",
+    "compact:compile": "echo \"[COMPACT] Compiling contracts/voidcloud.compact into managed artifacts...\" && tsx scripts/compile-compact.ts",
+    "proof-server": "docker compose up -d proof-server",
+    "proof-server:stop": "docker compose down",
+    "proof-server:logs": "docker compose logs -f proof-server",
+    "test:telegram": "tsx scripts/test-telegram.ts"
+  },
+  "keywords": [
+    "midnight-network",
+    "zero-knowledge",
+    "compact",
+    "decentralized-storage",
+    "zk-snark",
+    "antigravity-cli",
+    "threejs",
+    "cloud-vault"
+  ],
+  "author": "VoidCloud Team",
+  "license": "MIT",
+  "dependencies": {
+    "@react-three/drei": "^9.120.4",
+    "@react-three/fiber": "^8.17.10",
+    "boxen": "^7.1.1",
+    "canvas-confetti": "^1.9.3",
+    "chalk": "^5.3.0",
+    "clsx": "^2.1.1",
+    "commander": "^12.1.0",
+    "firebase": "^12.17.1",
+    "framer-motion": "^11.15.0",
+    "gradient-string": "^2.0.2",
+    "lucide-react": "^0.469.0",
+    "ora": "^8.1.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.6.0",
+    "three": "^0.171.0"
+  },
+  "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/gradient-string": "^1.1.6",
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@types/three": "^0.171.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5",
+    "vitest": "^2.1.8"
+  }
+}
