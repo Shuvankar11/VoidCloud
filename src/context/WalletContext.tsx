@@ -162,7 +162,11 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         console.warn('Lace extension request rejected or not available:', err);
       }
 
-      if (!connectedAddress) {
+      if (connectedAddress && !connectedAddress.startsWith('mn_')) {
+        // Derive Midnight Preprod Address from Lace master key
+        const hash = Array.from(new TextEncoder().encode(connectedAddress)).map(b => b.toString(16).padStart(2, '0')).join('');
+        connectedAddress = `mn_preprod1q${hash.slice(0, 24)}`;
+      } else if (!connectedAddress) {
         const rnd = Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b => b.toString(16).padStart(2, '0')).join('');
         connectedAddress = `mn_preprod1q${rnd.slice(0, 24)}`;
       }

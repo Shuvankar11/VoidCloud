@@ -123,25 +123,36 @@ export const WalletConnectModal: React.FC = () => {
 
               {/* Faucet Claim Section */}
               <div className="p-4 rounded-xl bg-gradient-to-r from-sky-950/40 via-blue-950/30 to-emerald-950/40 border border-sky-500/30 space-y-2">
-                <div className="flex items-center space-x-2 text-xs font-mono text-sky-300">
-                  <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="font-semibold">TESTNET TOKEN FAUCET</span>
+                <div className="flex items-center justify-between text-xs font-mono text-sky-300">
+                  <div className="flex items-center space-x-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                    <span className="font-semibold">MIDNIGHT PREPROD FAUCET</span>
+                  </div>
+                  <a
+                    href="https://faucet.preprod.midnight.network/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[10px] text-sky-400 hover:text-sky-300 underline font-mono flex items-center gap-0.5"
+                  >
+                    <span>Official Faucet</span>
+                    <span>↗</span>
+                  </a>
                 </div>
-                <p className="text-[11px] text-slate-400">
-                  Need testnet tokens to test storage tier upgrades? Claim instant testnet faucet tokens:
+                <p className="text-[11px] text-slate-400 font-sans">
+                  Claim instant testnet tokens for unshielded NIGHT and shielded tDUST storage payments:
                 </p>
                 <div className="flex flex-wrap gap-2 pt-1">
                   <button
                     onClick={() => claimTestnetTokens('NIGHT')}
-                    className="px-3 py-1.5 rounded-lg bg-sky-950 hover:bg-sky-900 border border-sky-500/50 text-sky-300 text-xs font-mono transition-colors"
+                    className="px-3 py-1.5 rounded-lg bg-sky-950 hover:bg-sky-900 border border-sky-500/50 text-sky-300 text-xs font-mono transition-colors font-semibold"
                   >
-                    +500 NIGHT
+                    +500 NIGHT (Unshielded)
                   </button>
                   <button
                     onClick={() => claimTestnetTokens('tDUST')}
-                    className="px-3 py-1.5 rounded-lg bg-emerald-950 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-300 text-xs font-mono transition-colors"
+                    className="px-3 py-1.5 rounded-lg bg-emerald-950 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-300 text-xs font-mono transition-colors font-semibold"
                   >
-                    +200 tDUST
+                    +200 tDUST (Shielded)
                   </button>
                   <button
                     onClick={() => claimTestnetTokens('USDT')}
@@ -181,7 +192,7 @@ export const WalletConnectModal: React.FC = () => {
                       </span>
                     </div>
                     <span className="text-xs text-slate-400 block font-mono">
-                      Official Midnight Preprod ZK Wallet
+                      Official Midnight Preprod ZK Wallet (Select Cardano #0 to authorize)
                     </span>
                   </div>
                 </div>
