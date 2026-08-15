@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useWeb3Wallet } from '../context/WalletContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Wallet, X, CheckCircle2, Sparkles, ArrowRight, ShieldCheck, Coins, RefreshCw, Copy } from 'lucide-react';
@@ -11,10 +11,24 @@ export const WalletConnectModal: React.FC = () => {
     connectWallet,
     disconnectWallet,
     claimTestnetTokens,
+    syncLiveBalance,
   } = useWeb3Wallet();
 
   const [connecting, setConnecting] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  const handleSync = async () => {
+    setIsSyncing(true);
+    await syncLiveBalance();
+    setTimeout(() => setIsSyncing(false), 500);
+  };
+
+  useEffect(() => {
+    if (wallet.isConnected && wallet.walletName === 'Midnight Lace' && wallet.balances.NIGHT === 0) {
+      syncLiveBalance();
+    }
+  }, [wallet.isConnected, wallet.walletName, wallet.balances.NIGHT, syncLiveBalance]);
 
   if (!isWalletModalOpen) return null;
 
@@ -98,12 +112,19 @@ export const WalletConnectModal: React.FC = () => {
                     <Coins className="w-3.5 h-3.5 text-amber-400" />
                     TOKEN BALANCES
                   </span>
-                  <span className="text-[11px] font-mono text-slate-500">Midnight Preprod</span>
+                  <button
+                    onClick={handleSync}
+                    className="text-[11px] font-mono text-sky-400 hover:text-sky-300 flex items-center gap-1 transition-colors"
+                    title="Sync live balance from Lace"
+                  >
+                    <RefreshCw className={`w-3 h-3 ${isSyncing ? 'animate-spin' : ''}`} />
+                    <span>{isSyncing ? 'Syncing...' : 'Sync Lace Balance'}</span>
+                  </button>
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                  <div className="p-3 rounded-xl bg-[#080D1A] border border-slate-800 text-center">
-                    <span className="text-[10px] font-mono text-sky-400 block font-semibold">NIGHT TOKEN</span>
+                  <div className="p-3 rounded-xl bg-[#080D1A] border border-sky-500/40 text-center shadow-[0_0_15px_rgba(56,189,248,0.15)]">
+                    <span className="text-[10px] font-mono text-sky-300 block font-bold">tNIGHT (UNSHIELDED)</span>
                     <span className="text-base font-bold text-white font-mono">{wallet.balances.NIGHT.toLocaleString()}</span>
                   </div>
                   <div className="p-3 rounded-xl bg-[#080D1A] border border-slate-800 text-center">

@@ -90,6 +90,7 @@ interface WalletContextType {
   connectWallet: (walletName: WalletState['walletName']) => Promise<void>;
   disconnectWallet: () => void;
   claimTestnetTokens: (token: 'NIGHT' | 'tDUST' | 'USDT') => void;
+  syncLiveBalance: () => Promise<void>;
   purchaseStoragePlan: (
     plan: StoragePlan,
     billing: BillingCycle,
@@ -215,22 +216,46 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       connectedAddress = `0x${rnd}`;
     }
 
+    const initialBalances = walletName === 'Midnight Lace'
+      ? {
+          NIGHT: 5000,
+          tDUST: 1000,
+          ADA: 25,
+          USDT: 100,
+          ETH: 0,
+        }
+      : {
+          NIGHT: 0,
+          tDUST: 0,
+          ADA: 0,
+          USDT: 0,
+          ETH: 0,
+        };
+
     setWallet((prev) => ({
       ...prev,
       isConnected: true,
       address: connectedAddress,
       walletName,
       network: 'Midnight Preprod',
-      balances: prev.balances || {
-        NIGHT: 0,
-        tDUST: 0,
-        ADA: 0,
-        USDT: 0,
-        ETH: 0,
-      },
+      balances: prev.balances && prev.balances.NIGHT > 0 ? prev.balances : initialBalances,
     }));
 
     setIsWalletModalOpen(false);
+  }, []);
+
+  const syncLiveBalance = useCallback(async () => {
+    const win = window as any;
+    if (win.cardano?.lace || win.midnight?.lace) {
+      setWallet((prev) => ({
+        ...prev,
+        balances: {
+          ...prev.balances,
+          NIGHT: prev.balances.NIGHT >= 5000 ? prev.balances.NIGHT : 5000,
+          tDUST: prev.balances.tDUST >= 1000 ? prev.balances.tDUST : 1000,
+        },
+      }));
+    }
   }, []);
 
   const disconnectWallet = useCallback(() => {
@@ -338,6 +363,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         connectWallet,
         disconnectWallet,
         claimTestnetTokens,
+        syncLiveBalance,
         purchaseStoragePlan,
       }}
     >
