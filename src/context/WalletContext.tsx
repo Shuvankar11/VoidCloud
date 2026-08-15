@@ -194,9 +194,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const initialBalances = walletName === 'Midnight Lace'
       ? {
           NIGHT: 5000,
-          tDUST: 1000,
-          ADA: 25,
-          USDT: 100,
+          tDUST: 0,
+          ADA: 0,
+          USDT: 0,
           ETH: 0,
         }
       : {
@@ -220,17 +220,16 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, []);
 
   const syncLiveBalance = useCallback(async () => {
-    const win = window as any;
-    if (win.cardano?.lace || win.midnight?.lace) {
-      setWallet((prev) => ({
-        ...prev,
-        balances: {
-          ...prev.balances,
-          NIGHT: prev.balances.NIGHT >= 5000 ? prev.balances.NIGHT : 5000,
-          tDUST: prev.balances.tDUST >= 1000 ? prev.balances.tDUST : 1000,
-        },
-      }));
-    }
+    setWallet((prev) => ({
+      ...prev,
+      balances: {
+        NIGHT: 5000,
+        tDUST: prev.balances.tDUST || 0,
+        ADA: prev.balances.ADA || 0,
+        USDT: prev.balances.USDT || 0,
+        ETH: prev.balances.ETH || 0,
+      },
+    }));
   }, []);
 
   const disconnectWallet = useCallback(() => {
