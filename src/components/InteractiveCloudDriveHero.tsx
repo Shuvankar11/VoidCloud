@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 
 export const InteractiveCloudDriveHero: React.FC = () => {
-  const { session, files, claimBonusWithZKProof, isGeneratingProof, uploadAndEncryptFile, setActivePreviewFile } = useVault();
+  const { session, files, claimBonusWithZKProof, isGeneratingProof, uploadAndEncryptFile, setActivePreviewFile, setActiveView } = useVault();
   const { user, setIsAuthModalOpen } = useAuth();
   const { setIsPricingModalOpen } = useWeb3Wallet();
   
@@ -227,10 +227,13 @@ export const InteractiveCloudDriveHero: React.FC = () => {
         <div className="mt-4 pt-3 border-t border-slate-800/80">
           <div className="flex items-center justify-between text-xs font-mono text-slate-400 mb-2">
             <span>Recent Vault Objects ({activeFiles.length})</span>
-            <a href="#gallery" className="text-sky-400 hover:text-sky-300 flex items-center gap-0.5 text-[11px]">
+            <button
+              onClick={() => setActiveView('gallery')}
+              className="text-sky-400 hover:text-sky-300 flex items-center gap-0.5 text-[11px] font-mono hover:underline"
+            >
               <span>Media Gallery</span>
               <ArrowUpRight className="w-3 h-3" />
-            </a>
+            </button>
           </div>
 
           {activeFiles.length > 0 ? (

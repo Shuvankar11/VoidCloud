@@ -2,13 +2,24 @@ import React, { useState } from 'react';
 import { useVault } from '../context/VaultContext';
 import { useAuth } from '../context/AuthContext';
 import { useWeb3Wallet } from '../context/WalletContext';
-import { Cloud, LogOut, LogIn, Menu, X, Wallet, Sparkles, ShieldCheck } from 'lucide-react';
+import { Cloud, LogOut, LogIn, Menu, X, Wallet, Sparkles, ShieldCheck, Image as ImageIcon } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
-  const { session } = useVault();
+  const { session, activeView, setActiveView } = useVault();
   const { user, setIsAuthModalOpen, signOut } = useAuth();
   const { wallet, setIsWalletModalOpen, setIsPricingModalOpen } = useWeb3Wallet();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleNavClick = (targetView: 'home' | 'gallery', hash?: string) => {
+    setActiveView(targetView);
+    setMobileMenuOpen(false);
+    if (targetView === 'home' && hash) {
+      setTimeout(() => {
+        const elem = document.querySelector(hash);
+        if (elem) elem.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-40 w-full backdrop-blur-2xl bg-[#080D1A]/95 border-b border-slate-800/80">
@@ -16,7 +27,10 @@ export const Navbar: React.FC = () => {
         
         {/* Left: Brand Logo & Status */}
         <div className="flex items-center space-x-2.5 sm:space-x-3 flex-shrink-0">
-          <a href="#" className="flex items-center space-x-2 group">
+          <button
+            onClick={() => handleNavClick('home', '#overview')}
+            className="flex items-center space-x-2 group text-left"
+          >
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-sky-500/20 via-blue-600/20 to-emerald-500/20 border border-sky-500/40 flex items-center justify-center group-hover:border-sky-400 group-hover:shadow-[0_0_15px_rgba(56,189,248,0.3)] transition-all">
               <Cloud className="w-4 h-4 sm:w-5 sm:h-5 text-sky-400 group-hover:scale-110 transition-transform" />
             </div>
@@ -27,7 +41,7 @@ export const Navbar: React.FC = () => {
               </div>
               <span className="text-[9px] sm:text-[10px] font-mono tracking-wider text-slate-400 block hidden xs:block">Decentralized ZK Storage</span>
             </div>
-          </a>
+          </button>
 
           {/* Midnight Status Pill */}
           <div className="hidden xl:flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-[#0E1424] border border-slate-700/80 text-slate-300 text-[11px] font-mono">
@@ -37,22 +51,57 @@ export const Navbar: React.FC = () => {
         </div>
 
         {/* Center: Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-4 xl:gap-6 text-xs sm:text-sm font-medium text-slate-300 flex-shrink-0">
-          <a href="#overview" className="hover:text-sky-400 transition-colors whitespace-nowrap">Overview</a>
-          <a href="#storage" className="hover:text-sky-400 transition-colors flex items-center gap-1.5 whitespace-nowrap">
+        <nav className="hidden lg:flex items-center gap-3 xl:gap-5 text-xs sm:text-sm font-medium text-slate-300 flex-shrink-0">
+          <button
+            onClick={() => handleNavClick('home', '#overview')}
+            className={`px-3 py-1.5 rounded-xl transition-all whitespace-nowrap ${
+              activeView === 'home'
+                ? 'text-white font-semibold'
+                : 'text-slate-400 hover:text-sky-300'
+            }`}
+          >
+            Overview
+          </button>
+
+          <button
+            onClick={() => handleNavClick('home', '#storage')}
+            className="px-2.5 py-1.5 rounded-xl text-slate-400 hover:text-sky-300 transition-colors flex items-center gap-1.5 whitespace-nowrap"
+          >
             <span>Storage Quota</span>
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-sky-950/80 border border-sky-500/40 text-sky-300 font-mono">
               {session.quotaGB}GB
             </span>
-          </a>
-          <a href="#gallery" className="hover:text-sky-400 text-sky-300 transition-colors flex items-center gap-1 whitespace-nowrap">
-            <span>Media Gallery</span>
-            <span className="px-1.5 py-0.2 rounded-md bg-gradient-to-r from-sky-500/30 to-violet-500/30 border border-sky-400/40 text-[9px] font-mono text-sky-200">
-              NEW
+          </button>
+
+          {/* DEDICATED MEDIA & FILES GALLERY BUTTON */}
+          <button
+            onClick={() => handleNavClick('gallery')}
+            className={`px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap ${
+              activeView === 'gallery'
+                ? 'bg-sky-500/20 text-sky-300 border border-sky-500/50 shadow-[0_0_15px_rgba(56,189,248,0.3)] font-bold'
+                : 'text-sky-400 hover:text-white hover:bg-sky-950/40 border border-sky-500/20'
+            }`}
+          >
+            <ImageIcon className="w-3.5 h-3.5" />
+            <span>Media & Files Gallery</span>
+            <span className="px-1.5 py-0.2 rounded-md bg-gradient-to-r from-sky-500/40 to-violet-500/40 border border-sky-400/40 text-[9px] font-mono text-sky-200 font-bold">
+              VAULT
             </span>
-          </a>
-          <a href="#vault" className="hover:text-sky-400 transition-colors whitespace-nowrap">Object Vault</a>
-          <a href="#features" className="hover:text-sky-400 transition-colors whitespace-nowrap">Architecture</a>
+          </button>
+
+          <button
+            onClick={() => handleNavClick('home', '#vault')}
+            className="px-2.5 py-1.5 rounded-xl text-slate-400 hover:text-sky-300 transition-colors whitespace-nowrap"
+          >
+            Object Vault
+          </button>
+
+          <button
+            onClick={() => handleNavClick('home', '#features')}
+            className="px-2.5 py-1.5 rounded-xl text-slate-400 hover:text-sky-300 transition-colors whitespace-nowrap"
+          >
+            Architecture
+          </button>
         </nav>
 
         {/* Right Actions: Upgrade + Web3 Wallet + User Account */}
@@ -126,42 +175,37 @@ export const Navbar: React.FC = () => {
       {/* Mobile / Tablet Dropdown Menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden bg-[#080D1A] border-b border-slate-800 px-4 py-4 space-y-3 font-mono text-xs">
-          <a
-            href="#overview"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-slate-300 hover:text-sky-400 py-1"
+          <button
+            onClick={() => handleNavClick('home', '#overview')}
+            className="block w-full text-left text-slate-300 hover:text-sky-400 py-1"
           >
             Overview
-          </a>
-          <a
-            href="#storage"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-slate-300 hover:text-sky-400 py-1"
+          </button>
+          <button
+            onClick={() => handleNavClick('home', '#storage')}
+            className="block w-full text-left text-slate-300 hover:text-sky-400 py-1"
           >
             Storage Quota ({session.quotaGB} GB)
-          </a>
-          <a
-            href="#gallery"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-sky-300 hover:text-sky-400 py-1 font-semibold flex items-center justify-between"
+          </button>
+          <button
+            onClick={() => handleNavClick('gallery')}
+            className="block w-full text-left text-sky-300 hover:text-white py-1.5 px-3 rounded-xl bg-sky-950/60 border border-sky-500/40 font-bold flex items-center justify-between"
           >
-            <span>Media Gallery (Photos & Videos)</span>
-            <span className="px-1.5 py-0.5 rounded-md bg-sky-500/20 text-[10px] text-sky-300">NEW</span>
-          </a>
-          <a
-            href="#vault"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-slate-300 hover:text-sky-400 py-1"
+            <span>Media & Files Gallery (Photos, Videos & Docs)</span>
+            <span className="px-1.5 py-0.5 rounded-md bg-sky-500/20 text-[10px] text-sky-300">OPEN</span>
+          </button>
+          <button
+            onClick={() => handleNavClick('home', '#vault')}
+            className="block w-full text-left text-slate-300 hover:text-sky-400 py-1"
           >
             Object Vault
-          </a>
-          <a
-            href="#features"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-slate-300 hover:text-sky-400 py-1"
+          </button>
+          <button
+            onClick={() => handleNavClick('home', '#features')}
+            className="block w-full text-left text-slate-300 hover:text-sky-400 py-1"
           >
             Architecture
-          </a>
+          </button>
 
           <div className="pt-2 border-t border-slate-800">
             <button
@@ -179,3 +223,5 @@ export const Navbar: React.FC = () => {
     </header>
   );
 };
+
+export default Navbar;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useVault } from '../context/VaultContext';
 import { ShieldedFile } from '../types';
 import { getFileBlob } from '../services/vaultIndexedDB';
@@ -6,6 +6,11 @@ import {
   Image as ImageIcon,
   Film,
   Music,
+  FileText,
+  FileCode,
+  Archive,
+  FileSpreadsheet,
+  FileCheck,
   Eye,
   Download,
   Trash2,
@@ -18,12 +23,16 @@ import {
   Maximize2,
   UploadCloud,
   CheckCircle2,
-  FileText,
   Search,
-  Filter
+  ArrowLeft,
+  Filter,
+  Loader2,
+  Plus,
+  RefreshCw,
+  FolderOpen
 } from 'lucide-react';
 
-interface MediaThumbnailProps {
+interface MediaCardProps {
   file: ShieldedFile;
   category: 'image' | 'video' | 'audio' | 'doc';
   onClick: () => void;
@@ -31,7 +40,7 @@ interface MediaThumbnailProps {
   onDelete: () => void;
 }
 
-const MediaCard: React.FC<MediaThumbnailProps> = ({
+const MediaCard: React.FC<MediaCardProps> = ({
   file,
   category,
   onClick,
@@ -41,6 +50,8 @@ const MediaCard: React.FC<MediaThumbnailProps> = ({
   const [blobUrl, setBlobUrl] = useState<string | null>(null);
   const isShredded = file.status === 'shredded';
   const sizeMB = (file.sizeBytes / (1024 * 1024)).toFixed(2);
+  const ext = file.name.split('.').pop()?.toUpperCase() || 'FILE';
+
   const formattedDate = new Date(file.uploadedAt).toLocaleDateString(undefined, {
     month: 'short',
     day: 'numeric',
@@ -71,12 +82,27 @@ const MediaCard: React.FC<MediaThumbnailProps> = ({
     };
   }, [file.id]);
 
+  const renderDocIcon = () => {
+    const lower = file.name.toLowerCase();
+    if (lower.endsWith('.pdf')) return <FileText className="w-10 h-10 text-rose-400" />;
+    if (lower.endsWith('.zip') || lower.endsWith('.rar') || lower.endsWith('.tar') || lower.endsWith('.7z')) {
+      return <Archive className="w-10 h-10 text-amber-400" />;
+    }
+    if (lower.endsWith('.csv') || lower.endsWith('.xlsx') || lower.endsWith('.xls')) {
+      return <FileSpreadsheet className="w-10 h-10 text-emerald-400" />;
+    }
+    if (lower.endsWith('.json') || lower.endsWith('.js') || lower.endsWith('.ts') || lower.endsWith('.py') || lower.endsWith('.html') || lower.endsWith('.css') || lower.endsWith('.md')) {
+      return <FileCode className="w-10 h-10 text-teal-400" />;
+    }
+    return <FileCheck className="w-10 h-10 text-sky-400" />;
+  };
+
   return (
     <div
       onClick={onClick}
       className="group relative bg-[#0B1120] hover:bg-[#0E1629] rounded-2xl border border-slate-800/90 hover:border-sky-500/60 transition-all duration-300 shadow-lg hover:shadow-[0_0_25px_rgba(56,189,248,0.2)] overflow-hidden flex flex-col cursor-pointer transform hover:-translate-y-1"
     >
-      {/* Media Box Header / Thumbnail Window */}
+      {/* Thumbnail Window / Card Header */}
       <div className="relative w-full h-40 sm:h-48 bg-[#050811] flex items-center justify-center overflow-hidden border-b border-slate-800/80">
         
         {category === 'image' ? (
@@ -88,7 +114,7 @@ const MediaCard: React.FC<MediaThumbnailProps> = ({
             />
           ) : (
             <div className="text-center p-4">
-              <ImageIcon className="w-10 h-10 text-sky-400 mx-auto opacity-70 group-hover:scale-110 transition-transform" />
+              <ImageIcon className="w-10 h-10 text-sky-400 mx-auto opacity-75 group-hover:scale-110 transition-transform" />
               <span className="text-[10px] font-mono text-slate-400 mt-1 block">Photo Shard</span>
             </div>
           )
@@ -110,7 +136,7 @@ const MediaCard: React.FC<MediaThumbnailProps> = ({
             </div>
           ) : (
             <div className="text-center p-4">
-              <Film className="w-10 h-10 text-violet-400 mx-auto opacity-70 group-hover:scale-110 transition-transform" />
+              <Film className="w-10 h-10 text-violet-400 mx-auto opacity-75 group-hover:scale-110 transition-transform" />
               <span className="text-[10px] font-mono text-slate-400 mt-1 block">Video Shard</span>
             </div>
           )
@@ -122,16 +148,20 @@ const MediaCard: React.FC<MediaThumbnailProps> = ({
             <span className="text-[11px] font-mono text-emerald-300 block font-semibold">Audio Shard</span>
           </div>
         ) : (
-          <div className="text-center p-4">
-            <FileText className="w-10 h-10 text-amber-400 mx-auto opacity-70" />
-            <span className="text-[10px] font-mono text-slate-400 mt-1 block">Document</span>
+          <div className="text-center p-4 space-y-2">
+            <div className="p-3 rounded-2xl bg-[#0E1424] border border-slate-800 group-hover:border-sky-500/40 transition-colors inline-block">
+              {renderDocIcon()}
+            </div>
+            <span className="text-[10px] font-mono text-slate-400 block uppercase font-bold">
+              {ext} FILE
+            </span>
           </div>
         )}
 
-        {/* Top Type Badge Overlay */}
+        {/* Top Left Format Badge */}
         <div className="absolute top-2.5 left-2.5 flex items-center space-x-1.5">
           <span className="px-2 py-0.5 rounded-md bg-[#080D1A]/90 border border-slate-700/80 text-[10px] font-mono font-bold uppercase text-sky-300 shadow-md backdrop-blur-md">
-            {category === 'image' ? 'PHOTO' : category === 'video' ? 'VIDEO' : category === 'audio' ? 'AUDIO' : 'DOC'}
+            {ext}
           </span>
           {isShredded && (
             <span className="px-2 py-0.5 rounded-md bg-rose-950/90 border border-rose-500/40 text-[10px] font-mono text-rose-300">
@@ -147,8 +177,8 @@ const MediaCard: React.FC<MediaThumbnailProps> = ({
           </span>
         </div>
 
-        {/* Hover Quick Action Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-end justify-between p-3">
+        {/* Hover Quick Actions */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-end justify-between p-3">
           <span className="text-[11px] font-mono text-sky-300 flex items-center gap-1 font-bold">
             <Maximize2 className="w-3.5 h-3.5" />
             <span>Click to Enlarge</span>
@@ -158,7 +188,7 @@ const MediaCard: React.FC<MediaThumbnailProps> = ({
             {!isShredded && (
               <button
                 onClick={onSave}
-                title="Decrypt & Save to device"
+                title="Decrypt & Download"
                 className="p-1.5 rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-950 transition-colors shadow-md"
               >
                 <Download className="w-3.5 h-3.5" />
@@ -175,7 +205,7 @@ const MediaCard: React.FC<MediaThumbnailProps> = ({
         </div>
       </div>
 
-      {/* Card Body Information */}
+      {/* Card Info */}
       <div className="p-3.5 flex-1 flex flex-col justify-between space-y-2.5">
         <div>
           {/* File Name */}
@@ -209,7 +239,7 @@ const MediaCard: React.FC<MediaThumbnailProps> = ({
             <span>AES-256-GCM</span>
           </div>
 
-          <span className="text-sky-400 group-hover:underline">View ↗</span>
+          <span className="text-sky-400 group-hover:underline">Open ↗</span>
         </div>
       </div>
     </div>
@@ -217,9 +247,25 @@ const MediaCard: React.FC<MediaThumbnailProps> = ({
 };
 
 export const MediaGallery: React.FC = () => {
-  const { files, setActivePreviewFile, decryptAndDownloadFile, deleteFilePermanently } = useVault();
-  const [activeCategory, setActiveCategory] = useState<'all' | 'photos' | 'videos' | 'audio'>('all');
+  const {
+    files,
+    setActivePreviewFile,
+    decryptAndDownloadFile,
+    deleteFilePermanently,
+    uploadAndEncryptFile,
+    setActiveView,
+    session,
+  } = useVault();
+
+  const [activeCategory, setActiveCategory] = useState<'all' | 'photos' | 'videos' | 'audio' | 'files'>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadFileName, setUploadFileName] = useState('');
+  const [uploadFileSizeMB, setUploadFileSizeMB] = useState(0);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadStage, setUploadStage] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const getMediaCategory = (f: ShieldedFile): 'image' | 'video' | 'audio' | 'doc' => {
     const name = f.name.toLowerCase();
@@ -230,10 +276,49 @@ export const MediaGallery: React.FC = () => {
     return 'doc';
   };
 
+  const handleFileDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      await processFiles(e.dataTransfer.files);
+    }
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      await processFiles(e.target.files);
+    }
+  };
+
+  const processFiles = async (fileList: FileList) => {
+    setIsUploading(true);
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList[i];
+      const sizeMB = parseFloat((file.size / (1024 * 1024)).toFixed(2)) || 0.1;
+      setUploadFileName(file.name);
+      setUploadFileSizeMB(sizeMB);
+      setUploadProgress(2);
+      setUploadStage('Encrypting and shielding file in vault...');
+
+      await uploadAndEncryptFile(file, (percent, stage) => {
+        setUploadProgress(percent);
+        setUploadStage(stage);
+      });
+    }
+
+    setTimeout(() => {
+      setIsUploading(false);
+      setUploadProgress(0);
+      setUploadFileName('');
+      setUploadStage('');
+    }, 700);
+  };
+
   const activeFiles = files.filter(f => f.status === 'shielded');
   const photoFiles = activeFiles.filter(f => getMediaCategory(f) === 'image');
   const videoFiles = activeFiles.filter(f => getMediaCategory(f) === 'video');
   const audioFiles = activeFiles.filter(f => getMediaCategory(f) === 'audio');
+  const docFiles = activeFiles.filter(f => getMediaCategory(f) === 'doc');
 
   const filteredMedia = files.filter((f) => {
     const matchesSearch = f.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -243,47 +328,108 @@ export const MediaGallery: React.FC = () => {
     if (activeCategory === 'photos') return cat === 'image';
     if (activeCategory === 'videos') return cat === 'video';
     if (activeCategory === 'audio') return cat === 'audio';
+    if (activeCategory === 'files') return cat === 'doc';
     return true;
   });
 
   return (
-    <section id="gallery" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto scroll-mt-20">
+    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8 animate-fade-in">
       
-      {/* Header */}
-      <div className="text-center max-w-3xl mx-auto mb-10">
-        <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-[#0E1424] border border-sky-500/30 text-sky-300 text-xs font-mono mb-3 shadow-[0_0_15px_rgba(56,189,248,0.2)]">
-          <ImageIcon className="w-3.5 h-3.5 text-sky-400" />
-          <span>DECENTRALIZED SHIELDED MEDIA GALLERY</span>
+      {/* Top Header with Back Button */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+        <div className="flex items-center space-x-3">
+          <button
+            onClick={() => setActiveView('home')}
+            className="p-2.5 rounded-xl bg-[#0E1424] hover:bg-[#141D30] border border-slate-700 hover:border-sky-500 text-sky-400 hover:text-white transition-all flex items-center gap-2 text-xs font-mono font-bold shadow-md"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to Dashboard</span>
+          </button>
+
+          <div>
+            <h1 className="text-xl sm:text-2xl font-display font-bold text-white tracking-tight flex items-center gap-2">
+              <span>Media & Files Vault</span>
+              <span className="px-2 py-0.5 rounded-full bg-sky-950/80 border border-sky-500/40 text-sky-300 font-mono text-xs font-normal">
+                {files.length} Objects
+              </span>
+            </h1>
+            <span className="text-xs font-mono text-slate-400">
+              Personal Shielded Storage • Partition {session.shieldedAddress.slice(0, 14)}...
+            </span>
+          </div>
         </div>
 
-        <h2 className="text-3xl sm:text-4xl font-display font-bold text-white tracking-tight">
-          Photos & Videos Vault
-        </h2>
-        <p className="mt-2 text-slate-400 text-sm">
-          Browse, stream, and inspect your uploaded media in high-definition. Click any box to enlarge, play, or save locally.
-        </p>
-
-        {/* Media Counts Pills */}
-        <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs font-mono">
-          <div className="px-3 py-1 rounded-xl bg-[#0E1424] border border-slate-800 flex items-center space-x-1.5 text-slate-300">
-            <ImageIcon className="w-3.5 h-3.5 text-sky-400" />
-            <span>Photos: <b className="text-white">{photoFiles.length}</b></span>
-          </div>
-
-          <div className="px-3 py-1 rounded-xl bg-[#0E1424] border border-slate-800 flex items-center space-x-1.5 text-slate-300">
-            <Film className="w-3.5 h-3.5 text-violet-400" />
-            <span>Videos: <b className="text-white">{videoFiles.length}</b></span>
-          </div>
-
-          <div className="px-3 py-1 rounded-xl bg-[#0E1424] border border-slate-800 flex items-center space-x-1.5 text-slate-300">
-            <Music className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Audio: <b className="text-white">{audioFiles.length}</b></span>
-          </div>
+        {/* Action Button: Direct Upload */}
+        <div className="flex items-center space-x-2 w-full sm:w-auto">
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="w-full sm:w-auto px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-mono font-bold text-xs transition-all shadow-[0_0_20px_rgba(56,189,248,0.3)] flex items-center justify-center gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Upload Photos / Files</span>
+          </button>
         </div>
       </div>
 
+      {/* Hidden File Input */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileSelect}
+        multiple
+        className="hidden"
+      />
+
+      {/* Live Upload Progress Bar if Uploading */}
+      {isUploading && (
+        <div className="cloud-card rounded-2xl p-6 border border-sky-500/50 bg-[#080D1A] shadow-[0_0_30px_rgba(56,189,248,0.25)] space-y-3">
+          <div className="flex items-center justify-between text-xs font-mono">
+            <span className="font-bold text-white truncate max-w-sm">
+              Encrypting & Uploading: {uploadFileName} ({uploadFileSizeMB} MB)
+            </span>
+            <span className="text-sky-300 font-extrabold">{uploadProgress}%</span>
+          </div>
+          <div className="h-2.5 w-full bg-[#0E1424] rounded-full overflow-hidden border border-slate-700/80">
+            <div
+              style={{ width: `${uploadProgress}%` }}
+              className="h-full bg-gradient-to-r from-sky-400 to-emerald-400 rounded-full transition-all duration-150 shadow-[0_0_15px_rgba(56,189,248,0.6)]"
+            />
+          </div>
+          <div className="flex items-center space-x-2 text-[11px] font-mono text-sky-300">
+            <Loader2 className="w-3.5 h-3.5 animate-spin text-sky-400" />
+            <span>{uploadStage}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Drag & Drop Quick Zone */}
+      <div
+        onDragOver={(e) => {
+          e.preventDefault();
+          setIsDragging(true);
+        }}
+        onDragLeave={() => setIsDragging(false)}
+        onDrop={handleFileDrop}
+        onClick={() => fileInputRef.current?.click()}
+        className={`rounded-2xl p-6 sm:p-7 border-2 border-dashed text-center cursor-pointer transition-all ${
+          isDragging
+            ? 'border-sky-400 bg-sky-950/30'
+            : 'border-slate-800 hover:border-sky-500/50 bg-[#080D1A]/80'
+        }`}
+      >
+        <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center mx-auto mb-2 text-sky-400">
+          <UploadCloud className="w-5 h-5" />
+        </div>
+        <h3 className="text-xs sm:text-sm font-semibold text-white font-mono">
+          Drag & drop any Photo, Video, PDF, DOC, or Code file here
+        </h3>
+        <p className="text-[11px] text-slate-400 mt-0.5 font-sans">
+          All formats (JPG, PNG, MP4, PDF, DOCX, ZIP, TXT) are envelope-encrypted with AES-256-GCM.
+        </p>
+      </div>
+
       {/* Gallery Filter & Search Control Bar */}
-      <div className="cloud-card rounded-2xl border border-slate-700/80 bg-[#080D1A]/95 p-4 sm:p-5 shadow-2xl backdrop-blur-xl mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="cloud-card rounded-2xl border border-slate-700/80 bg-[#080D1A]/95 p-4 sm:p-5 shadow-2xl backdrop-blur-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         
         {/* Category Tabs */}
         <div className="flex flex-wrap items-center bg-[#0E1424] p-1 rounded-xl border border-slate-800 text-xs font-mono">
@@ -296,7 +442,7 @@ export const MediaGallery: React.FC = () => {
             }`}
           >
             <Sparkles className="w-3.5 h-3.5" />
-            <span>All Media ({activeFiles.length})</span>
+            <span>All Items ({activeFiles.length})</span>
           </button>
 
           <button
@@ -334,6 +480,18 @@ export const MediaGallery: React.FC = () => {
             <Music className="w-3.5 h-3.5 text-emerald-400" />
             <span>Audio ({audioFiles.length})</span>
           </button>
+
+          <button
+            onClick={() => setActiveCategory('files')}
+            className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
+              activeCategory === 'files'
+                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold'
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            <FileText className="w-3.5 h-3.5 text-amber-400" />
+            <span>Files & Docs ({docFiles.length})</span>
+          </button>
         </div>
 
         {/* Search Media Box */}
@@ -341,7 +499,7 @@ export const MediaGallery: React.FC = () => {
           <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 transform -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search media by name..."
+            placeholder="Search by filename..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-[#0E1424] border border-slate-800 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-sky-500/60 font-mono"
@@ -349,7 +507,7 @@ export const MediaGallery: React.FC = () => {
         </div>
       </div>
 
-      {/* Grid of Small Media Boxes */}
+      {/* Grid of Small Media & File Boxes */}
       {filteredMedia.length > 0 ? (
         <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
           {filteredMedia.map((file) => (
@@ -366,30 +524,32 @@ export const MediaGallery: React.FC = () => {
       ) : (
         <div className="text-center py-16 px-4 bg-[#080D1A]/80 rounded-2xl border border-slate-800/80 max-w-lg mx-auto space-y-4">
           <div className="w-14 h-14 rounded-2xl bg-slate-800/80 border border-slate-700 flex items-center justify-center mx-auto text-slate-400">
-            <ImageIcon className="w-7 h-7" />
+            <FolderOpen className="w-7 h-7" />
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold text-slate-200 font-mono">No Media Found</h4>
+            <h4 className="text-sm font-semibold text-slate-200 font-mono">No Items in this Category</h4>
             <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto font-sans">
               {activeCategory === 'photos'
-                ? 'No photos uploaded yet. Upload .jpg, .png or .webp images to preview them here!'
+                ? 'No photos uploaded yet. Upload .jpg, .png or .webp files.'
                 : activeCategory === 'videos'
-                ? 'No videos uploaded yet. Upload .mp4 or .webm files to stream them here!'
-                : 'Upload photos, videos, or audio to your shielded vault to see them in this gallery.'}
+                ? 'No videos uploaded yet. Upload .mp4 or .webm files.'
+                : activeCategory === 'files'
+                ? 'No documents uploaded yet. Upload .pdf, .docx, .zip, or code files.'
+                : 'Upload any file above to preview it in this vault.'}
             </p>
           </div>
 
-          <a
-            href="#overview"
+          <button
+            onClick={() => fileInputRef.current?.click()}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold font-mono text-xs transition-all shadow-[0_0_15px_rgba(56,189,248,0.3)]"
           >
             <UploadCloud className="w-4 h-4" />
-            <span>Upload Media Now</span>
-          </a>
+            <span>Upload First File</span>
+          </button>
         </div>
       )}
 
-    </section>
+    </div>
   );
 };

@@ -46,51 +46,64 @@ const GlobalFileViewer: React.FC = () => {
   );
 };
 
+const AppContent: React.FC = () => {
+  const { activeView } = useVault();
+
+  return (
+    <div className="min-h-screen bg-[#030712] text-slate-100 relative selection:bg-sky-500 selection:text-black">
+      {/* Futuristic High-Visibility Cloud Cursor */}
+      <CustomCursor />
+
+      {/* Top Live Midnight Network Status Marquee */}
+      <TopMarquee />
+
+      {/* Navigation Bar with User Profile, Web3 Wallet & Auth Status */}
+      <Navbar />
+
+      {/* Conditional Page Views: Dedicated Media & Files Vault Page VS. Home Landing */}
+      <main className="space-y-6">
+        {activeView === 'gallery' ? (
+          <MediaGallery />
+        ) : (
+          <>
+            <HeroSection />
+            <StorageVisualizer />
+            <ShieldedFileManager />
+            <FeatureGrid />
+          </>
+        )}
+      </main>
+
+      {/* Cloud Infrastructure Footer */}
+      <Footer />
+
+      {/* Real-time ZK Proof Synthesizer Modal */}
+      <ZKProofModal />
+
+      {/* User Account & Authentication Modal */}
+      <AuthModal />
+
+      {/* Web3 Multi-Wallet Connect Modal (Midnight Lace / MetaMask) */}
+      <WalletConnectModal />
+
+      {/* Storage Quota Upgrade & Multi-Token Pricing Modal (50GB - 500GB) */}
+      <StoragePricingModal />
+
+      {/* Telegram Private Channel Storage Settings Modal */}
+      <TelegramSettingsModal />
+
+      {/* Cyberpunk Media Lightbox & File Viewer Modal for Photos/Videos/Docs */}
+      <GlobalFileViewer />
+    </div>
+  );
+};
+
 export const App: React.FC = () => {
   return (
     <AuthProvider>
       <VaultProvider>
         <WalletProvider>
-          <div className="min-h-screen bg-[#030712] text-slate-100 relative selection:bg-sky-500 selection:text-black">
-            {/* Futuristic High-Visibility Cloud Cursor */}
-            <CustomCursor />
-
-            {/* Top Live Midnight Network Status Marquee */}
-            <TopMarquee />
-
-            {/* Navigation Bar with User Profile, Web3 Wallet & Auth Status */}
-            <Navbar />
-
-            {/* Main Core Cloud Storage Sections */}
-            <main className="space-y-6">
-              <HeroSection />
-              <StorageVisualizer />
-              <MediaGallery />
-              <ShieldedFileManager />
-              <FeatureGrid />
-            </main>
-
-            {/* Cloud Infrastructure Footer */}
-            <Footer />
-
-            {/* Real-time ZK Proof Synthesizer Modal */}
-            <ZKProofModal />
-
-            {/* User Account & Authentication Modal */}
-            <AuthModal />
-
-            {/* Web3 Multi-Wallet Connect Modal (Midnight Lace / MetaMask) */}
-            <WalletConnectModal />
-
-            {/* Storage Quota Upgrade & Multi-Token Pricing Modal (50GB - 500GB) */}
-            <StoragePricingModal />
-
-            {/* Telegram Private Channel Storage Settings Modal */}
-            <TelegramSettingsModal />
-
-            {/* Cyberpunk Media Lightbox & File Viewer Modal for Photos/Videos/Docs */}
-            <GlobalFileViewer />
-          </div>
+          <AppContent />
         </WalletProvider>
       </VaultProvider>
     </AuthProvider>

@@ -33,6 +33,8 @@ interface VaultContextType {
   setProofModalOpen: (open: boolean) => void;
   activePreviewFile: ShieldedFile | null;
   setActivePreviewFile: (file: ShieldedFile | null) => void;
+  activeView: 'home' | 'gallery';
+  setActiveView: (view: 'home' | 'gallery') => void;
   telegramConfig: TelegramConfig;
   setTelegramConfig: (config: TelegramConfig) => void;
   isTelegramModalOpen: boolean;
@@ -100,6 +102,38 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [telegramConfig, setTelegramConfigState] = useState<TelegramConfig>(getStoredTelegramConfig);
   const [isTelegramModalOpen, setIsTelegramModalOpen] = useState(false);
   const [activePreviewFile, setActivePreviewFile] = useState<ShieldedFile | null>(null);
+  const [activeView, setActiveViewState] = useState<'home' | 'gallery'>(() => {
+    if (typeof window !== 'undefined' && window.location.hash.toLowerCase().includes('gallery')) {
+      return 'gallery';
+    }
+    return 'home';
+  });
+
+  const setActiveView = useCallback((view: 'home' | 'gallery') => {
+    setActiveViewState(view);
+    if (typeof window !== 'undefined') {
+      if (view === 'gallery') {
+        window.location.hash = 'gallery';
+      } else {
+        if (window.location.hash.includes('gallery')) {
+          history.pushState('', document.title, window.location.pathname + window.location.search);
+        }
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleHash = () => {
+      if (window.location.hash.toLowerCase().includes('gallery')) {
+        setActiveViewState('gallery');
+      } else {
+        setActiveViewState('home');
+      }
+    };
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
 
   const setTelegramConfig = useCallback((config: TelegramConfig) => {
     setTelegramConfigState(config);
@@ -492,6 +526,8 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setProofModalOpen,
         activePreviewFile,
         setActivePreviewFile,
+        activeView,
+        setActiveView,
         telegramConfig,
         setTelegramConfig,
         isTelegramModalOpen,
