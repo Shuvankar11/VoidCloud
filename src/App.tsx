@@ -7,6 +7,7 @@ import { TopMarquee } from './components/TopMarquee';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { StorageVisualizer } from './components/StorageVisualizer';
+import { MediaGallery } from './components/MediaGallery';
 import { ShieldedFileManager } from './components/ShieldedFileManager';
 import { FeatureGrid } from './components/FeatureGrid';
 import { Footer } from './components/Footer';
@@ -64,6 +65,7 @@ export const App: React.FC = () => {
             <main className="space-y-6">
               <HeroSection />
               <StorageVisualizer />
+              <MediaGallery />
               <ShieldedFileManager />
               <FeatureGrid />
             </main>

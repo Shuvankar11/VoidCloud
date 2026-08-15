@@ -227,8 +227,8 @@ export const InteractiveCloudDriveHero: React.FC = () => {
         <div className="mt-4 pt-3 border-t border-slate-800/80">
           <div className="flex items-center justify-between text-xs font-mono text-slate-400 mb-2">
             <span>Recent Vault Objects ({activeFiles.length})</span>
-            <a href="#vault" className="text-sky-400 hover:text-sky-300 flex items-center gap-0.5 text-[11px]">
-              <span>View All</span>
+            <a href="#gallery" className="text-sky-400 hover:text-sky-300 flex items-center gap-0.5 text-[11px]">
+              <span>Media Gallery</span>
               <ArrowUpRight className="w-3 h-3" />
             </a>
           </div>

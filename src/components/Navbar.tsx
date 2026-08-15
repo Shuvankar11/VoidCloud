@@ -37,12 +37,18 @@ export const Navbar: React.FC = () => {
         </div>
 
         {/* Center: Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-5 xl:gap-7 text-xs sm:text-sm font-medium text-slate-300 flex-shrink-0">
+        <nav className="hidden lg:flex items-center gap-4 xl:gap-6 text-xs sm:text-sm font-medium text-slate-300 flex-shrink-0">
           <a href="#overview" className="hover:text-sky-400 transition-colors whitespace-nowrap">Overview</a>
           <a href="#storage" className="hover:text-sky-400 transition-colors flex items-center gap-1.5 whitespace-nowrap">
             <span>Storage Quota</span>
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-sky-950/80 border border-sky-500/40 text-sky-300 font-mono">
               {session.quotaGB}GB
+            </span>
+          </a>
+          <a href="#gallery" className="hover:text-sky-400 text-sky-300 transition-colors flex items-center gap-1 whitespace-nowrap">
+            <span>Media Gallery</span>
+            <span className="px-1.5 py-0.2 rounded-md bg-gradient-to-r from-sky-500/30 to-violet-500/30 border border-sky-400/40 text-[9px] font-mono text-sky-200">
+              NEW
             </span>
           </a>
           <a href="#vault" className="hover:text-sky-400 transition-colors whitespace-nowrap">Object Vault</a>
@@ -133,6 +139,14 @@ export const Navbar: React.FC = () => {
             className="block text-slate-300 hover:text-sky-400 py-1"
           >
             Storage Quota ({session.quotaGB} GB)
+          </a>
+          <a
+            href="#gallery"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-sky-300 hover:text-sky-400 py-1 font-semibold flex items-center justify-between"
+          >
+            <span>Media Gallery (Photos & Videos)</span>
+            <span className="px-1.5 py-0.5 rounded-md bg-sky-500/20 text-[10px] text-sky-300">NEW</span>
           </a>
           <a
             href="#vault"
