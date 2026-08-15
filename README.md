@@ -183,8 +183,8 @@ node cli/void.js shred <fileId>
 📝 TypeScript bindings written to: managed/voidcloud/index.ts
 🚀 Ready for Preprod deployment and proof generation.
 ```
-Screenshot anchor placeholder: 
-<img width="1919" height="1097" alt="{B12E360C-AA51-402E-9C56-B790FE651D04}" src="https://github.com/user-attachments/assets/928a0bcf-7a6a-4b11-9050-b0abf4b0ef08" />
+
+<img width="1919" height="1097" alt="Compact Compilation Terminal Verification" src="https://github.com/user-attachments/assets/928a0bcf-7a6a-4b11-9050-b0abf4b0ef08" />
 
 
 ### 📸 Midnight Preprod Deployment Output
@@ -212,9 +212,8 @@ Screenshot anchor placeholder:
 💾 Receipt Saved To   : deployed-contract.json
 ======================================================
 ```
-Screenshot anchor placeholder: 
 
-<img width="1190" height="205" alt="{297688A1-9956-45D4-8004-EE0CECB1A12F}" src="https://github.com/user-attachments/assets/fd620f1c-0c23-4ed5-8f70-df5f38ef77dc" />
+<img width="1190" height="205" alt="Midnight Preprod Deployment Verification" src="https://github.com/user-attachments/assets/fd620f1c-0c23-4ed5-8f70-df5f38ef77dc" />
 
 
 ---
