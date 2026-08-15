@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 
 export const InteractiveCloudDriveHero: React.FC = () => {
-  const { session, files, claimBonusWithZKProof, isGeneratingProof, uploadAndEncryptFile } = useVault();
+  const { session, files, claimBonusWithZKProof, isGeneratingProof, uploadAndEncryptFile, setActivePreviewFile } = useVault();
   const { user, setIsAuthModalOpen } = useAuth();
   const { setIsPricingModalOpen } = useWeb3Wallet();
   
@@ -238,16 +238,18 @@ export const InteractiveCloudDriveHero: React.FC = () => {
               {activeFiles.slice(0, 2).map((file) => (
                 <div
                   key={file.id}
-                  className="flex items-center justify-between p-2.5 rounded-xl bg-[#0E1424] border border-slate-800 text-xs font-mono"
+                  onClick={() => setActivePreviewFile(file)}
+                  className="flex items-center justify-between p-2.5 rounded-xl bg-[#0E1424] hover:bg-[#121B32] border border-slate-800 hover:border-sky-500/40 text-xs font-mono cursor-pointer transition-all group"
+                  title="Click to preview file"
                 >
                   <div className="flex items-center space-x-2.5 truncate max-w-[220px] sm:max-w-xs">
-                    <FileText className="w-3.5 h-3.5 text-sky-400 flex-shrink-0" />
-                    <span className="text-slate-200 truncate">{file.name}</span>
+                    <FileText className="w-3.5 h-3.5 text-sky-400 flex-shrink-0 group-hover:text-sky-300" />
+                    <span className="text-slate-200 group-hover:text-white truncate">{file.name}</span>
                   </div>
                   <div className="flex items-center space-x-2 flex-shrink-0 text-[11px]">
                     <span className="text-slate-400">{(file.sizeBytes / (1024 * 1024)).toFixed(2)} MB</span>
-                    <span className="px-2 py-0.5 rounded-md bg-emerald-950/80 border border-emerald-500/30 text-emerald-400">
-                      SHIELDED
+                    <span className="px-2 py-0.5 rounded-md bg-emerald-950/80 border border-emerald-500/30 text-emerald-400 group-hover:border-sky-400 group-hover:text-sky-300 transition-colors">
+                      VIEW ↗
                     </span>
                   </div>
                 </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { AuthProvider } from './context/AuthContext';
-import { VaultProvider } from './context/VaultContext';
+import { VaultProvider, useVault } from './context/VaultContext';
 import { WalletProvider } from './context/WalletContext';
 import { CustomCursor } from './components/CustomCursor';
 import { TopMarquee } from './components/TopMarquee';
@@ -15,6 +15,35 @@ import { AuthModal } from './components/AuthModal';
 import { WalletConnectModal } from './components/WalletConnectModal';
 import { StoragePricingModal } from './components/StoragePricingModal';
 import { TelegramSettingsModal } from './components/TelegramSettingsModal';
+import { FileViewerModal } from './components/FileViewerModal';
+
+const GlobalFileViewer: React.FC = () => {
+  const { activePreviewFile, setActivePreviewFile, files } = useVault();
+  if (!activePreviewFile) return null;
+
+  const activeFiles = files.filter((f) => f.status === 'shielded');
+  const currentIndex = activeFiles.findIndex((f) => f.id === activePreviewFile.id);
+  const hasNext = currentIndex >= 0 && currentIndex < activeFiles.length - 1;
+  const hasPrev = currentIndex > 0;
+
+  const handleNavigate = (direction: 'next' | 'prev') => {
+    if (direction === 'next' && hasNext) {
+      setActivePreviewFile(activeFiles[currentIndex + 1]);
+    } else if (direction === 'prev' && hasPrev) {
+      setActivePreviewFile(activeFiles[currentIndex - 1]);
+    }
+  };
+
+  return (
+    <FileViewerModal
+      file={activePreviewFile}
+      onClose={() => setActivePreviewFile(null)}
+      onNavigate={handleNavigate}
+      hasNext={hasNext}
+      hasPrev={hasPrev}
+    />
+  );
+};
 
 export const App: React.FC = () => {
   return (
@@ -56,6 +85,9 @@ export const App: React.FC = () => {
 
             {/* Telegram Private Channel Storage Settings Modal */}
             <TelegramSettingsModal />
+
+            {/* Cyberpunk Media Lightbox & File Viewer Modal for Photos/Videos/Docs */}
+            <GlobalFileViewer />
           </div>
         </WalletProvider>
       </VaultProvider>

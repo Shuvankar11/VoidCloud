@@ -7,6 +7,7 @@ export interface ShieldedFile {
   uploadedAt: string;
   status: 'shielded' | 'shredded';
   encryptionAlgo: string;
+  mimeType?: string;
   ownerId?: string;
   ownerEmail?: string;
   rawBlob?: Blob;

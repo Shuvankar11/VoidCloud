@@ -9,6 +9,12 @@ import {
   deleteFromTelegramChannel,
   DEFAULT_TELEGRAM_CONFIG,
 } from '../services/telegramStorage';
+import {
+  saveFileBlob,
+  getFileBlob,
+  deleteFileBlob,
+  clearAllFileBlobs,
+} from '../services/vaultIndexedDB';
 
 export type UploadProgressCallback = (
   percent: number,
@@ -25,6 +31,8 @@ interface VaultContextType {
   proofSteps: ZKProofStep[];
   proofModalOpen: boolean;
   setProofModalOpen: (open: boolean) => void;
+  activePreviewFile: ShieldedFile | null;
+  setActivePreviewFile: (file: ShieldedFile | null) => void;
   telegramConfig: TelegramConfig;
   setTelegramConfig: (config: TelegramConfig) => void;
   isTelegramModalOpen: boolean;
@@ -91,6 +99,7 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const [telegramConfig, setTelegramConfigState] = useState<TelegramConfig>(getStoredTelegramConfig);
   const [isTelegramModalOpen, setIsTelegramModalOpen] = useState(false);
+  const [activePreviewFile, setActivePreviewFile] = useState<ShieldedFile | null>(null);
 
   const setTelegramConfig = useCallback((config: TelegramConfig) => {
     setTelegramConfigState(config);
@@ -366,8 +375,14 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const keyHex = Array.from(new Uint8Array(rawKey)).map(b => b.toString(16).padStart(2, '0')).join('');
       const ivHex = Array.from(iv).map(b => b.toString(16).padStart(2, '0')).join('');
 
+      const fileId = 'void_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 4);
+      const mimeType = file.type || 'application/octet-stream';
+
+      // Save real file blob in browser IndexedDB for high-res photo/video viewing & real downloads
+      await saveFileBlob(fileId, file, mimeType);
+
       const newFile: ShieldedFile = {
-        id: 'void_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 4),
+        id: fileId,
         name: file.name,
         sizeBytes: file.size || encryptedBuffer.byteLength,
         encryptedCid,
@@ -375,6 +390,7 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         uploadedAt: new Date().toISOString(),
         status: 'shielded',
         encryptionAlgo: 'AES-256-GCM + ZK Commitment',
+        mimeType,
         rawKeyHex: keyHex,
         ivHex: ivHex,
         ownerId: activeUserId,
@@ -399,6 +415,7 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (fileToShred && fileToShred.telegramMessageId) {
       await deleteFromTelegramChannel(fileToShred.telegramMessageId, telegramConfig);
     }
+    await deleteFileBlob(fileId);
 
     setFiles((prev) =>
       prev.map((f) => {
@@ -421,6 +438,7 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (fileToDelete && fileToDelete.telegramMessageId) {
       await deleteFromTelegramChannel(fileToDelete.telegramMessageId, telegramConfig);
     }
+    await deleteFileBlob(fileId);
 
     setFiles((prev) => prev.filter(f => f.id !== fileId));
   }, [files, telegramConfig]);
@@ -433,17 +451,24 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
 
     try {
-      const blob = new Blob([`[VOIDCLOUD DECRYPTED CONTENT FOR ${file.name}]\nDecrypted with client witness at: ${new Date().toISOString()}\nStorage Origin: Telegram Private Storage Channel (${file.telegramFileId || 'Relay Shard'})`], {
-        type: 'text/plain;charset=utf-8',
-      });
-      const url = URL.createObjectURL(blob);
+      const cached = await getFileBlob(file.id);
+      let downloadBlob: Blob;
+      if (cached && cached.blob) {
+        downloadBlob = cached.blob;
+      } else {
+        downloadBlob = new Blob([`[VOIDCLOUD DECRYPTED CONTENT FOR ${file.name}]\nDecrypted with client witness at: ${new Date().toISOString()}\nStorage Origin: Telegram Private Storage Channel (${file.telegramFileId || 'Relay Shard'})`], {
+          type: file.mimeType || 'application/octet-stream',
+        });
+      }
+
+      const url = URL.createObjectURL(downloadBlob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `decrypted_${file.name.replace('.enc', '.txt')}`;
+      a.download = file.name;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
     } catch (err) {
       console.error('Decryption failed:', err);
     }
@@ -465,6 +490,8 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         proofSteps,
         proofModalOpen,
         setProofModalOpen,
+        activePreviewFile,
+        setActivePreviewFile,
         telegramConfig,
         setTelegramConfig,
         isTelegramModalOpen,
