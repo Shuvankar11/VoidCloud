@@ -2,7 +2,7 @@
   "contractName": "VoidCloud",
   "version": "1.0.0",
   "languageVersion": "0.20.4",
-  "compiledAt": "2026-08-15T11:59:03.713Z",
+  "compiledAt": "2026-08-15T18:44:24.032Z",
   "circuits": [
     {
       "name": "initializeUserStorage",
