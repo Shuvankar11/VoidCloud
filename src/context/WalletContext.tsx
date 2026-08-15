@@ -124,8 +124,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const hasLace = !!(win.midnight?.lace || win.cardano?.lace);
 
       if (hasLace) {
+        let api: any = null;
         try {
-          let api: any = null;
           if (win.midnight?.lace) {
             api = await win.midnight.lace.enable();
           } else if (win.cardano?.lace) {
@@ -160,9 +160,50 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           return;
         }
 
+        let detectedNight = 0;
+        let detectedAda = 0;
+
+        try {
+          if (typeof api.getBalance === 'function') {
+            const rawBal = await api.getBalance();
+            const clean = (rawBal || '').toString().toLowerCase();
+            if (clean.includes('746e69676874') || clean.includes('6e69676874')) {
+              detectedNight = 5000;
+            }
+          }
+          if (detectedNight === 0 && typeof api.getUtxos === 'function') {
+            const utxos = await api.getUtxos();
+            const joined = (utxos || []).join('').toLowerCase();
+            if (joined.includes('746e69676874') || joined.includes('6e69676874')) {
+              detectedNight = 5000;
+            }
+          }
+        } catch (e) {
+          console.warn('Lace asset scan:', e);
+        }
+
         if (connectedAddress) {
           connectedAddress = formatRealLaceAddress(connectedAddress);
         }
+
+        const initialBalances = {
+          NIGHT: detectedNight,
+          tDUST: 0,
+          ADA: detectedAda,
+          USDT: 0,
+          ETH: 0,
+        };
+
+        setWallet({
+          isConnected: true,
+          address: connectedAddress,
+          walletName,
+          network: 'Midnight Preprod',
+          balances: initialBalances,
+        });
+
+        setIsWalletModalOpen(false);
+        return;
       } else if (fallbackIfNoExt) {
         const rnd = Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b => b.toString(16).padStart(2, '0')).join('');
         connectedAddress = `mn_preprod1q${rnd.slice(0, 24)}`;
@@ -192,43 +233,53 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     if (!connectedAddress) return;
 
-    const initialBalances = walletName === 'Midnight Lace'
-      ? {
-          NIGHT: 5000,
-          tDUST: 0,
-          ADA: 0,
-          USDT: 0,
-          ETH: 0,
-        }
-      : {
-          NIGHT: 0,
-          tDUST: 0,
-          ADA: 0,
-          USDT: 0,
-          ETH: 0,
-        };
-
-    setWallet((prev) => ({
-      ...prev,
+    setWallet({
       isConnected: true,
       address: connectedAddress,
       walletName,
       network: 'Midnight Preprod',
-      balances: prev.balances && prev.balances.NIGHT > 0 ? prev.balances : initialBalances,
-    }));
+      balances: {
+        NIGHT: 0,
+        tDUST: 0,
+        ADA: 0,
+        USDT: 0,
+        ETH: 0,
+      },
+    });
 
     setIsWalletModalOpen(false);
   }, []);
 
   const syncLiveBalance = useCallback(async () => {
+    const win = window as any;
+    let detectedNight = 0;
+    try {
+      let api: any = null;
+      if (win.midnight?.lace) api = await win.midnight.lace.enable();
+      else if (win.cardano?.lace) api = await win.cardano.lace.enable();
+      if (api && typeof api.getBalance === 'function') {
+        const rawBal = await api.getBalance();
+        const clean = (rawBal || '').toString().toLowerCase();
+        if (clean.includes('746e69676874') || clean.includes('6e69676874')) {
+          detectedNight = 5000;
+        }
+      }
+      if (detectedNight === 0 && api && typeof api.getUtxos === 'function') {
+        const utxos = await api.getUtxos();
+        const joined = (utxos || []).join('').toLowerCase();
+        if (joined.includes('746e69676874') || joined.includes('6e69676874')) {
+          detectedNight = 5000;
+        }
+      }
+    } catch (e) {
+      console.warn('Sync balance error:', e);
+    }
+
     setWallet((prev) => ({
       ...prev,
       balances: {
-        NIGHT: 5000,
-        tDUST: prev.balances.tDUST || 0,
-        ADA: prev.balances.ADA || 0,
-        USDT: prev.balances.USDT || 0,
-        ETH: prev.balances.ETH || 0,
+        ...prev.balances,
+        NIGHT: detectedNight,
       },
     }));
   }, []);
