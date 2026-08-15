@@ -97,11 +97,16 @@ export const WalletConnectModal: React.FC = () => {
                   <span className="text-slate-400">Address:</span>
                   <button
                     onClick={copyAddress}
-                    className="text-slate-300 hover:text-sky-400 flex items-center gap-1 transition-colors"
+                    className="text-slate-300 hover:text-sky-400 flex items-center gap-1 transition-colors font-mono font-semibold"
+                    title="Click to copy full address"
                   >
-                    <span>{wallet.address?.slice(0, 10)}...{wallet.address?.slice(-8)}</span>
+                    <span>{wallet.address?.slice(0, 14)}...{wallet.address?.slice(-8)}</span>
                     {copied ? <CheckCircle2 className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
                   </button>
+                </div>
+                <div className="text-[10px] font-mono text-slate-500 pt-1 border-t border-slate-800/50 flex items-center justify-between">
+                  <span>Authorized by Lace Extension</span>
+                  <span className="text-emerald-400 font-semibold">Active Session</span>
                 </div>
               </div>
 
