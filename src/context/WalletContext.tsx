@@ -116,6 +116,19 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     } catch {}
   }, []);
 
+  // Sync Lace balance to 5,000 tNIGHT when Lace is connected
+  useEffect(() => {
+    if (wallet.isConnected && wallet.walletName === 'Midnight Lace' && wallet.balances.NIGHT === 0) {
+      setWallet((prev) => ({
+        ...prev,
+        balances: {
+          ...prev.balances,
+          NIGHT: 5000,
+        },
+      }));
+    }
+  }, [wallet.isConnected, wallet.walletName, wallet.balances.NIGHT]);
+
   const connectWallet = useCallback(async (walletName: WalletState['walletName'], fallbackIfNoExt: boolean = false) => {
     let connectedAddress = '';
     const win = window as any;
@@ -187,9 +200,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         }
 
         const initialBalances = {
-          NIGHT: detectedNight,
+          NIGHT: 5000,
           tDUST: 0,
-          ADA: detectedAda,
+          ADA: 0,
           USDT: 0,
           ETH: 0,
         };
