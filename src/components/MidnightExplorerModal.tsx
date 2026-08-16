@@ -129,6 +129,17 @@ export const MidnightExplorerModal: React.FC<MidnightExplorerModalProps> = ({
             </div>
 
             <div className="flex items-center space-x-2">
+              <a
+                href="https://preprod.midnightexplorer.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#080D1A] hover:bg-slate-800 border border-emerald-500/40 text-emerald-300 text-xs transition-colors"
+                title="View Official Midnight Network Preprod Explorer"
+              >
+                <span>Midnight Preprod Explorer</span>
+                <ExternalLink className="w-3.5 h-3.5 text-emerald-400" />
+              </a>
+
               <button
                 onClick={onClose}
                 className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"

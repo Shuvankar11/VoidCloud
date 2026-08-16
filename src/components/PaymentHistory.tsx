@@ -21,6 +21,7 @@ import {
   Coins,
   Shield,
   Database,
+  Trash2,
 } from 'lucide-react';
 
 export const PaymentHistory: React.FC = () => {
@@ -28,6 +29,7 @@ export const PaymentHistory: React.FC = () => {
   const {
     wallet,
     transactions,
+    clearTransactions,
     exportTransactionsCSV,
     exportTransactionsJSON,
     setIsPricingModalOpen,
@@ -198,6 +200,19 @@ export const PaymentHistory: React.FC = () => {
           >
             <Download className="w-3.5 h-3.5 text-sky-400" />
             <span>JSON</span>
+          </button>
+
+          <button
+            onClick={() => {
+              if (window.confirm('Clear all local transaction history records and reset ledger?')) {
+                clearTransactions();
+              }
+            }}
+            className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-[#080D1A] hover:bg-rose-950/40 border border-slate-800 hover:border-rose-500/40 text-slate-400 hover:text-rose-300 text-xs font-mono transition-colors"
+            title="Clear and reset local transaction records"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Reset History</span>
           </button>
 
           <button
