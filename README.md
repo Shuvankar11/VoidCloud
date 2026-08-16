@@ -179,7 +179,8 @@ $ node cli/void.js status
 ```
 
 > 📸 **Level 1 Screenshot (CLI & Contract Deployment)**:  
-> *(Attach Level 1 terminal verification or CLI output screenshot here)*
+> <img width="1920" height="1099" alt="{F4943162-5FE2-49C8-B11B-E4932AC5A8E9}" src="https://github.com/user-attachments/assets/7da01c8c-a384-479c-8301-e10d2129b513" />
+
 
 ---
 
