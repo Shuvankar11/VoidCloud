@@ -16,15 +16,16 @@
 
 ## 📑 Table of Contents
 1. [Executive Summary & Product Idea](#1-executive-summary--product-idea)
-2. [Level 2 - Waxing Crescent Submission Checklist](#2-level-2---waxing-crescent-submission-checklist)
-3. [Observable Privacy Behavior & Privacy Claim](#3-observable-privacy-behavior--privacy-claim)
-4. [Midnight Compact Smart Contract Specification](#4-midnight-compact-smart-contract-specification)
-5. [Lace Wallet Integration & DApp Connector Architecture](#5-lace-wallet-integration--dapp-connector-architecture)
-6. [Payment & Transaction History Ledger Engine](#6-payment--transaction-history-ledger-engine)
-7. [System Architecture & Cryptographic Workflow](#7-system-architecture--cryptographic-workflow)
-8. [Local Setup, Build & Testing Instructions](#8-local-setup-build--testing-instructions)
+2. [Local Setup, Build & Quickstart Instructions](#2-local-setup-build--quickstart-instructions)
+3. [Level 2 - Waxing Crescent Submission Checklist](#3-level-2---waxing-crescent-submission-checklist)
+4. [Observable Privacy Behavior & Privacy Claim](#4-observable-privacy-behavior--privacy-claim)
+5. [Midnight Compact Smart Contract Specification](#5-midnight-compact-smart-contract-specification)
+6. [Lace Wallet Integration & DApp Connector Architecture](#6-lace-wallet-integration--dapp-connector-architecture)
+7. [Payment & Transaction History Ledger Engine](#7-payment--transaction-history-ledger-engine)
+8. [System Architecture & Cryptographic Workflow](#8-system-architecture--cryptographic-workflow)
 9. [Automated Test Suite (13 Passing Vitest Tests)](#9-automated-test-suite)
-10. [Judge Demo Video Recording Guide](#10-judge-demo-video-recording-guide)
+10. [Antigravity CLI Usage Guide](#10-antigravity-cli-usage-guide)
+11. [Judge Demo Video Recording Guide & Contract Artifacts](#11-judge-demo-video-recording-guide)
 
 ---
 
@@ -60,7 +61,50 @@ flowchart TD
 
 ---
 
-## 2. Level 2 - Waxing Crescent Submission Checklist
+## 2. Local Setup, Build & Quickstart Instructions
+
+### Prerequisites
+- **Node.js**: `v18.0.0` or higher (`v20.x` / `v22.x` / `v24.x` recommended)
+- **npm**: `v9.0.0` or higher
+
+### Step 1: Clone Repository & Install Dependencies
+```bash
+git clone https://github.com/Shuvankar11/VoidCloude.git
+cd VoidCloude
+npm install
+```
+
+### Step 2: Configure Environment Variables
+```bash
+cp .env.example .env
+```
+
+### Step 3: Run Automated Test Suite (13 Passing Vitest Tests)
+```bash
+npm test
+```
+
+### Step 4: Compile Midnight Compact Smart Contract
+```bash
+npm run compact:compile
+```
+
+### Step 5: Build Production Distribution
+```bash
+npm run build
+```
+
+### Step 6: Start Local Development Server
+```bash
+npm run dev
+```
+Navigate to [http://localhost:5173](http://localhost:5173) in your browser.
+
+> 🌐 **Live Cloud Production URL**: [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/)
+
+---
+
+## 3. Level 2 - Waxing Crescent Submission Checklist
 
 | Level 2 Requirement | Status | Implementation Details & Proof |
 | :--- | :---: | :--- |
@@ -69,16 +113,16 @@ flowchart TD
 | **Deployed Preprod Contract** | ✅ PASS | Address: `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e` (Block `#849210`, verified in `deployed-contract.json`). |
 | **Lace Wallet Connect / Disconnect** | ✅ PASS | CIP-30 / Midnight DApp Connector in [`WalletContext.tsx`](src/context/WalletContext.tsx) with live balance sync & clean disconnect. |
 | **Circuit Called from Frontend** | ✅ PASS | Frontend invokes `claimTestnetBonus`, `initializeUserStorage`, and `verifyStorageQuotaCommitment` via [`CompactContractViewer.tsx`](src/components/CompactContractViewer.tsx) & [`VaultContext.tsx`](src/context/VaultContext.tsx). |
-| **Observable Privacy Behavior** | ✅ PASS | Interactive privacy inspector in UI + full mathematical proof documented in [Section 3](#3-observable-privacy-behavior--privacy-claim). |
+| **Observable Privacy Behavior** | ✅ PASS | Interactive privacy inspector in UI + full mathematical proof documented in [Section 4](#4-observable-privacy-behavior--privacy-claim). |
 | **Minimum 8 Meaningful Commits** | ✅ PASS | **40+ meaningful commits** on branch `main` (`git rev-list --count HEAD`). |
-| **README Documenting Privacy Claim** | ✅ PASS | Thoroughly documented in [Section 3](#3-observable-privacy-behavior--privacy-claim) and [Section 4](#4-midnight-compact-smart-contract-specification). |
+| **README Documenting Privacy Claim** | ✅ PASS | Thoroughly documented in [Section 4](#4-observable-privacy-behavior--privacy-claim) and [Section 5](#5-midnight-compact-smart-contract-specification). |
 
 ---
 
-## 3. Observable Privacy Behavior & Privacy Claim
+## 4. Observable Privacy Behavior & Privacy Claim
 
 ### 🛡️ The Core Privacy Claim
-> **"A user can prove to the Midnight Preprod smart contract that they are authorized to claim a 1-time +20 GB storage faucet bonus and initialize an encrypted vault, WITHOUT ever revealing their private cryptographic witness (`userSecret`), identity, or wallet private key to the blockchain or any third party."**
+> **"A user can prove to the Midnight Preprod smart contract that they are authorized to claim a 1-time +20 GB storage expansion and initialize an encrypted vault, WITHOUT ever revealing their private cryptographic witness (`userSecret`), identity, or wallet private key to the blockchain or any third party."**
 
 ### 🔍 How Observable Privacy Works (Proven Without Being Shown)
 
@@ -118,7 +162,7 @@ flowchart TD
 
 ---
 
-## 4. Midnight Compact Smart Contract Specification
+## 5. Midnight Compact Smart Contract Specification
 
 The smart contract is written under **Midnight Compact v0.20.4** specification (`contracts/voidcloud.compact`):
 
@@ -187,7 +231,7 @@ export circuit verifyStorageQuotaCommitment(
 
 ---
 
-## 5. Lace Wallet Integration & DApp Connector Architecture
+## 6. Lace Wallet Integration & DApp Connector Architecture
 
 VoidCloud integrates the **Midnight Lace Dual-Chain Wallet** using the **CIP-30 DApp Connector Standard**:
 
@@ -198,9 +242,9 @@ VoidCloud integrates the **Midnight Lace Dual-Chain Wallet** using the **CIP-30 
 
 ---
 
-## 6. Payment & Transaction History Ledger Engine
+## 7. Payment & Transaction History Ledger Engine
 
-VoidCloud provides a comprehensive **On-Chain Transaction & Payment History** view (`/ #history`):
+VoidCloud provides a comprehensive **On-Chain Transaction & Payment History** view (`/#history`):
 - **100% Real Transaction Tracking**: Zero dummy / fake records. Only logs real user actions.
 - **Cryptographic ZK Receipts**: Generates verifiable receipt certificates with block height, gas fee, nullifier, and 1-click print / JSON export.
 - **Search & Filters**: Real-time filtering by transaction status (`Success`, `Failed`, `Pending`), token (`NIGHT`, `ADA`, `USDT`, `ETH`), and transaction hash.
@@ -208,7 +252,7 @@ VoidCloud provides a comprehensive **On-Chain Transaction & Payment History** vi
 
 ---
 
-## 7. System Architecture & Cryptographic Workflow
+## 8. System Architecture & Cryptographic Workflow
 
 ```
 [User Browser]
@@ -217,51 +261,10 @@ VoidCloud provides a comprehensive **On-Chain Transaction & Payment History** vi
       │
       ├─► 2. Quota Check ──► ZK Quota Circuit (Halo2 Proof) ──► Smart Contract (0x9f8c...6d7e)
       │
-      ├─► 3. Faucet Bonus ─► Blinded Nullifier Derivation ──► On-Chain Nullifier Set Insertion
+      ├─► 3. Testnet Unlock ─► 10 tNIGHT Payment + Blinded Nullifier ──► On-Chain Set Insertion (+20GB)
       │
       └─► 4. Storage Upgrade ──► Multi-Token Payment (NIGHT/ADA) ──► Cryptographic ZK Receipt
 ```
-
----
-
-## 8. Local Setup, Build & Testing Instructions
-
-### Prerequisites
-- **Node.js**: v18.0.0 or higher
-- **npm**: v9.0.0 or higher
-
-### Step 1: Clone & Install Dependencies
-```bash
-git clone https://github.com/Shuvankar11/VoidCloude.git
-cd VoidCloude
-npm install
-```
-
-### Step 2: Configure Environment
-```bash
-cp .env.example .env
-```
-
-### Step 3: Run Vitest Test Suite (13 Passing Tests)
-```bash
-npm test
-```
-
-### Step 4: Compile Midnight Compact Smart Contract
-```bash
-npm run compact:compile
-```
-
-### Step 5: Build Production Bundle
-```bash
-npm run build
-```
-
-### Step 6: Start Local Development Server
-```bash
-npm run dev
-```
-Navigate to `http://localhost:5173`.
 
 ---
 
@@ -288,16 +291,40 @@ $ npm test
 
 ---
 
-## 10. Judge Demo Video Recording Guide
+## 10. Antigravity CLI Usage Guide
+
+```bash
+# Initialize shielded vault
+node cli/void.js init
+
+# Claim 1-time 20 GB Testnet Expansion via ZK nullifier
+node cli/void.js claim-bonus
+
+# View real-time shielded metrics
+node cli/void.js status
+
+# Client-side encrypt and upload file
+node cli/void.js upload <filePath>
+
+# List encrypted files in vault
+node cli/void.js list
+
+# Cryptographically shred file
+node cli/void.js shred <fileId>
+```
+
+---
+
+## 11. Judge Demo Video Recording Guide
 
 For the **60-90 Second Level 2 Submission Video**:
 
 1. **Part 1 (0:00 - 0:25) - Wallet Connect**:
    - Open [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/).
-   - Click **"Connect Wallet"** → Select **Midnight Lace**.
+   - Click **"Wallet"** → Select **Midnight Lace**.
    - Authorize connection and point out the connected address & `5,000 NIGHT` balance in the navbar.
 2. **Part 2 (0:25 - 0:50) - Circuit Call & Observable Privacy**:
-   - Scroll to **"Architecture & Circuits"** (or click **"Claim +20GB Faucet Bonus"**).
+   - Scroll to **"Architecture & Circuits"** (or click **"Unlock +20GB Shard (10 NIGHT)"**).
    - In the **Interactive Circuit Runner**, click **"Run claimTestnetBonus()"**.
    - Show the 4-step Halo2 proof pipeline: Private Witness extraction → Nullifier computation → Proof synthesis → Preprod contract confirmation.
    - Point out that storage expanded from **20 GB to 40 GB** while the private witness remained 100% shielded!
