@@ -119,6 +119,49 @@ Navigate to [http://localhost:5173](http://localhost:5173) in your browser.
 
 ## 4. 🏆 Hackathon Level Progression & Submission Archives
 
+### 🌑 Level 1 - New Moon Submission Archive (100% PASS)
+
+| Level 1 Requirement | Status | Implementation Details & Proof |
+| :--- | :---: | :--- |
+| **Compact Smart Contract Written** | ✅ PASS | Written in `contracts/voidcloud.compact` under Compact 0.20 specification. |
+| **Contract Compiled Successfully** | ✅ PASS | Compiled to ZK-IR & Halo2 circuit constraints (`npm run compact:compile`). |
+| **Contract Deployed to Midnight Preprod** | ✅ PASS | Address: `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e` (Genesis block `#849210`). |
+| **Command Line Interface (CLI) Implemented** | ✅ PASS | Standalone Node.js CLI tool in `cli/void.js` supporting vault init, file encryption, bonus claim, and status. |
+| **Minimum 5 Meaningful Commits** | ✅ PASS | Fully version controlled on GitHub. |
+
+#### ⚙️ Level 1 Contract Compilation & Deployment Artifact:
+```json
+{
+  "contractAddress": "0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e",
+  "txHash": "0xfd3686b4c354d85f6f762373f18aabe84e6e75729bcc78ca6e1b446303d1e84c",
+  "blockHeight": 849210,
+  "network": "Midnight Preprod",
+  "compilerVersion": "0.20.4",
+  "verificationHash": "0x3a79d2ec9b1c73f4e8b82093da4c1e8273619fa10b981258d4a9f0e1c2d3e4f5"
+}
+```
+
+> 📸 **Level 1 Screenshot (CLI & Contract Deployment)**:  
+> *(Attach Level 1 terminal verification or CLI output screenshot here)*
+
+---
+
+### 🌘 Level 2 - Waxing Crescent Submission Archive (100% PASS)
+
+| Level 2 Requirement | Status | Implementation Details & Proof |
+| :--- | :---: | :--- |
+| **Lace Wallet Connect / Disconnect** | ✅ PASS | CIP-30 / Midnight DApp Connector in [`WalletContext.tsx`](src/context/WalletContext.tsx) with live balance sync & clean disconnect. |
+| **Circuit Called from Frontend** | ✅ PASS | Frontend invokes `claimTestnetBonus`, `initializeUserStorage`, and `verifyStorageQuotaCommitment` via [`CompactContractViewer.tsx`](src/components/CompactContractViewer.tsx) & [`VaultContext.tsx`](src/context/VaultContext.tsx). |
+| **Observable Privacy Behavior** | ✅ PASS | Interactive privacy inspector in UI + full cryptographic invariant documented in [Section 5](#5-midnight-privacy-model-what-an-observer-can-and-cannot-learn). |
+| **Deployed Preprod Contract** | ✅ PASS | Address: `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e` (Block `#849210`, verified in `deployed-contract.json`). |
+| **Minimum 8 Meaningful Commits** | ✅ PASS | 49 commits on branch `main`. |
+| **README Documenting Privacy Claim** | ✅ PASS | Documented in [Section 5](#5-midnight-privacy-model-what-an-observer-can-and-cannot-learn) and [Section 6](#6-midnight-compact-smart-contract-specification). |
+
+> 📸 **Level 2 Screenshot (Lace Wallet Connected & Circuit Execution)**:  
+> *(Attach Level 2 DApp interface & circuit runner screenshot here)*
+
+---
+
 ### 🌕 Level 3 - First Quarter Submission Archive (100% PASS)
 
 | Level 3 Requirement | Status | Implementation Details & Proof |
@@ -163,42 +206,8 @@ $ npm test
    Duration  784ms
 ```
 
----
-
-### 🌘 Level 2 - Waxing Crescent Submission Archive (100% PASS)
-
-| Level 2 Requirement | Status | Implementation Details & Proof |
-| :--- | :---: | :--- |
-| **Lace Wallet Connect / Disconnect** | ✅ PASS | CIP-30 / Midnight DApp Connector in [`WalletContext.tsx`](src/context/WalletContext.tsx) with live balance sync & clean disconnect. |
-| **Circuit Called from Frontend** | ✅ PASS | Frontend invokes `claimTestnetBonus`, `initializeUserStorage`, and `verifyStorageQuotaCommitment` via [`CompactContractViewer.tsx`](src/components/CompactContractViewer.tsx) & [`VaultContext.tsx`](src/context/VaultContext.tsx). |
-| **Observable Privacy Behavior** | ✅ PASS | Interactive privacy inspector in UI + full cryptographic invariant documented in [Section 5](#5-midnight-privacy-model-what-an-observer-can-and-cannot-learn). |
-| **Deployed Preprod Contract** | ✅ PASS | Address: `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e` (Block `#849210`, verified in `deployed-contract.json`). |
-| **Minimum 8 Meaningful Commits** | ✅ PASS | 49 commits on branch `main`. |
-| **README Documenting Privacy Claim** | ✅ PASS | Documented in [Section 5](#5-midnight-privacy-model-what-an-observer-can-and-cannot-learn) and [Section 6](#6-midnight-compact-smart-contract-specification). |
-
----
-
-### 🌑 Level 1 - New Moon Submission Archive (100% PASS)
-
-| Level 1 Requirement | Status | Implementation Details & Proof |
-| :--- | :---: | :--- |
-| **Compact Smart Contract Written** | ✅ PASS | Written in `contracts/voidcloud.compact` under Compact 0.20 specification. |
-| **Contract Compiled Successfully** | ✅ PASS | Compiled to ZK-IR & Halo2 circuit constraints (`npm run compact:compile`). |
-| **Contract Deployed to Midnight Preprod** | ✅ PASS | Address: `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e` (Genesis block `#849210`). |
-| **Command Line Interface (CLI) Implemented** | ✅ PASS | Standalone Node.js CLI tool in `cli/void.js` supporting vault init, file encryption, bonus claim, and status. |
-| **Minimum 5 Meaningful Commits** | ✅ PASS | Fully version controlled on GitHub. |
-
-#### ⚙️ Level 1 Contract Compilation & Deployment Artifact:
-```json
-{
-  "contractAddress": "0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e",
-  "txHash": "0xfd3686b4c354d85f6f762373f18aabe84e6e75729bcc78ca6e1b446303d1e84c",
-  "blockHeight": 849210,
-  "network": "Midnight Preprod",
-  "compilerVersion": "0.20.4",
-  "verificationHash": "0x3a79d2ec9b1c73f4e8b82093da4c1e8273619fa10b981258d4a9f0e1c2d3e4f5"
-}
-```
+> 📸 **Level 3 Screenshot (Test Suite Output & CI/CD Passing Run)**:  
+> *(Attach Level 3 `npm test` passing output or GitHub Actions run screenshot here)*
 
 ---
 
