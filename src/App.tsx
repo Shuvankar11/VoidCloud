@@ -19,6 +19,7 @@ import { TelegramSettingsModal } from './components/TelegramSettingsModal';
 import { FileViewerModal } from './components/FileViewerModal';
 import { PaymentHistory } from './components/PaymentHistory';
 import { ZKReceiptModal } from './components/ZKReceiptModal';
+import { CompactContractViewer } from './components/CompactContractViewer';
 
 const GlobalFileViewer: React.FC = () => {
   const { activePreviewFile, setActivePreviewFile, files } = useVault();
@@ -73,6 +74,7 @@ const AppContent: React.FC = () => {
             <HeroSection />
             <StorageVisualizer />
             <ShieldedFileManager />
+            <CompactContractViewer />
             <FeatureGrid />
           </>
         )}
