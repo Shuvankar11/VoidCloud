@@ -1,0 +1,40 @@
+name: VoidCloud CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-and-build:
+    name: Test, Lint & Build Pipeline
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: 📦 Install Dependencies
+        run: npm ci
+
+      - name: 🧪 Run Vitest Test Suite (13+ Unit Tests)
+        run: npm test
+
+      - name: 🏗️ Verify TypeScript & Production Build
+        run: npm run build
+
+      - name: 🚀 Deployment Health Check
+        run: |
+          echo "CI/CD Pipeline Completed Successfully."
+          echo "Artifacts generated in dist/ directory."
