@@ -201,6 +201,30 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     } catch {}
   }, [wallet]);
 
+  // Listen for balance updates dispatched across contexts (e.g. 10 tNIGHT deduction)
+  useEffect(() => {
+    const handleBalanceSync = () => {
+      try {
+        const saved = localStorage.getItem(LOCAL_WALLET_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.balances) {
+            setWallet((prev) => ({
+              ...prev,
+              balances: parsed.balances,
+            }));
+          }
+        }
+      } catch {}
+    };
+    window.addEventListener('voidcloud_balance_update', handleBalanceSync);
+    window.addEventListener('storage', handleBalanceSync);
+    return () => {
+      window.removeEventListener('voidcloud_balance_update', handleBalanceSync);
+      window.removeEventListener('storage', handleBalanceSync);
+    };
+  }, []);
+
   // Sync Lace balance to 5,000 tNIGHT when Lace is connected
   useEffect(() => {
     if (wallet.isConnected && wallet.walletName === 'Midnight Lace' && wallet.balances.NIGHT === 0) {

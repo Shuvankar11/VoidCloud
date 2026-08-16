@@ -585,20 +585,14 @@ export const PaymentHistory: React.FC = () => {
                             )}
                           </button>
 
-                          {/* Explorer Link */}
-                          <a
-                            href={
-                              tx.network.toLowerCase().includes('cardano')
-                                ? `https://preprod.cardanoscan.io/transaction/${tx.txHash}`
-                                : `https://midnight.network/explorer/tx/${tx.txHash}`
-                            }
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            title="View on Block Explorer"
+                          {/* Receipt / Inspector Link */}
+                          <button
+                            onClick={() => openReceipt(tx)}
+                            title="Inspect On-Chain Cryptographic Receipt"
                             className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-sky-300 transition-colors"
                           >
                             <ExternalLink className="w-3.5 h-3.5" />
-                          </a>
+                          </button>
                         </div>
                         {tx.zkProofNullifier && (
                           <div className="mt-1 flex items-center space-x-1 text-[10px] text-purple-400">

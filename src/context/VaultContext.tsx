@@ -349,6 +349,7 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           if (parsedW && parsedW.balances) {
             parsedW.balances.NIGHT = Math.max(0, (parsedW.balances.NIGHT || 5000) - 10);
             localStorage.setItem('voidcloud_active_session_wallet', JSON.stringify(parsedW));
+            window.dispatchEvent(new Event('voidcloud_balance_update'));
           }
         }
       } catch {}
