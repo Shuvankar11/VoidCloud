@@ -469,16 +469,16 @@ export const PaymentHistory: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs font-mono">
+          <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-[#080D1A]/40 shadow-xl">
+            <table className="w-full min-w-[960px] text-left border-collapse text-xs font-mono">
               <thead>
-                <tr className="bg-[#030712]/80 border-b border-slate-800 text-[11px] text-slate-400 uppercase tracking-wider">
-                  <th className="py-3.5 px-4 font-semibold">Date & Time</th>
-                  <th className="py-3.5 px-4 font-semibold">Plan / Action</th>
-                  <th className="py-3.5 px-4 font-semibold">Amount & Token</th>
-                  <th className="py-3.5 px-4 font-semibold">Transaction Hash / Proof</th>
-                  <th className="py-3.5 px-4 font-semibold">Status</th>
-                  <th className="py-3.5 px-4 font-semibold text-right">Receipt</th>
+                <tr className="bg-[#030712]/90 border-b border-slate-800 text-[11px] text-slate-400 uppercase tracking-wider">
+                  <th className="py-3.5 px-4 font-semibold w-[140px]">Date & Time</th>
+                  <th className="py-3.5 px-4 font-semibold min-w-[220px]">Plan / Action</th>
+                  <th className="py-3.5 px-4 font-semibold w-[130px]">Amount & Fee</th>
+                  <th className="py-3.5 px-4 font-semibold min-w-[200px]">Transaction Hash / Proof</th>
+                  <th className="py-3.5 px-4 font-semibold w-[110px] text-center">Status</th>
+                  <th className="py-3.5 px-4 font-semibold w-[200px] text-right">Audit & Inspect</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60">
@@ -607,15 +607,6 @@ export const PaymentHistory: React.FC = () => {
                               <Copy className="w-3.5 h-3.5" />
                             )}
                           </button>
-
-                          {/* Explorer Link */}
-                          <button
-                            onClick={() => openExplorer(tx)}
-                            title="Inspect on Midnight Network Preprod Explorer"
-                            className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-emerald-300 transition-colors"
-                          >
-                            <ExternalLink className="w-3.5 h-3.5" />
-                          </button>
                         </div>
                         {tx.zkProofNullifier && (
                           <div className="mt-1 flex items-center space-x-1 text-[10px] text-purple-400">
@@ -626,7 +617,7 @@ export const PaymentHistory: React.FC = () => {
                       </td>
 
                       {/* Status Column */}
-                      <td className="py-4 px-4 whitespace-nowrap">
+                      <td className="py-4 px-4 whitespace-nowrap text-center">
                         {isSuccess && (
                           <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-[11px] font-bold shadow-[0_0_10px_rgba(16,185,129,0.2)]">
                             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
