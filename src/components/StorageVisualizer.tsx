@@ -5,7 +5,7 @@ import { useWeb3Wallet } from '../context/WalletContext';
 import { HardDrive, Sparkles, ShieldCheck, Database, Check, Server, Cloud, Cpu, ArrowUpRight, Coins, Shield, CheckCircle2 } from 'lucide-react';
 
 export const StorageVisualizer: React.FC = () => {
-  const { session, claimBonusWithZKProof, isGeneratingProof, files } = useVault();
+  const { session, claimBonusWithZKProof, isGeneratingProof, files, setActiveView } = useVault();
   const { setIsPricingModalOpen } = useWeb3Wallet();
 
   const totalCapacityBytes = session.quotaGB * 1024 * 1024 * 1024;
@@ -145,13 +145,22 @@ export const StorageVisualizer: React.FC = () => {
               <span>Storage Architecture: <strong className="text-slate-200">Decentralized Shielded Relay</strong></span>
             </div>
 
-            <button
-              onClick={() => setIsPricingModalOpen(true)}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 border border-amber-500/40 text-amber-300 text-xs font-mono font-semibold flex items-center space-x-1.5 transition-all hover:scale-105"
-            >
-              <Coins className="w-3.5 h-3.5 text-amber-400" />
-              <span>Buy More Storage (50GB - 500GB)</span>
-            </button>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => setActiveView('payments')}
+                className="px-3.5 py-2 rounded-xl bg-[#080D1A] hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-emerald-300 text-xs font-mono font-semibold flex items-center space-x-1.5 transition-all"
+              >
+                <span>Payment History</span>
+              </button>
+
+              <button
+                onClick={() => setIsPricingModalOpen(true)}
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 border border-amber-500/40 text-amber-300 text-xs font-mono font-semibold flex items-center space-x-1.5 transition-all hover:scale-105"
+              >
+                <Coins className="w-3.5 h-3.5 text-amber-400" />
+                <span>Buy More Storage (50GB - 500GB)</span>
+              </button>
+            </div>
           </div>
         </div>
 

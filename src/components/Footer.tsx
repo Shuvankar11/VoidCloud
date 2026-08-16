@@ -3,7 +3,7 @@ import { useVault } from '../context/VaultContext';
 import { Cloud, Github, ArrowUpRight, CheckCircle2, Shield, HardDrive, Lock } from 'lucide-react';
 
 export const Footer: React.FC = () => {
-  const { metrics, session } = useVault();
+  const { metrics, session, setActiveView } = useVault();
 
   return (
     <footer className="relative bg-[#030712] border-t border-slate-800/80 pt-16 pb-12 overflow-hidden">
@@ -40,10 +40,11 @@ export const Footer: React.FC = () => {
           <div className="md:col-span-3 space-y-3">
             <h4 className="font-display font-semibold text-xs tracking-wider uppercase text-white">Platform Navigation</h4>
             <ul className="space-y-2 text-xs font-mono text-slate-400">
-              <li><a href="#overview" className="hover:text-sky-400 transition-colors">Overview</a></li>
-              <li><a href="#storage" className="hover:text-sky-400 transition-colors">Cloud Quota ({session.quotaGB} GB)</a></li>
-              <li><a href="#vault" className="hover:text-sky-400 transition-colors">Object Vault</a></li>
-              <li><a href="#features" className="hover:text-sky-400 transition-colors">Security Architecture</a></li>
+              <li><button onClick={() => setActiveView('home')} className="hover:text-sky-400 transition-colors block text-left">Overview</button></li>
+              <li><button onClick={() => setActiveView('gallery')} className="hover:text-sky-400 transition-colors block text-left">Media & Files Gallery</button></li>
+              <li><button onClick={() => setActiveView('payments')} className="hover:text-emerald-400 transition-colors block text-left font-semibold">Payment & Ledger History</button></li>
+              <li><a href="#storage" className="hover:text-sky-400 transition-colors block">Cloud Quota ({session.quotaGB} GB)</a></li>
+              <li><a href="#vault" className="hover:text-sky-400 transition-colors block">Object Vault</a></li>
             </ul>
           </div>
 

@@ -14,7 +14,7 @@ export const StoragePricingModal: React.FC = () => {
     purchaseStoragePlan,
   } = useWeb3Wallet();
 
-  const { session, upgradeStorageQuota } = useVault();
+  const { session, upgradeStorageQuota, setActiveView } = useVault();
 
   const [selectedPlan, setSelectedPlan] = useState<StoragePlan>(STORAGE_PLANS[0]);
   const [billing, setBilling] = useState<BillingCycle>('monthly');
@@ -143,15 +143,27 @@ export const StoragePricingModal: React.FC = () => {
               <div className="p-2 rounded-xl bg-[#080D1A] border border-slate-800 text-[11px] font-mono text-emerald-400 break-all max-w-md mx-auto">
                 {successTx}
               </div>
-              <button
-                onClick={() => {
-                  setIsPricingModalOpen(false);
-                  setSuccessTx(null);
-                }}
-                className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-500 text-white font-bold text-xs font-mono mt-2"
-              >
-                Return to Cloud Vault
-              </button>
+              <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+                <button
+                  onClick={() => {
+                    setIsPricingModalOpen(false);
+                    setSuccessTx(null);
+                  }}
+                  className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs font-mono"
+                >
+                  Return to Cloud Vault
+                </button>
+                <button
+                  onClick={() => {
+                    setIsPricingModalOpen(false);
+                    setSuccessTx(null);
+                    setActiveView('payments');
+                  }}
+                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-400 hover:to-emerald-400 text-white font-bold text-xs font-mono shadow-md"
+                >
+                  View in Payment History →
+                </button>
+              </div>
             </div>
           ) : (
             <>

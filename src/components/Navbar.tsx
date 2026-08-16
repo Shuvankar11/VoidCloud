@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useVault } from '../context/VaultContext';
 import { useAuth } from '../context/AuthContext';
 import { useWeb3Wallet } from '../context/WalletContext';
-import { Cloud, LogOut, LogIn, Menu, X, Wallet, Sparkles, ShieldCheck, Image as ImageIcon, HardDrive } from 'lucide-react';
+import { Cloud, LogOut, LogIn, Menu, X, Wallet, Sparkles, ShieldCheck, Image as ImageIcon, HardDrive, Receipt, FileText, History } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const { session, activeView, setActiveView } = useVault();
@@ -10,7 +10,7 @@ export const Navbar: React.FC = () => {
   const { wallet, setIsWalletModalOpen, setIsPricingModalOpen } = useWeb3Wallet();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleNavClick = (targetView: 'home' | 'gallery', hash?: string) => {
+  const handleNavClick = (targetView: 'home' | 'gallery' | 'payments', hash?: string) => {
     setActiveView(targetView);
     setMobileMenuOpen(false);
     if (targetView === 'home' && hash) {
@@ -45,12 +45,12 @@ export const Navbar: React.FC = () => {
         </div>
 
         {/* Center: Navigation Links (Optimized & Compact) */}
-        <nav className="hidden lg:flex items-center gap-1 xl:gap-2 text-xs font-medium text-slate-300 flex-shrink">
+        <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 text-xs font-medium text-slate-300 flex-shrink">
           <button
             onClick={() => handleNavClick('home', '#overview')}
             className={`px-2.5 py-1.5 rounded-lg transition-all whitespace-nowrap ${
               activeView === 'home'
-                ? 'text-white font-semibold hover:bg-slate-800/50'
+                ? 'text-white font-semibold bg-slate-800/60'
                 : 'text-slate-400 hover:text-sky-300'
             }`}
           >
@@ -70,7 +70,7 @@ export const Navbar: React.FC = () => {
           {/* DEDICATED MEDIA & FILES GALLERY BUTTON */}
           <button
             onClick={() => handleNavClick('gallery')}
-            className={`px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap ${
+            className={`px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap ${
               activeView === 'gallery'
                 ? 'bg-sky-500/20 text-sky-300 border border-sky-500/50 shadow-[0_0_15px_rgba(56,189,248,0.3)] font-bold'
                 : 'text-sky-400 hover:text-white hover:bg-sky-950/40 border border-sky-500/30'
@@ -80,6 +80,22 @@ export const Navbar: React.FC = () => {
             <span>Gallery & Files</span>
             <span className="px-1.5 py-0.2 rounded-md bg-gradient-to-r from-sky-500/40 to-violet-500/40 border border-sky-400/40 text-[9px] font-mono text-sky-200 font-bold">
               VAULT
+            </span>
+          </button>
+
+          {/* DEDICATED PAYMENT & TRANSACTIONS HISTORY BUTTON */}
+          <button
+            onClick={() => handleNavClick('payments')}
+            className={`px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap ${
+              activeView === 'payments'
+                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.3)] font-bold'
+                : 'text-slate-400 hover:text-emerald-300 hover:bg-emerald-950/30 border border-transparent'
+            }`}
+          >
+            <History className="w-3.5 h-3.5 text-emerald-400" />
+            <span>History</span>
+            <span className="px-1.5 py-0.2 rounded-md bg-emerald-950/80 border border-emerald-500/40 text-[9px] font-mono text-emerald-300 font-semibold">
+              LEDGER
             </span>
           </button>
 
@@ -187,6 +203,13 @@ export const Navbar: React.FC = () => {
           >
             <span>Media & Files Gallery (Photos, Videos & Docs)</span>
             <span className="px-1.5 py-0.5 rounded-md bg-sky-500/20 text-[10px] text-sky-300">OPEN</span>
+          </button>
+          <button
+            onClick={() => handleNavClick('payments')}
+            className="block w-full text-left text-emerald-300 hover:text-white py-1.5 px-3 rounded-xl bg-emerald-950/60 border border-emerald-500/40 font-bold flex items-center justify-between"
+          >
+            <span>Payment & Transaction History</span>
+            <span className="px-1.5 py-0.5 rounded-md bg-emerald-500/20 text-[10px] text-emerald-300 font-mono">LEDGER</span>
           </button>
           <button
             onClick={() => handleNavClick('home', '#vault')}

@@ -17,6 +17,8 @@ import { WalletConnectModal } from './components/WalletConnectModal';
 import { StoragePricingModal } from './components/StoragePricingModal';
 import { TelegramSettingsModal } from './components/TelegramSettingsModal';
 import { FileViewerModal } from './components/FileViewerModal';
+import { PaymentHistory } from './components/PaymentHistory';
+import { ZKReceiptModal } from './components/ZKReceiptModal';
 
 const GlobalFileViewer: React.FC = () => {
   const { activePreviewFile, setActivePreviewFile, files } = useVault();
@@ -60,10 +62,12 @@ const AppContent: React.FC = () => {
       {/* Navigation Bar with User Profile, Web3 Wallet & Auth Status */}
       <Navbar />
 
-      {/* Conditional Page Views: Dedicated Media & Files Vault Page VS. Home Landing */}
+      {/* Conditional Page Views: Dedicated Media Vault VS. Payment History VS. Home Landing */}
       <main className="space-y-6">
         {activeView === 'gallery' ? (
           <MediaGallery />
+        ) : activeView === 'payments' ? (
+          <PaymentHistory />
         ) : (
           <>
             <HeroSection />
@@ -91,6 +95,9 @@ const AppContent: React.FC = () => {
 
       {/* Telegram Private Channel Storage Settings Modal */}
       <TelegramSettingsModal />
+
+      {/* Cryptographic ZK Proof & Payment Transaction Receipt Modal */}
+      <ZKReceiptModal />
 
       {/* Cyberpunk Media Lightbox & File Viewer Modal for Photos/Videos/Docs */}
       <GlobalFileViewer />

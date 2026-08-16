@@ -33,8 +33,8 @@ interface VaultContextType {
   setProofModalOpen: (open: boolean) => void;
   activePreviewFile: ShieldedFile | null;
   setActivePreviewFile: (file: ShieldedFile | null) => void;
-  activeView: 'home' | 'gallery';
-  setActiveView: (view: 'home' | 'gallery') => void;
+  activeView: 'home' | 'gallery' | 'payments';
+  setActiveView: (view: 'home' | 'gallery' | 'payments') => void;
   telegramConfig: TelegramConfig;
   setTelegramConfig: (config: TelegramConfig) => void;
   isTelegramModalOpen: boolean;
@@ -102,20 +102,24 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [telegramConfig, setTelegramConfigState] = useState<TelegramConfig>(getStoredTelegramConfig);
   const [isTelegramModalOpen, setIsTelegramModalOpen] = useState(false);
   const [activePreviewFile, setActivePreviewFile] = useState<ShieldedFile | null>(null);
-  const [activeView, setActiveViewState] = useState<'home' | 'gallery'>(() => {
-    if (typeof window !== 'undefined' && window.location.hash.toLowerCase().includes('gallery')) {
-      return 'gallery';
+  const [activeView, setActiveViewState] = useState<'home' | 'gallery' | 'payments'>(() => {
+    if (typeof window !== 'undefined') {
+      const h = window.location.hash.toLowerCase();
+      if (h.includes('gallery')) return 'gallery';
+      if (h.includes('payments') || h.includes('history') || h.includes('transactions')) return 'payments';
     }
     return 'home';
   });
 
-  const setActiveView = useCallback((view: 'home' | 'gallery') => {
+  const setActiveView = useCallback((view: 'home' | 'gallery' | 'payments') => {
     setActiveViewState(view);
     if (typeof window !== 'undefined') {
       if (view === 'gallery') {
         window.location.hash = 'gallery';
+      } else if (view === 'payments') {
+        window.location.hash = 'history';
       } else {
-        if (window.location.hash.includes('gallery')) {
+        if (window.location.hash.includes('gallery') || window.location.hash.includes('history') || window.location.hash.includes('payments')) {
           history.pushState('', document.title, window.location.pathname + window.location.search);
         }
       }
@@ -125,8 +129,11 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   useEffect(() => {
     const handleHash = () => {
-      if (window.location.hash.toLowerCase().includes('gallery')) {
+      const h = window.location.hash.toLowerCase();
+      if (h.includes('gallery')) {
         setActiveViewState('gallery');
+      } else if (h.includes('payments') || h.includes('history') || h.includes('transactions')) {
+        setActiveViewState('payments');
       } else {
         setActiveViewState('home');
       }
@@ -333,6 +340,33 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         totalShieldedStorageAllocatedGB: prev.totalShieldedStorageAllocatedGB + 20,
         bonusNullifiersCount: prev.bonusNullifiersCount + 1,
       }));
+
+      // Record ZK Faucet Bonus in Transaction History
+      try {
+        const savedTx = localStorage.getItem('voidcloud_v2_payment_transactions');
+        const parsedTx = savedTx ? JSON.parse(savedTx) : [];
+        const newBonusTx = {
+          id: `tx_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 7)}`,
+          receiptId: `RCP-VOID-ZK-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+          txHash,
+          timestamp: new Date().toISOString(),
+          planName: 'Testnet Faucet ZK Proof Expansion (+20 GB)',
+          capacityGB: 20,
+          billingCycle: 'free_bonus',
+          amount: 0,
+          token: 'FREE',
+          status: 'success',
+          senderAddress: session.shieldedAddress,
+          receiverAddress: '0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e',
+          network: 'Midnight Preprod',
+          blockHeight: 849225 + Math.floor(Math.random() * 20),
+          gasFee: '0.0000 tDUST',
+          zkProofNullifier: session.nullifierHex,
+        };
+        localStorage.setItem('voidcloud_v2_payment_transactions', JSON.stringify([newBonusTx, ...parsedTx]));
+      } catch (e) {
+        console.warn('Failed to record bonus tx:', e);
+      }
 
       try {
         confetti({

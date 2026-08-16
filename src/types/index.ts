@@ -98,6 +98,37 @@ export interface StoragePlan {
   features: string[];
 }
 
+export type TransactionStatus = 'success' | 'failed' | 'pending';
+
+export type TransactionType =
+  | 'storage_upgrade'
+  | 'storage_renewal'
+  | 'faucet_claim'
+  | 'zk_bonus_claim'
+  | 'bandwidth_topup';
+
+export interface PaymentTransaction {
+  id: string;
+  txHash: string;
+  timestamp: string;
+  planId?: string;
+  planName: string;
+  capacityGB?: number;
+  billingCycle?: BillingCycle | 'one_time' | 'free_bonus' | 'faucet';
+  amount: number;
+  token: 'NIGHT' | 'tDUST' | 'ADA' | 'USDT' | 'ETH' | 'FREE';
+  status: TransactionStatus;
+  failureReason?: string;
+  senderAddress: string;
+  receiverAddress: string;
+  network: string;
+  blockHeight?: number;
+  gasFee?: string;
+  zkProofNullifier?: string;
+  receiptId: string;
+  userId?: string;
+}
+
 export interface TelegramConfig {
   botToken: string;
   chatId: string;

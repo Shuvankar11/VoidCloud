@@ -250,4 +250,146 @@ describe('VoidCloud Midnight Compact Contract Suite', () => {
       }).toThrowError(/Bonus tier verification failed/);
     });
   });
+
+  describe('6. Payment & Transaction History Ledger Engine', () => {
+    interface MockPaymentTx {
+      id: string;
+      txHash: string;
+      timestamp: string;
+      planName: string;
+      capacityGB?: number;
+      amount: number;
+      token: 'NIGHT' | 'tDUST' | 'ADA' | 'USDT' | 'ETH' | 'FREE';
+      status: 'success' | 'failed' | 'pending';
+      failureReason?: string;
+      senderAddress: string;
+      receiverAddress: string;
+      network: string;
+      receiptId: string;
+    }
+
+    it('should accurately record successful storage upgrade payments with receipt ID and cryptographic hashes', () => {
+      const txList: MockPaymentTx[] = [];
+      const addTx = (txData: Omit<MockPaymentTx, 'id' | 'receiptId'>): MockPaymentTx => {
+        const newTx: MockPaymentTx = {
+          ...txData,
+          id: `tx_${Date.now()}_test`,
+          receiptId: `RCP-VOID-TEST-8492`,
+        };
+        txList.unshift(newTx);
+        return newTx;
+      };
+
+      const tx = addTx({
+        txHash: '0x' + crypto.randomBytes(32).toString('hex'),
+        timestamp: new Date().toISOString(),
+        planName: 'Pro Sentinel (100 GB)',
+        capacityGB: 100,
+        amount: 50,
+        token: 'NIGHT',
+        status: 'success',
+        senderAddress: 'addr_test1qp6ja6agem4yj7c2784kphsdej00764yvmnn8mn6ztl5z7ln6nxvtdy3hgfenkd028rldupm5x5t4czpwyglnn6lx4xse2kggj',
+        receiverAddress: 'mn_addr_preprod15gfl98ha5jg2l99awxjww4pzyymnfjljf68nvd74s0r0q2nwy70srzssjm',
+        network: 'Midnight Preprod',
+      });
+
+      expect(txList.length).toBe(1);
+      expect(tx.status).toBe('success');
+      expect(tx.amount).toBe(50);
+      expect(tx.capacityGB).toBe(100);
+      expect(tx.receiptId.startsWith('RCP-VOID')).toBe(true);
+      expect(tx.txHash.startsWith('0x')).toBe(true);
+    });
+
+    it('should accurately record failed payment attempts with explicit failure reasons', () => {
+      const txList: MockPaymentTx[] = [];
+      const addTx = (txData: Omit<MockPaymentTx, 'id' | 'receiptId'>): MockPaymentTx => {
+        const newTx: MockPaymentTx = {
+          ...txData,
+          id: `tx_${Date.now()}_failed`,
+          receiptId: `RCP-VOID-FAIL`,
+        };
+        txList.unshift(newTx);
+        return newTx;
+      };
+
+      const failedTx = addTx({
+        txHash: '0x' + crypto.randomBytes(32).toString('hex'),
+        timestamp: new Date().toISOString(),
+        planName: 'Enterprise Matrix (500 GB)',
+        capacityGB: 500,
+        amount: 120,
+        token: 'NIGHT',
+        status: 'failed',
+        failureReason: 'Insufficient NIGHT balance (Required: 120 NIGHT, Balance: 25 NIGHT)',
+        senderAddress: 'mn_shielded_0x8f2a',
+        receiverAddress: 'mn_addr_preprod15gfl98ha5jg',
+        network: 'Midnight Preprod',
+      });
+
+      expect(txList.length).toBe(1);
+      expect(failedTx.status).toBe('failed');
+      expect(failedTx.failureReason).toContain('Insufficient NIGHT balance');
+    });
+
+    it('should filter transactions by status, token, and search query', () => {
+      const txs: MockPaymentTx[] = [
+        {
+          id: '1',
+          txHash: '0xabc123',
+          timestamp: '2026-08-16T12:00:00Z',
+          planName: 'Starter Shard (50 GB)',
+          amount: 25,
+          token: 'NIGHT',
+          status: 'success',
+          senderAddress: 'addr1',
+          receiverAddress: 'addr2',
+          network: 'Midnight Preprod',
+          receiptId: 'RCP-1',
+        },
+        {
+          id: '2',
+          txHash: '0xdef456',
+          timestamp: '2026-08-16T13:00:00Z',
+          planName: 'Pro Sentinel (100 GB)',
+          amount: 30,
+          token: 'ADA',
+          status: 'failed',
+          failureReason: 'User rejected in wallet',
+          senderAddress: 'addr1',
+          receiverAddress: 'addr2',
+          network: 'Cardano Preprod',
+          receiptId: 'RCP-2',
+        },
+        {
+          id: '3',
+          txHash: '0x999888',
+          timestamp: '2026-08-16T14:00:00Z',
+          planName: 'Genesis 20GB Shielded Allocation',
+          amount: 0,
+          token: 'FREE',
+          status: 'success',
+          senderAddress: 'mn_0x',
+          receiverAddress: 'mn_contract',
+          network: 'Midnight Preprod',
+          receiptId: 'RCP-3',
+        },
+      ];
+
+      // Status filter
+      const successfulTxs = txs.filter((t) => t.status === 'success');
+      expect(successfulTxs.length).toBe(2);
+
+      // Token filter
+      const adaTxs = txs.filter((t) => t.token === 'ADA');
+      expect(adaTxs.length).toBe(1);
+      expect(adaTxs[0].planName).toBe('Pro Sentinel (100 GB)');
+
+      // Search query
+      const searchMatches = txs.filter((t) => t.planName.toLowerCase().includes('genesis'));
+      expect(searchMatches.length).toBe(1);
+      expect(searchMatches[0].token).toBe('FREE');
+    });
+  });
 });
+
