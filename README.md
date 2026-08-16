@@ -246,7 +246,8 @@ $ npm test
 ```
 
 > 📸 **Level 3 Screenshot (Test Suite Output & CI/CD Passing Run)**:  
-> *(Attach Level 3 `npm test` passing output or GitHub Actions run screenshot here)*
+> <img width="1920" height="1090" alt="{B5770A00-C34B-4403-8417-62FCFB747E2B}" src="https://github.com/user-attachments/assets/f46d8b56-79e5-44f5-bcc2-7514dbfad4f9" />
+
 
 ---
 
