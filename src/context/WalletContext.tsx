@@ -66,44 +66,6 @@ export const STORAGE_PLANS: StoragePlan[] = [
 const LOCAL_WALLET_KEY = 'voidcloud_active_session_wallet';
 const LOCAL_TRANSACTIONS_KEY = 'voidcloud_v2_payment_transactions';
 
-const SEED_TRANSACTIONS: PaymentTransaction[] = [
-  {
-    id: 'tx_genesis_init_01',
-    txHash: '0x3f8a19b4c7e2d5a8f0b1c3d6e9a2f5b8c1d4e7a0b3c6d9e2f5a8b1c4d7e0f3a6',
-    timestamp: new Date(Date.now() - 3 * 3600 * 1000).toISOString(),
-    planId: 'genesis_20gb',
-    planName: 'Genesis 20GB Shielded Storage Allocation',
-    capacityGB: 20,
-    billingCycle: 'free_bonus',
-    amount: 0,
-    token: 'FREE',
-    status: 'success',
-    senderAddress: 'mn_shielded_0x8f2a9c104e7b3d5a',
-    receiverAddress: TREASURY_CONFIG.midnightShieldedAddress,
-    network: 'Midnight Preprod',
-    blockHeight: 849201,
-    gasFee: '0.0000 tDUST',
-    zkProofNullifier: '0x9a8f7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a',
-    receiptId: 'RCP-VOID-GENESIS-20GB',
-  },
-  {
-    id: 'tx_faucet_claim_02',
-    txHash: '0x7c91e45b82d3f0a1c6e8b4d2a9f5e3c7b1d8a4f6e2c9b5d1a7f3e8c4b0d6a2f5',
-    timestamp: new Date(Date.now() - 1 * 3600 * 1000).toISOString(),
-    planName: 'Midnight Testnet Faucet Allocation (5,000 tNIGHT)',
-    billingCycle: 'faucet',
-    amount: 5000,
-    token: 'NIGHT',
-    status: 'success',
-    senderAddress: 'Midnight Preprod Faucet Contract',
-    receiverAddress: TREASURY_CONFIG.midnightUnshieldedAddress,
-    network: 'Midnight Preprod',
-    blockHeight: 849218,
-    gasFee: '0.0012 tDUST',
-    receiptId: 'RCP-VOID-FAUCET-5000TN',
-  },
-];
-
 // Pure 0 Initial Real Balances (No fake/hardcoded numbers)
 const DEFAULT_WALLET: WalletState = {
   isConnected: false,
@@ -180,18 +142,25 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [selectedReceiptTx, setSelectedReceiptTx] = useState<PaymentTransaction | null>(null);
   const [isReceiptModalOpen, setIsReceiptModalOpen] = useState(false);
 
-  // Transactions History State with LocalStorage Persistence
+  // Transactions History State with LocalStorage Persistence (Strictly Real Transactions Only)
   const [transactions, setTransactions] = useState<PaymentTransaction[]>(() => {
     try {
       const saved = localStorage.getItem(LOCAL_TRANSACTIONS_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+        if (Array.isArray(parsed)) {
+          // Filter out any legacy dummy/seed transactions
+          return parsed.filter(
+            (t: any) =>
+              t &&
+              t.id !== 'tx_genesis_init_01' &&
+              t.id !== 'tx_faucet_claim_02' &&
+              !t.planName?.includes('Genesis 20GB Shielded Storage Allocation')
+          );
         }
       }
     } catch {}
-    return SEED_TRANSACTIONS;
+    return [];
   });
 
   // Save transactions to localStorage

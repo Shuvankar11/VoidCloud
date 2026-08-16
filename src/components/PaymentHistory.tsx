@@ -405,31 +405,43 @@ export const PaymentHistory: React.FC = () => {
             <div className="w-14 h-14 rounded-full bg-slate-800/80 border border-slate-700 flex items-center justify-center mx-auto text-slate-400">
               <FileText className="w-7 h-7" />
             </div>
-            <div className="space-y-1 max-w-sm mx-auto">
-              <h3 className="text-base font-bold text-white font-display">No Transactions Found</h3>
+            <div className="space-y-1 max-w-md mx-auto">
+              <h3 className="text-base font-bold text-white font-display">
+                {searchQuery || selectedStatus !== 'all' || selectedToken !== 'all' || selectedType !== 'all'
+                  ? 'No Matching Transactions Found'
+                  : 'No Payment or Ledger Transactions Yet'}
+              </h3>
               <p className="text-xs text-slate-400 font-mono">
                 {searchQuery || selectedStatus !== 'all' || selectedToken !== 'all' || selectedType !== 'all'
                   ? 'Try clearing your search query or adjusting your filters.'
-                  : 'You have not made any storage transactions yet. Upgrade a plan or claim testnet tokens to get started!'}
+                  : 'Your cloud storage upgrades, testnet faucet claims, and on-chain settlements will automatically appear here once performed.'}
               </p>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
-              <button
-                onClick={() => {
-                  setSearchQuery('');
-                  setSelectedStatus('all');
-                  setSelectedToken('all');
-                  setSelectedType('all');
-                }}
-                className="px-4 py-2 rounded-xl bg-[#030712] border border-slate-700 text-slate-300 hover:text-white text-xs font-mono"
-              >
-                Reset Filters
-              </button>
+              {searchQuery || selectedStatus !== 'all' || selectedToken !== 'all' || selectedType !== 'all' ? (
+                <button
+                  onClick={() => {
+                    setSearchQuery('');
+                    setSelectedStatus('all');
+                    setSelectedToken('all');
+                    setSelectedType('all');
+                  }}
+                  className="px-4 py-2 rounded-xl bg-[#030712] border border-slate-700 text-slate-300 hover:text-white text-xs font-mono"
+                >
+                  Reset Filters
+                </button>
+              ) : null}
               <button
                 onClick={() => setIsPricingModalOpen(true)}
-                className="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 text-white font-bold text-xs font-mono shadow-md"
+                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 text-white font-bold text-xs font-mono shadow-md"
               >
                 Upgrade Storage Plan
+              </button>
+              <button
+                onClick={() => setActiveView('home')}
+                className="px-4 py-2.5 rounded-xl bg-[#030712] border border-slate-700 text-slate-300 hover:text-white text-xs font-mono"
+              >
+                Return to Vault
               </button>
             </div>
           </div>
