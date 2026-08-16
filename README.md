@@ -141,6 +141,43 @@ Navigate to [http://localhost:5173](http://localhost:5173) in your browser.
 }
 ```
 
+#### 💻 Level 1 Terminal Verification (`node cli/void.js status`):
+```bash
+$ node cli/void.js status
+
+ ██▒   █▓ ▒█████   ██▓▓█████▄  ▄████▄   ██▓     ▒█████   █     █░▓█████▄ 
+▓██░   █▒▒██▒  ██▒▓██▒▒██▀ ██▌▒██▀ ▀█  ▓██▒    ▒██▒  ██▒▓█░ █ ░█░▒██▀ ██▌
+ ▓██  █▒░▒██░  ██▒▒██▒░██   █▌▒▓█    ▄ ▒██░    ▒██░  ██▒▒█░ █ ░█ ░██   █▌
+  ▒██ █░░▒██   ██░░██░░▓█▄   ▌▒▓▓▄ ▄██▒▒██░    ▒██   ██░░░█░ █ ░█ ░▓█▄   ▌
+   ▒▀█░  ░ ████▓▒░░██░░▓████▓ ▒ ▓███▀ ░░██████▒░ ████▓▒░ ░░█▀░█▀  ░▓████▓ 
+   ░ ▐░  ░ ▒░▒░▒░ ░▓   ▒▒▓  ▒ ░ ░▒ ▒  ░░ ▒░▓  ░░ ▒░▒░▒░   ░ ▐░   ░▒▒▓  ▒ 
+   ░ ░░    ░ ▒ ▒░  ▒ ░ ░ ▒  ▒   ░  ▒    ░ ░ ▒  ░  ░ ▒ ▒░   ░ ░░   ░ ▒  ▒ 
+     ░░  ░ ░ ░ ▒   ▒ ░ ░ ░  ░ ░           ░ ░   ░ ░ ░ ▒      ░░   ░ ░  ░ 
+      ░      ░ ░   ░     ░    ░ ░           ░  ░    ░ ░       ░     ░    
+     ░                 ░      ░                                    ░     
+
+  [ MIDNIGHT NETWORK // LEVEL 1 ZK-SHIELDED DECENTRALIZED STORAGE ]
+
+- Querying Midnight Preprod ledger state & indexer...
+✔ Ledger state synchronized with Midnight Preprod
+
+╔═════════════════════════════════════════════════════════════════════════════╗
+║                                                                             ║
+║   🌌 SHIELDED STORAGE METRICS                                               ║
+║                                                                             ║
+║   Shielded ID      : mn_shielded_0xde02625d82b84a5cc485d60d0ad1111f6851fc   ║
+║   Total Quota      : 40 GB (+20GB ZK Faucet Bonus Active)                   ║
+║   Storage Used     : 0.000 GB / 40 GB (0%)                                  ║
+║   [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░]                                          ║
+║                                                                             ║
+║   Encrypted Files  : 0                                                      ║
+║   Bonus Nullifier  : COMMITTED (0x9bd20be553de7029...)                      ║
+║   Midnight Node    : Preprod (Block #849,210 | Indexer 99.99% UP)           ║
+║   Proof Server     : 127.0.0.1:6300 (Latency 34ms)                          ║
+║                                                                             ║
+╚═════════════════════════════════════════════════════════════════════════════╝
+```
+
 > 📸 **Level 1 Screenshot (CLI & Contract Deployment)**:  
 > *(Attach Level 1 terminal verification or CLI output screenshot here)*
 
