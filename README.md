@@ -62,39 +62,16 @@ flowchart TD
 
 ---
 
-## 2. 🎥 Judge Demo Video Walkthrough & Submission Anchors
+## 2. 🎥 Judge Demo Video & Primary Submission Anchors
 
-> 🏆 **Attention Judges / Evaluators**: Below is the quick reference guide and walkthrough sequence demonstrating the **Lace Wallet Connection**, **Compact Circuit Execution**, **Observable Privacy**, and **Preprod On-Chain Settlement**.
+> 🏆 **Attention Judges / Evaluators**: Below are the official submission links and the full end-to-end demo video for **Level 2 & Level 3** demonstrating Lace Wallet Connection, Compact Circuit Execution, Observable Privacy, Encrypted Cloud Storage, and Midnight Preprod Settlement.
 
-### 🔗 Primary Submission Links
+### 🔗 Official Submission Links
+* 🎥 **Full Demo Video (YouTube)**: [Watch VoidCloud Demo Video on YouTube](https://youtu.be/VOIDCLOUD_DEMO_LINK)
 * 🌐 **Live dApp URL**: [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/)
 * 📦 **Public GitHub Repository**: [https://github.com/Shuvankar11/VoidCloude](https://github.com/Shuvankar11/VoidCloude)
 * 📜 **Deployed Midnight Preprod Contract**: `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e` (Block `#849210`)
-
----
-
-### ⏱️ Video Demo Walkthrough Sequence (60–90 Seconds)
-
-```
-[0:00 - 0:25] ──► 1. Lace Wallet Connect:
-                   • Open https://void-cloude.vercel.app/
-                   • Click "Wallet" ➔ Select "Midnight Lace"
-                   • Authorize connection; point out connected address & 5,000 NIGHT balance in navbar.
-
-[0:25 - 0:50] ──► 2. Circuit Call & Observable Privacy:
-                   • Click "Architecture & Circuits" ➔ Open Interactive Circuit Runner.
-                   • Click "Run claimTestnetBonus()".
-                   • Observe 4-step Halo2 proof pipeline: Private Witness ➔ Nullifier ➔ Proof ➔ Contract.
-                   • Note storage expands from 20 GB to 40 GB with 100% shielded private witness!
-
-[0:50 - 1:15] ──► 3. Payment & Transaction History [LEDGER]:
-                   • Click "History [LEDGER]" in navbar.
-                   • Inspect on-chain transaction hash, timestamp, and SUCCESS status.
-                   • Click "Receipt" to display cryptographic ZK certificate modal with block height and gas fee.
-
-[1:15 - 1:30] ──► 4. Contract Verification & Conclusion:
-                   • Showcase deployed contract address 0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e.
-```
+* 🔍 **Official Midnight Preprod Explorer**: [https://preprod.midnightexplorer.com/](https://preprod.midnightexplorer.com/)
 
 ---
 
