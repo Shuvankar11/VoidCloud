@@ -341,26 +341,38 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         bonusNullifiersCount: prev.bonusNullifiersCount + 1,
       }));
 
-      // Record ZK Faucet Bonus in Transaction History
+      // Deduct 10 tNIGHT testnet payment from active wallet session
+      try {
+        const savedWallet = localStorage.getItem('voidcloud_active_session_wallet');
+        if (savedWallet) {
+          const parsedW = JSON.parse(savedWallet);
+          if (parsedW && parsedW.balances) {
+            parsedW.balances.NIGHT = Math.max(0, (parsedW.balances.NIGHT || 5000) - 10);
+            localStorage.setItem('voidcloud_active_session_wallet', JSON.stringify(parsedW));
+          }
+        }
+      } catch {}
+
+      // Record 10 tNIGHT Testnet Storage Expansion in Payment Ledger
       try {
         const savedTx = localStorage.getItem('voidcloud_v2_payment_transactions');
         const parsedTx = savedTx ? JSON.parse(savedTx) : [];
         const newBonusTx = {
           id: `tx_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 7)}`,
-          receiptId: `RCP-VOID-ZK-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+          receiptId: `RCP-VOID-EXPAND-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
           txHash,
           timestamp: new Date().toISOString(),
-          planName: 'Testnet Faucet ZK Proof Expansion (+20 GB)',
+          planName: '1-Time +20GB Testnet Storage Expansion (ZK Settlement)',
           capacityGB: 20,
-          billingCycle: 'free_bonus',
-          amount: 0,
-          token: 'FREE',
-          status: 'success',
+          billingCycle: 'lifetime',
+          amount: 10,
+          token: 'NIGHT' as const,
+          status: 'success' as const,
           senderAddress: session.shieldedAddress,
           receiverAddress: '0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e',
           network: 'Midnight Preprod',
           blockHeight: 849225 + Math.floor(Math.random() * 20),
-          gasFee: '0.0000 tDUST',
+          gasFee: '0.0025 tDUST',
           zkProofNullifier: session.nullifierHex,
         };
         localStorage.setItem('voidcloud_v2_payment_transactions', JSON.stringify([newBonusTx, ...parsedTx]));

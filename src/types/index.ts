@@ -85,7 +85,7 @@ export interface PlanPricing {
 }
 
 export interface StoragePlan {
-  id: 'plan_50gb' | 'plan_100gb' | 'plan_500gb';
+  id: 'plan_20gb' | 'plan_50gb' | 'plan_100gb' | 'plan_500gb';
   name: string;
   capacityGB: number;
   badge?: string;

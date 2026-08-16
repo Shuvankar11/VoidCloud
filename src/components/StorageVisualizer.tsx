@@ -167,29 +167,38 @@ export const StorageVisualizer: React.FC = () => {
         {/* Right: +20GB Faucet Bonus Card & Pro Tiers */}
         <div className="lg:col-span-4 flex flex-col gap-6">
           
-          {/* Card 1: 1-Time Faucet Bonus */}
+          {/* Card 1: 1-Time Testnet 20GB Expansion */}
           <div className="cloud-card rounded-2xl p-6 border-emerald-500/30 flex-1 flex flex-col justify-between">
             <div>
-              <div className="flex items-center space-x-2 text-emerald-400 text-xs font-mono mb-2">
-                <Sparkles className="w-4 h-4" />
-                <span>1-TIME TESTNET FAUCET</span>
+              <div className="flex items-center justify-between text-emerald-400 text-xs font-mono mb-2">
+                <span className="flex items-center space-x-1.5">
+                  <Sparkles className="w-4 h-4" />
+                  <span>1-TIME TESTNET UNLOCK</span>
+                </span>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold">
+                  10 tNIGHT
+                </span>
               </div>
               <h3 className="text-xl font-display font-bold text-white">
-                Claim +20 GB Bonus
+                Unlock +20 GB Expansion
               </h3>
               <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                Execute a Halo2 zero-knowledge circuit to synthesize a blinded nullifier hash and unlock +20 GB expansion.
+                Pay <strong>10 tNIGHT</strong> with your Lace wallet and execute a Halo2 ZK circuit to expand your shielded storage vault from 20 GB to <strong>40 GB</strong>.
               </p>
 
               <div className="mt-4 p-3 rounded-xl bg-[#080D1A] border border-slate-800 text-xs font-mono space-y-1.5">
+                <div className="flex justify-between text-slate-400">
+                  <span>Price / Fee:</span>
+                  <span className="text-emerald-400 font-bold">10.00 NIGHT (Testnet)</span>
+                </div>
                 <div className="flex justify-between text-slate-400">
                   <span>Nullifier Hash:</span>
                   <span className="text-sky-300">{session.nullifierHex.slice(0, 10)}...</span>
                 </div>
                 <div className="flex justify-between text-slate-400">
-                  <span>Bonus Status:</span>
+                  <span>Expansion Status:</span>
                   <span className={session.bonusClaimed ? 'text-emerald-400 font-bold' : 'text-amber-400'}>
-                    {session.bonusClaimed ? 'CLAIMED (+20GB)' : 'AVAILABLE'}
+                    {session.bonusClaimed ? 'EXPANDED (40GB ACTIVE)' : 'AVAILABLE (10 NIGHT)'}
                   </span>
                 </div>
               </div>
@@ -202,12 +211,12 @@ export const StorageVisualizer: React.FC = () => {
                   disabled={isGeneratingProof}
                   className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold text-xs font-mono uppercase tracking-wider shadow-[0_0_20px_rgba(16,185,129,0.25)] transition-all hover:scale-105"
                 >
-                  {isGeneratingProof ? 'Synthesizing Proof...' : 'Claim +20GB Faucet Bonus'}
+                  {isGeneratingProof ? 'Processing ZK Settlement...' : 'Pay 10 tNIGHT & Expand Quota'}
                 </button>
               ) : (
                 <div className="w-full py-3 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 font-mono text-xs text-center flex items-center justify-center space-x-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  <span>Bonus Active (40GB Vault)</span>
+                  <span>40GB Vault Active (Settled)</span>
                 </div>
               )}
             </div>
