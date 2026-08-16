@@ -20,6 +20,7 @@ import {
   RefreshCw,
   Coins,
   Shield,
+  Database,
 } from 'lucide-react';
 
 export const PaymentHistory: React.FC = () => {
@@ -32,6 +33,8 @@ export const PaymentHistory: React.FC = () => {
     setIsPricingModalOpen,
     setSelectedReceiptTx,
     setIsReceiptModalOpen,
+    setSelectedExplorerTx,
+    setIsExplorerModalOpen,
     syncLiveBalance,
   } = useWeb3Wallet();
 
@@ -58,6 +61,11 @@ export const PaymentHistory: React.FC = () => {
   const openReceipt = (tx: PaymentTransaction) => {
     setSelectedReceiptTx(tx);
     setIsReceiptModalOpen(true);
+  };
+
+  const openExplorer = (tx: PaymentTransaction) => {
+    setSelectedExplorerTx(tx);
+    setIsExplorerModalOpen(true);
   };
 
   // Filtered transactions
@@ -585,11 +593,11 @@ export const PaymentHistory: React.FC = () => {
                             )}
                           </button>
 
-                          {/* Receipt / Inspector Link */}
+                          {/* Explorer Link */}
                           <button
-                            onClick={() => openReceipt(tx)}
-                            title="Inspect On-Chain Cryptographic Receipt"
-                            className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-sky-300 transition-colors"
+                            onClick={() => openExplorer(tx)}
+                            title="Inspect on Midnight Network Preprod Explorer"
+                            className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-emerald-300 transition-colors"
                           >
                             <ExternalLink className="w-3.5 h-3.5" />
                           </button>
@@ -627,15 +635,26 @@ export const PaymentHistory: React.FC = () => {
                         )}
                       </td>
 
-                      {/* Receipt Action Column */}
+                      {/* Action Column */}
                       <td className="py-4 px-4 text-right whitespace-nowrap">
-                        <button
-                          onClick={() => openReceipt(tx)}
-                          className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-xl bg-[#080D1A] hover:bg-sky-500/20 border border-slate-700 hover:border-sky-500/50 text-slate-300 hover:text-sky-300 text-xs font-semibold transition-all group-hover:border-sky-500/40"
-                        >
-                          <FileText className="w-3.5 h-3.5 text-sky-400" />
-                          <span>Receipt</span>
-                        </button>
+                        <div className="flex items-center justify-end space-x-2">
+                          <button
+                            onClick={() => openExplorer(tx)}
+                            title="Inspect On-Chain Midnight Preprod State & Contract"
+                            className="inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 text-emerald-300 hover:text-emerald-200 text-xs font-semibold transition-all shadow-sm"
+                          >
+                            <Database className="w-3.5 h-3.5 text-emerald-400" />
+                            <span>Explorer</span>
+                          </button>
+
+                          <button
+                            onClick={() => openReceipt(tx)}
+                            className="inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-xl bg-[#080D1A] hover:bg-sky-500/20 border border-slate-700 hover:border-sky-500/50 text-slate-300 hover:text-sky-300 text-xs font-semibold transition-all group-hover:border-sky-500/40"
+                          >
+                            <FileText className="w-3.5 h-3.5 text-sky-400" />
+                            <span>Receipt</span>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );

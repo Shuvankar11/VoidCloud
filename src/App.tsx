@@ -20,6 +20,8 @@ import { FileViewerModal } from './components/FileViewerModal';
 import { PaymentHistory } from './components/PaymentHistory';
 import { ZKReceiptModal } from './components/ZKReceiptModal';
 import { CompactContractViewer } from './components/CompactContractViewer';
+import { MidnightExplorerModal } from './components/MidnightExplorerModal';
+import { useWeb3Wallet } from './context/WalletContext';
 
 const GlobalFileViewer: React.FC = () => {
   const { activePreviewFile, setActivePreviewFile, files } = useVault();
@@ -51,6 +53,7 @@ const GlobalFileViewer: React.FC = () => {
 
 const AppContent: React.FC = () => {
   const { activeView } = useVault();
+  const { isExplorerModalOpen, setIsExplorerModalOpen, selectedExplorerTx, setSelectedExplorerTx } = useWeb3Wallet();
 
   return (
     <div className="min-h-screen bg-[#030712] text-slate-100 relative selection:bg-sky-500 selection:text-black">
@@ -100,6 +103,16 @@ const AppContent: React.FC = () => {
 
       {/* Cryptographic ZK Proof & Payment Transaction Receipt Modal */}
       <ZKReceiptModal />
+
+      {/* Midnight Network Preprod Explorer & Contract Inspector Modal */}
+      <MidnightExplorerModal
+        isOpen={isExplorerModalOpen}
+        onClose={() => {
+          setIsExplorerModalOpen(false);
+          setSelectedExplorerTx(null);
+        }}
+        tx={selectedExplorerTx}
+      />
 
       {/* Cyberpunk Media Lightbox & File Viewer Modal for Photos/Videos/Docs */}
       <GlobalFileViewer />

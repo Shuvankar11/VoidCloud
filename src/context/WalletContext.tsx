@@ -116,6 +116,10 @@ interface WalletContextType {
   setSelectedReceiptTx: (tx: PaymentTransaction | null) => void;
   isReceiptModalOpen: boolean;
   setIsReceiptModalOpen: (open: boolean) => void;
+  selectedExplorerTx: PaymentTransaction | null;
+  setSelectedExplorerTx: (tx: PaymentTransaction | null) => void;
+  isExplorerModalOpen: boolean;
+  setIsExplorerModalOpen: (open: boolean) => void;
   connectWallet: (walletName: WalletState['walletName'], fallbackIfNoExt?: boolean) => Promise<void>;
   disconnectWallet: () => void;
   claimTestnetTokens: (token: 'NIGHT' | 'tDUST' | 'USDT') => void;
@@ -159,6 +163,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [selectedPlan, setSelectedPlan] = useState<StoragePlan | null>(STORAGE_PLANS[0]);
   const [selectedReceiptTx, setSelectedReceiptTx] = useState<PaymentTransaction | null>(null);
   const [isReceiptModalOpen, setIsReceiptModalOpen] = useState(false);
+  const [selectedExplorerTx, setSelectedExplorerTx] = useState<PaymentTransaction | null>(null);
+  const [isExplorerModalOpen, setIsExplorerModalOpen] = useState(false);
 
   // Transactions History State with LocalStorage Persistence (Strictly Real Transactions Only)
   const [transactions, setTransactions] = useState<PaymentTransaction[]>(() => {
@@ -691,6 +697,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setSelectedReceiptTx,
         isReceiptModalOpen,
         setIsReceiptModalOpen,
+        selectedExplorerTx,
+        setSelectedExplorerTx,
+        isExplorerModalOpen,
+        setIsExplorerModalOpen,
         connectWallet,
         disconnectWallet,
         claimTestnetTokens,

@@ -16,13 +16,26 @@ import {
   Sparkles,
   HardDrive,
   QrCode,
+  Database,
 } from 'lucide-react';
 
 export const ZKReceiptModal: React.FC = () => {
-  const { selectedReceiptTx, setSelectedReceiptTx, isReceiptModalOpen, setIsReceiptModalOpen } = useWeb3Wallet();
+  const {
+    selectedReceiptTx,
+    setSelectedReceiptTx,
+    isReceiptModalOpen,
+    setIsReceiptModalOpen,
+    setSelectedExplorerTx,
+    setIsExplorerModalOpen,
+  } = useWeb3Wallet();
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
   if (!isReceiptModalOpen || !selectedReceiptTx) return null;
+
+  const openExplorer = () => {
+    setSelectedExplorerTx(selectedReceiptTx);
+    setIsExplorerModalOpen(true);
+  };
 
   const tx = selectedReceiptTx;
   const isSuccess = tx.status === 'success';
@@ -259,21 +272,29 @@ export const ZKReceiptModal: React.FC = () => {
 
           {/* Action Buttons Footer */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 print:hidden">
-            <div className="flex items-center space-x-2 w-full sm:w-auto">
+            <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+              <button
+                onClick={openExplorer}
+                className="inline-flex items-center justify-center space-x-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500/20 to-sky-500/20 hover:from-emerald-500/30 hover:to-sky-500/30 border border-emerald-500/50 text-emerald-300 hover:text-emerald-200 text-xs font-mono font-semibold transition-all hover:scale-105 shadow-sm"
+              >
+                <Database className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Open in Midnight Explorer</span>
+              </button>
+
               <button
                 onClick={handlePrint}
-                className="flex-1 sm:flex-none inline-flex items-center justify-center space-x-1.5 px-4 py-2 rounded-xl bg-[#080D1A] hover:bg-[#10172A] border border-slate-700 text-slate-300 hover:text-white text-xs font-mono transition-colors"
+                className="inline-flex items-center justify-center space-x-1.5 px-3 py-2 rounded-xl bg-[#080D1A] hover:bg-[#10172A] border border-slate-700 text-slate-300 hover:text-white text-xs font-mono transition-colors"
               >
                 <Printer className="w-3.5 h-3.5" />
-                <span>Print Receipt</span>
+                <span>Print</span>
               </button>
 
               <button
                 onClick={handleDownloadJSON}
-                className="flex-1 sm:flex-none inline-flex items-center justify-center space-x-1.5 px-4 py-2 rounded-xl bg-[#080D1A] hover:bg-[#10172A] border border-slate-700 text-slate-300 hover:text-white text-xs font-mono transition-colors"
+                className="inline-flex items-center justify-center space-x-1.5 px-3 py-2 rounded-xl bg-[#080D1A] hover:bg-[#10172A] border border-slate-700 text-slate-300 hover:text-white text-xs font-mono transition-colors"
               >
                 <Download className="w-3.5 h-3.5" />
-                <span>Download JSON</span>
+                <span>JSON</span>
               </button>
             </div>
 
@@ -282,7 +303,7 @@ export const ZKReceiptModal: React.FC = () => {
                 setIsReceiptModalOpen(false);
                 setSelectedReceiptTx(null);
               }}
-              className="w-full sm:w-auto px-6 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white text-xs font-mono font-semibold transition-all shadow-md"
+              className="w-full sm:w-auto px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-mono font-semibold transition-all"
             >
               Close Receipt
             </button>
