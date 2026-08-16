@@ -196,7 +196,8 @@ $ node cli/void.js status
 | **README Documenting Privacy Claim** | ✅ PASS | Documented in [Section 5](#5-midnight-privacy-model-what-an-observer-can-and-cannot-learn) and [Section 6](#6-midnight-compact-smart-contract-specification). |
 
 > 📸 **Level 2 Screenshot (Lace Wallet Connected & Circuit Execution)**:  
-> *(Attach Level 2 DApp interface & circuit runner screenshot here)*
+> <img width="1920" height="1090" alt="{2D2C5E43-573C-49C3-A869-490CF53AB2BF}" src="https://github.com/user-attachments/assets/87b33f2f-023d-47b6-8f70-14e2009cdfb3" />
+
 
 ---
 
