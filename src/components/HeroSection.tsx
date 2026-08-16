@@ -79,7 +79,7 @@ export const HeroSection: React.FC = () => {
                 className="inline-flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl bg-[#0E1424] hover:bg-[#141D30] border border-emerald-500/50 hover:border-emerald-400 text-emerald-300 font-semibold text-sm shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all hover:scale-105"
               >
                 <Sparkles className="w-4 h-4 text-emerald-400" />
-                <span>{isGeneratingProof ? 'Settling ZK Proof...' : 'Unlock +20GB Shard (10 NIGHT)'}</span>
+                <span>{isGeneratingProof ? 'Synthesizing ZK Proof...' : 'Claim +20GB Faucet Bonus'}</span>
               </button>
             ) : (
               <div className="inline-flex items-center space-x-2 px-5 py-3.5 rounded-xl bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 font-mono text-xs">

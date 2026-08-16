@@ -130,13 +130,13 @@ export const MidnightExplorerModal: React.FC<MidnightExplorerModalProps> = ({
 
             <div className="flex items-center space-x-2">
               <a
-                href={`https://preprod.cardanoscan.io/address/${contractAddress}`}
+                href="https://indexer.preprod.midnight.network/api/v1/graphql"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#080D1A] hover:bg-slate-800 border border-slate-700 text-sky-400 text-xs transition-colors"
+                className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#080D1A] hover:bg-slate-800 border border-emerald-500/40 text-emerald-300 text-xs transition-colors"
               >
-                <span>Cardanoscan Preprod</span>
-                <ExternalLink className="w-3.5 h-3.5" />
+                <span>Midnight Preprod Indexer</span>
+                <ExternalLink className="w-3.5 h-3.5 text-emerald-400" />
               </a>
 
               <button
