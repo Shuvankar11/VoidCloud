@@ -245,7 +245,10 @@ $ npm test
    Duration  784ms
 ```
 
-> 📸 **Level 3 Screenshot (Test Suite Output & CI/CD Passing Run)**:  
+> 📸 **Level 3 Screenshot 1: Automated Test Suite Output (13 Tests Passing)**:  
+> *(Attach `npm test` terminal output screenshot here)*
+
+> 📸 **Level 3 Screenshot 2: GitHub Actions CI/CD Pipeline (Passing Run)**:  
 > <img width="1920" height="1090" alt="{B5770A00-C34B-4403-8417-62FCFB747E2B}" src="https://github.com/user-attachments/assets/f46d8b56-79e5-44f5-bcc2-7514dbfad4f9" />
 
 
