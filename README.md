@@ -250,7 +250,8 @@ $ npm test
 
 
 > 📸 **Level 3 Screenshot 2: GitHub Actions CI/CD Pipeline (Passing Run)**:  
-> <img width="1920" height="1090" alt="{B5770A00-C34B-4403-8417-62FCFB747E2B}" src="https://github.com/user-attachments/assets/f46d8b56-79e5-44f5-bcc2-7514dbfad4f9" />
+> <img width="1920" height="1090" alt="{51B06DB5-0C30-433B-A9C7-CC0FC70DEA44}" src="https://github.com/user-attachments/assets/f15fa5df-816f-4a0e-8fc8-7751efce837d" />
+
 
 
 ---
