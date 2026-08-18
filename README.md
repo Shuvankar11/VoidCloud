@@ -1,6 +1,6 @@
 # 🌌 VoidCloud // Privacy-First Decentralized Cloud Storage on Midnight Network
 
-[![CI/CD Pipeline](https://github.com/Shuvankar11/VoidCloude/actions/workflows/ci.yml/badge.svg)](https://github.com/Shuvankar11/VoidCloude/actions/workflows/ci.yml)
+[![CI/CD Pipeline](https://github.com/Shuvankar11/VoidCloud/actions/workflows/ci.yml/badge.svg)](https://github.com/Shuvankar11/VoidCloud/actions/workflows/ci.yml)
 [![Live Production dApp](https://img.shields.io/badge/Live%20dApp-void--cloude.vercel.app-00F2FE?style=for-the-badge&logo=vercel)](https://void-cloude.vercel.app/)
 [![Midnight Network](https://img.shields.io/badge/Midnight-Preprod-7F00FF?style=for-the-badge&logo=shield)](https://midnight.network)
 [![ZK-SNARK](https://img.shields.io/badge/ZK--SNARK-Halo2%20%2F%20PLONK-00F2FE?style=for-the-badge)](https://midnight.network)
@@ -10,7 +10,7 @@
 
 > 🌐 **Live Production dApp**: [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/)  
 > 📜 **Deployed Preprod Contract**: `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e`  
-> 🔗 **Public GitHub Repository**: [https://github.com/Shuvankar11/VoidCloude](https://github.com/Shuvankar11/VoidCloude)  
+> 🔗 **Public GitHub Repository**: [https://github.com/Shuvankar11/VoidCloud](https://github.com/Shuvankar11/VoidCloud)  
 > 🛡️ **Level 3 - First Quarter Verified Submission** (Fully functional dApp, 13 Vitest Unit Tests, Automated CI/CD Workflow, Observable Privacy Model, Midnight Compact Smart Contract).
 
 ---
@@ -68,7 +68,7 @@ flowchart TD
 ### 🔗 Official Submission Links
 * 🎥 **Full Demo Video (YouTube)**: [Watch VoidCloud Demo Video on YouTube](https://youtu.be/VOIDCLOUD_DEMO_LINK)
 * 🌐 **Live dApp URL**: [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/)
-* 📦 **Public GitHub Repository**: [https://github.com/Shuvankar11/VoidCloude](https://github.com/Shuvankar11/VoidCloude)
+* 📦 **Public GitHub Repository**: [https://github.com/Shuvankar11/VoidCloud](https://github.com/Shuvankar11/VoidCloud)
 * 📜 **Deployed Midnight Preprod Contract**: `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e` (Block `#849210`)
 * 🔍 **Official Midnight Preprod Explorer**: [https://preprod.midnightexplorer.com/](https://preprod.midnightexplorer.com/)
 
@@ -82,8 +82,8 @@ flowchart TD
 
 ### Step 1: Clone Repository & Install Dependencies
 ```bash
-git clone https://github.com/Shuvankar11/VoidCloude.git
-cd VoidCloude
+git clone https://github.com/Shuvankar11/VoidCloud.git
+cd VoidCloud
 npm install
 ```
 
@@ -212,7 +212,7 @@ $ node cli/void.js status
 | **Minimum 10 meaningful commits** | ✅ PASS | **49+ meaningful conventional commits** on branch `main` (`git rev-list --count HEAD`). |
 | **README "Privacy Model" section (Observer model)** | ✅ PASS | Exhaustive breakdown in [Section 5](#5-midnight-privacy-model-what-an-observer-can-and-cannot-learn) detailing what an observer can and cannot learn. |
 | **Live demo link** | ✅ PASS | [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/) (Continuous Vercel deployment). |
-| **Public GitHub repository** | ✅ PASS | [`https://github.com/Shuvankar11/VoidCloude`](https://github.com/Shuvankar11/VoidCloude) (Public, clean tree, MIT licensed). |
+| **Public GitHub repository** | ✅ PASS | [`https://github.com/Shuvankar11/VoidCloud`](https://github.com/Shuvankar11/VoidCloud) (Public, clean tree, MIT licensed). |
 
 #### 🧪 Level 3 Test Suite Verification Output (13 Tests Passing):
 ```bash
