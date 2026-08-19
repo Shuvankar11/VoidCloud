@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useVault } from '../context/VaultContext';
+import { useAuth } from '../context/AuthContext';
 import { ShieldedFile } from '../types';
 import { getFileBlob } from '../services/vaultIndexedDB';
 import {
@@ -9,8 +10,6 @@ import {
   FileText,
   FileCode,
   Archive,
-  FileSpreadsheet,
-  FileCheck,
   Eye,
   Download,
   Trash2,
@@ -26,19 +25,44 @@ import {
   Loader2,
   Plus,
   Lock,
+  Folder,
+  FolderArchive,
+  Users,
+  MapPin,
+  Cloud,
+  Settings,
+  Share2,
+  CheckSquare,
+  MoreHorizontal,
+  Grid,
+  Layers,
+  ChevronDown,
+  Minus,
+  Square,
+  X
 } from 'lucide-react';
 
-interface MediaCardProps {
+interface MediaTileProps {
   file: ShieldedFile;
   category: 'image' | 'video' | 'audio' | 'doc';
+  gridDensity: 'small' | 'medium' | 'large';
+  index: number;
+  isSelected?: boolean;
+  onSelectToggle?: () => void;
+  isSelectionMode?: boolean;
   onClick: () => void;
   onSave: () => void;
   onDelete: () => void;
 }
 
-const MediaCard: React.FC<MediaCardProps> = ({
+const MediaTile: React.FC<MediaTileProps> = ({
   file,
   category,
+  gridDensity,
+  index,
+  isSelected = false,
+  onSelectToggle,
+  isSelectionMode = false,
   onClick,
   onSave,
   onDelete,
@@ -47,12 +71,6 @@ const MediaCard: React.FC<MediaCardProps> = ({
   const isShredded = file.status === 'shredded';
   const sizeMB = (file.sizeBytes / (1024 * 1024)).toFixed(2);
   const ext = file.name.split('.').pop()?.toUpperCase() || 'FILE';
-
-  const formattedDate = new Date(file.uploadedAt).toLocaleDateString(undefined, {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
 
   useEffect(() => {
     let isMounted = true;
@@ -64,7 +82,7 @@ const MediaCard: React.FC<MediaCardProps> = ({
           setBlobUrl(url);
         }
       } catch (err) {
-        console.warn('[MediaCard] Error loading blob:', err);
+        console.warn('[MediaTile] Error loading blob:', err);
       }
     }
     load();
@@ -74,157 +92,112 @@ const MediaCard: React.FC<MediaCardProps> = ({
     };
   }, [file.id]);
 
-  const renderDocIcon = () => {
-    const lower = file.name.toLowerCase();
-    if (lower.endsWith('.pdf')) return <FileText className="w-10 h-10 text-rose-500" />;
-    if (lower.endsWith('.zip') || lower.endsWith('.rar') || lower.endsWith('.tar') || lower.endsWith('.7z')) {
-      return <Archive className="w-10 h-10 text-emerald-500" />;
-    }
-    if (lower.endsWith('.csv') || lower.endsWith('.xlsx') || lower.endsWith('.xls')) {
-      return <FileSpreadsheet className="w-10 h-10 text-green-600" />;
-    }
-    if (lower.endsWith('.json') || lower.endsWith('.js') || lower.endsWith('.ts') || lower.endsWith('.py') || lower.endsWith('.html') || lower.endsWith('.css') || lower.endsWith('.md')) {
-      return <FileCode className="w-10 h-10 text-teal-600" />;
-    }
-    return <FileCheck className="w-10 h-10 text-sky-500" />;
-  };
+  // Determine span classes for masonry grid look (matching reference)
+  const isLargeFeature = (index === 0 || index === 8 || index === 14) && gridDensity === 'medium';
+  const isWideFeature = (index === 3 || index === 11) && gridDensity === 'medium';
 
   return (
     <div
-      onClick={onClick}
-      className="group relative bg-white hover:bg-slate-50/80 rounded-2xl border border-slate-200/80 hover:border-sky-400 transition-all duration-300 shadow-sm hover:shadow-xl overflow-hidden flex flex-col cursor-pointer transform hover:-translate-y-1"
+      onClick={isSelectionMode ? onSelectToggle : onClick}
+      className={`group relative rounded-xl overflow-hidden cursor-pointer transition-all duration-200 bg-slate-100 shadow-xs hover:shadow-md ${
+        isLargeFeature
+          ? 'col-span-2 row-span-2 h-72 sm:h-80'
+          : isWideFeature
+          ? 'col-span-2 h-36 sm:h-40'
+          : gridDensity === 'small'
+          ? 'h-28 sm:h-32'
+          : gridDensity === 'large'
+          ? 'h-52 sm:h-64'
+          : 'h-36 sm:h-40'
+      } ${isSelected ? 'ring-3 ring-rose-500 scale-[0.98]' : 'hover:scale-[1.01]'}`}
     >
-      {/* Thumbnail Window / Card Header */}
-      <div className="relative w-full h-40 sm:h-48 bg-slate-100/70 flex items-center justify-center overflow-hidden border-b border-slate-200/80">
-        {category === 'image' ? (
-          blobUrl ? (
-            <img
+      {/* Visual Content */}
+      {category === 'image' ? (
+        blobUrl ? (
+          <img
+            src={blobUrl}
+            alt={file.name}
+            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300 select-none pointer-events-none"
+          />
+        ) : (
+          <div className="w-full h-full flex flex-col items-center justify-center p-3 bg-gradient-to-tr from-sky-100 to-indigo-50 text-slate-700">
+            <ImageIcon className="w-8 h-8 text-sky-500 mb-1" />
+            <span className="text-[10px] font-bold truncate max-w-full">{file.name}</span>
+          </div>
+        )
+      ) : category === 'video' ? (
+        blobUrl ? (
+          <div className="relative w-full h-full">
+            <video
               src={blobUrl}
-              alt={file.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              className="w-full h-full object-cover"
+              muted
+              playsInline
+              preload="metadata"
             />
-          ) : (
-            <div className="text-center p-4">
-              <ImageIcon className="w-10 h-10 text-sky-500 mx-auto opacity-75 group-hover:scale-110 transition-transform" />
-              <span className="text-[10px] font-semibold text-slate-500 mt-1 block">Photo Shard</span>
-            </div>
-          )
-        ) : category === 'video' ? (
-          blobUrl ? (
-            <div className="relative w-full h-full">
-              <video
-                src={blobUrl}
-                className="w-full h-full object-cover opacity-85 group-hover:opacity-100 transition-opacity"
-                muted
-                playsInline
-                preload="metadata"
-              />
-              <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-                <div className="w-11 h-11 rounded-full bg-sky-500 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                  <Play className="w-5 h-5 fill-current ml-0.5" />
-                </div>
+            <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+              <div className="w-9 h-9 rounded-full bg-white/90 text-slate-900 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                <Play className="w-4 h-4 fill-current ml-0.5" />
               </div>
             </div>
-          ) : (
-            <div className="text-center p-4">
-              <Film className="w-10 h-10 text-violet-500 mx-auto opacity-75 group-hover:scale-110 transition-transform" />
-              <span className="text-[10px] font-semibold text-slate-500 mt-1 block">Video Shard</span>
-            </div>
-          )
-        ) : category === 'audio' ? (
-          <div className="text-center p-6 space-y-2">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-xs">
-              <Music className="w-6 h-6" />
-            </div>
-            <span className="text-[11px] text-emerald-700 block font-bold">Audio Shard</span>
           </div>
         ) : (
-          <div className="text-center p-4 space-y-2">
-            <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 group-hover:border-sky-300 transition-colors inline-block">
-              {renderDocIcon()}
-            </div>
-            <span className="text-[10px] text-slate-600 block uppercase font-bold">
-              {ext} FILE
-            </span>
+          <div className="w-full h-full flex flex-col items-center justify-center p-3 bg-gradient-to-tr from-purple-100 to-pink-50 text-slate-700">
+            <Film className="w-8 h-8 text-purple-500 mb-1" />
+            <span className="text-[10px] font-bold truncate max-w-full">{file.name}</span>
           </div>
-        )}
+        )
+      ) : (
+        <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-slate-50 border border-slate-200 text-center">
+          <FileText className="w-8 h-8 text-amber-500 mb-1" />
+          <span className="text-xs font-bold text-slate-800 truncate max-w-full">{file.name}</span>
+          <span className="text-[10px] text-slate-400 font-mono mt-0.5">{sizeMB} MB • {ext}</span>
+        </div>
+      )}
 
-        {/* Top Left Format Badge */}
-        <div className="absolute top-2.5 left-2.5 flex items-center space-x-1.5">
-          <span className="px-2 py-0.5 rounded-lg bg-white/90 border border-slate-200 text-[10px] font-bold uppercase text-slate-800 shadow-xs">
+      {/* Top Left Selection Checkbox */}
+      {isSelectionMode && (
+        <div className="absolute top-2 left-2 z-20">
+          <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${isSelected ? 'bg-rose-500 border-rose-500 text-white' : 'bg-white/80 border-slate-300'}`}>
+            {isSelected && <CheckSquare className="w-3.5 h-3.5" />}
+          </div>
+        </div>
+      )}
+
+      {/* Hover Overlay Controls */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-150 flex flex-col justify-between p-2.5 text-white">
+        <div className="flex items-center justify-between">
+          <span className="px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-md text-[10px] font-mono font-bold uppercase">
             {ext}
           </span>
-          {isShredded && (
-            <span className="px-2 py-0.5 rounded-lg bg-rose-50 border border-rose-200 text-[10px] font-bold text-rose-600">
-              REVOKED
-            </span>
-          )}
-        </div>
-
-        {/* Top Right Size Badge */}
-        <div className="absolute top-2.5 right-2.5">
-          <span className="px-2 py-0.5 rounded-lg bg-white/90 border border-slate-200 text-[10px] font-bold text-slate-700 shadow-xs">
+          <span className="text-[10px] bg-black/60 px-1.5 py-0.5 rounded-md backdrop-blur-md">
             {sizeMB} MB
           </span>
         </div>
 
-        {/* Hover Quick Actions */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-end justify-between p-3">
-          <span className="text-[11px] text-white flex items-center gap-1 font-bold">
-            <Maximize2 className="w-3.5 h-3.5" />
-            <span>Click to Enlarge</span>
+        <div className="flex items-center justify-between">
+          <span className="text-[11px] font-bold truncate max-w-[130px] drop-shadow-sm">
+            {file.name}
           </span>
 
-          <div className="flex items-center space-x-1.5" onClick={(e) => e.stopPropagation()}>
+          <div className="flex items-center space-x-1" onClick={(e) => e.stopPropagation()}>
             {!isShredded && (
               <button
                 onClick={onSave}
                 title="Decrypt & Download"
-                className="p-1.5 rounded-lg bg-sky-500 hover:bg-sky-400 text-white transition-colors shadow-md"
+                className="p-1 rounded-md bg-white/90 hover:bg-white text-slate-900 shadow-sm transition-colors cursor-pointer"
               >
                 <Download className="w-3.5 h-3.5" />
               </button>
             )}
             <button
               onClick={onDelete}
-              title="Delete permanently"
-              className="p-1.5 rounded-lg bg-rose-500 hover:bg-rose-600 text-white transition-colors shadow-md"
+              title="Delete"
+              className="p-1 rounded-md bg-rose-500 hover:bg-rose-600 text-white shadow-sm transition-colors cursor-pointer"
             >
               <Trash2 className="w-3.5 h-3.5" />
             </button>
           </div>
-        </div>
-      </div>
-
-      {/* Card Body Info */}
-      <div className="p-4 flex flex-col justify-between flex-1 space-y-3 bg-white">
-        <div>
-          <h3
-            className="font-bold text-slate-900 text-xs sm:text-sm truncate group-hover:text-sky-600 transition-colors"
-            title={file.name}
-          >
-            {file.name}
-          </h3>
-          <div className="flex items-center space-x-2 text-[10px] text-slate-400 mt-1">
-            <span className="flex items-center gap-1">
-              <Calendar className="w-3 h-3 text-slate-400" />
-              {formattedDate}
-            </span>
-            <span>•</span>
-            <span className="flex items-center gap-1 text-emerald-600 font-semibold">
-              <CheckCircle2 className="w-3 h-3 text-emerald-500" />
-              ZK Shielded
-            </span>
-          </div>
-        </div>
-
-        {/* Card Footer Key Metadata */}
-        <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500 font-mono">
-          <div className="flex items-center space-x-1">
-            <Lock className="w-3 h-3 text-sky-500" />
-            <span>AES-256</span>
-          </div>
-          <span className="text-sky-600 font-semibold group-hover:underline">Open ↗</span>
         </div>
       </div>
     </div>
@@ -241,15 +214,17 @@ export const MediaGallery: React.FC = () => {
     setActiveView,
     session,
   } = useVault();
+  const { user } = useAuth();
 
-  const [activeCategory, setActiveCategory] = useState<'all' | 'photos' | 'videos' | 'audio' | 'files'>('all');
+  const [activeSidebarTab, setActiveSidebarTab] = useState<'photos' | 'albums' | 'folders' | 'memories' | 'people' | 'locations'>('photos');
+  const [gridDensity, setGridDensity] = useState<'small' | 'medium' | 'large'>('medium');
   const [searchQuery, setSearchQuery] = useState('');
-  const [isDragging, setIsDragging] = useState(false);
+  const [isSelectionMode, setIsSelectionMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadFileName, setUploadFileName] = useState('');
-  const [uploadFileSizeMB, setUploadFileSizeMB] = useState(0);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadStage, setUploadStage] = useState('');
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const getMediaCategory = (f: ShieldedFile): 'image' | 'video' | 'audio' | 'doc' => {
@@ -261,269 +236,442 @@ export const MediaGallery: React.FC = () => {
     return 'doc';
   };
 
-  const handleFileDrop = async (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(false);
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      await processFiles(e.dataTransfer.files);
-    }
-  };
+  const activeFiles = useMemo(() => files.filter((f) => f.status === 'shielded'), [files]);
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const filteredMedia = useMemo(() => {
+    return activeFiles.filter((f) => {
+      const matchesSearch = f.name.toLowerCase().includes(searchQuery.toLowerCase());
+      if (!matchesSearch) return false;
+
+      if (activeSidebarTab === 'albums') {
+        return getMediaCategory(f) === 'image' || getMediaCategory(f) === 'video';
+      }
+      return true;
+    });
+  }, [activeFiles, searchQuery, activeSidebarTab]);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      await processFiles(e.target.files);
+      setIsUploading(true);
+      setUploadProgress(10);
+      setUploadStage('Encrypting and shielding media in vault...');
+
+      for (let i = 0; i < e.target.files.length; i++) {
+        const file = e.target.files[i];
+        await uploadAndEncryptFile(file, (percent, stage) => {
+          setUploadProgress(percent);
+          setUploadStage(stage);
+        });
+      }
+
+      setTimeout(() => {
+        setIsUploading(false);
+        setUploadProgress(0);
+        setUploadStage('');
+      }, 600);
     }
   };
 
-  const processFiles = async (fileList: FileList) => {
-    setIsUploading(true);
-    for (let i = 0; i < fileList.length; i++) {
-      const file = fileList[i];
-      const sizeMB = parseFloat((file.size / (1024 * 1024)).toFixed(2)) || 0.1;
-      setUploadFileName(file.name);
-      setUploadFileSizeMB(sizeMB);
-      setUploadProgress(2);
-      setUploadStage('Encrypting and shielding file in vault...');
-
-      await uploadAndEncryptFile(file, (percent, stage) => {
-        setUploadProgress(percent);
-        setUploadStage(stage);
-      });
-    }
-
-    setTimeout(() => {
-      setIsUploading(false);
-      setUploadProgress(0);
-      setUploadFileName('');
-      setUploadStage('');
-    }, 700);
+  const toggleSelectId = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
   };
 
-  const activeFiles = files.filter(f => f.status === 'shielded');
-  const photoFiles = activeFiles.filter(f => getMediaCategory(f) === 'image');
-  const videoFiles = activeFiles.filter(f => getMediaCategory(f) === 'video');
-  const audioFiles = activeFiles.filter(f => getMediaCategory(f) === 'audio');
-  const docFiles = activeFiles.filter(f => getMediaCategory(f) === 'doc');
-
-  const filteredMedia = files.filter((f) => {
-    const matchesSearch = f.name.toLowerCase().includes(searchQuery.toLowerCase());
-    if (!matchesSearch) return false;
-
-    const cat = getMediaCategory(f);
-    if (activeCategory === 'photos') return cat === 'image';
-    if (activeCategory === 'videos') return cat === 'video';
-    if (activeCategory === 'audio') return cat === 'audio';
-    if (activeCategory === 'files') return cat === 'doc';
-    return true;
-  });
+  // Grouping timeline header
+  const timelineDateString = useMemo(() => {
+    const d = new Date();
+    return `${d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })} - ${filteredMedia.length} shielded photos`;
+  }, [filteredMedia.length]);
 
   return (
     <section
-      className="min-h-screen py-8 px-3 sm:px-6 lg:px-8 bg-cover bg-center bg-no-repeat transition-all"
+      className="min-h-screen py-6 sm:py-8 px-3 sm:px-6 lg:px-8 bg-cover bg-center bg-no-repeat transition-all select-none"
       style={{
         backgroundImage: 'url(/aurora-bg.jpg)',
         backgroundColor: '#EBF4FF',
       }}
     >
-      <div className="max-w-7xl mx-auto rounded-3xl bg-white/95 backdrop-blur-2xl border border-white/80 shadow-[0_25px_80px_rgba(30,60,140,0.16)] p-6 sm:p-8 space-y-6 text-slate-800">
+      {/* Hidden File Input */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileUpload}
+        multiple
+        accept="image/*,video/*,audio/*,.pdf,.doc,.docx"
+        className="hidden"
+      />
+
+      {/* Main Microsoft Photos Redesign Window Frame */}
+      <div className="max-w-7xl mx-auto rounded-3xl bg-white/95 backdrop-blur-2xl border border-white/80 shadow-[0_25px_80px_rgba(30,60,140,0.16)] flex flex-col md:flex-row overflow-hidden min-h-[820px] text-slate-800 relative">
         
-        {/* Top Header with Back Button */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-200">
-          <div className="flex items-center space-x-3">
+        {/* ============================================================ */}
+        {/* 1. LEFT SIDEBAR: User Profile & Photos Navigation            */}
+        {/* ============================================================ */}
+        <aside className="md:w-60 bg-gradient-to-b from-slate-50/90 via-rose-50/30 to-slate-50/90 border-r border-slate-200/80 p-5 flex flex-col justify-between flex-shrink-0">
+          <div className="space-y-6">
+            
+            {/* Top User Profile (Matching Reference: Aroha / Avatar) */}
+            <div className="flex flex-col items-center text-center pt-2 pb-4 border-b border-slate-200/60">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-slate-900 to-slate-700 text-white font-bold flex items-center justify-center shadow-md mb-2 overflow-hidden border-2 border-white">
+                <img
+                  src="/voidcloud-logo.jpg"
+                  alt="Avatar"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <h3 className="font-display font-black text-sm text-slate-900">
+                {user?.displayName || 'Shuvankar Samanta'}
+              </h3>
+              <p className="text-[11px] text-slate-400 font-mono truncate max-w-[170px]">
+                {user?.email || 'kgp.shuvankar112@gmail.com'}
+              </p>
+            </div>
+
+            {/* Section 1: Library */}
+            <div className="space-y-1">
+              <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-1.5">
+                Library
+              </div>
+
+              <button
+                onClick={() => setActiveSidebarTab('photos')}
+                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all relative cursor-pointer ${
+                  activeSidebarTab === 'photos'
+                    ? 'text-slate-900 bg-white shadow-xs font-bold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
+                }`}
+              >
+                {/* Active Coral Indicator Bar (Matching Reference) */}
+                {activeSidebarTab === 'photos' && (
+                  <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-rose-500 rounded-r-full" />
+                )}
+                <ImageIcon className={`w-4 h-4 ${activeSidebarTab === 'photos' ? 'text-rose-500' : 'text-slate-400'}`} />
+                <span>Photos</span>
+              </button>
+
+              <button
+                onClick={() => setActiveSidebarTab('albums')}
+                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all relative cursor-pointer ${
+                  activeSidebarTab === 'albums'
+                    ? 'text-slate-900 bg-white shadow-xs font-bold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
+                }`}
+              >
+                {activeSidebarTab === 'albums' && (
+                  <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-rose-500 rounded-r-full" />
+                )}
+                <FolderArchive className={`w-4 h-4 ${activeSidebarTab === 'albums' ? 'text-rose-500' : 'text-slate-400'}`} />
+                <span>Albums</span>
+              </button>
+
+              <button
+                onClick={() => setActiveSidebarTab('folders')}
+                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all relative cursor-pointer ${
+                  activeSidebarTab === 'folders'
+                    ? 'text-slate-900 bg-white shadow-xs font-bold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
+                }`}
+              >
+                {activeSidebarTab === 'folders' && (
+                  <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-rose-500 rounded-r-full" />
+                )}
+                <Folder className={`w-4 h-4 ${activeSidebarTab === 'folders' ? 'text-rose-500' : 'text-slate-400'}`} />
+                <span>Folders</span>
+              </button>
+            </div>
+
+            {/* Section 2: Collections */}
+            <div className="space-y-1 pt-2">
+              <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-1.5">
+                Collections
+              </div>
+
+              <button
+                onClick={() => setActiveSidebarTab('memories')}
+                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all relative cursor-pointer ${
+                  activeSidebarTab === 'memories'
+                    ? 'text-slate-900 bg-white shadow-xs font-bold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
+                }`}
+              >
+                {activeSidebarTab === 'memories' && (
+                  <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-rose-500 rounded-r-full" />
+                )}
+                <Clock className={`w-4 h-4 ${activeSidebarTab === 'memories' ? 'text-rose-500' : 'text-slate-400'}`} />
+                <span>Memories</span>
+              </button>
+
+              <button
+                onClick={() => setActiveSidebarTab('people')}
+                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all relative cursor-pointer ${
+                  activeSidebarTab === 'people'
+                    ? 'text-slate-900 bg-white shadow-xs font-bold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
+                }`}
+              >
+                {activeSidebarTab === 'people' && (
+                  <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-rose-500 rounded-r-full" />
+                )}
+                <Users className={`w-4 h-4 ${activeSidebarTab === 'people' ? 'text-rose-500' : 'text-slate-400'}`} />
+                <span>People</span>
+              </button>
+
+              <button
+                onClick={() => setActiveSidebarTab('locations')}
+                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all relative cursor-pointer ${
+                  activeSidebarTab === 'locations'
+                    ? 'text-slate-900 bg-white shadow-xs font-bold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
+                }`}
+              >
+                {activeSidebarTab === 'locations' && (
+                  <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-rose-500 rounded-r-full" />
+                )}
+                <MapPin className={`w-4 h-4 ${activeSidebarTab === 'locations' ? 'text-rose-500' : 'text-slate-400'}`} />
+                <span>Locations</span>
+              </button>
+            </div>
+
+            {/* Section 3: Storage */}
+            <div className="space-y-1 pt-2">
+              <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-1.5">
+                Storage
+              </div>
+
+              <div className="px-3 py-2 rounded-xl bg-white/70 border border-slate-200/60 flex items-center justify-between text-xs font-semibold shadow-2xs">
+                <div className="flex items-center space-x-2.5">
+                  <Cloud className="w-4 h-4 text-sky-500" />
+                  <span>Midnight ZK Vault</span>
+                </div>
+                <span className="text-[10px] font-mono font-bold text-sky-700 bg-sky-50 px-1.5 py-0.5 rounded">
+                  {session.quotaGB}GB
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Settings Link & Back to Dashboard */}
+          <div className="pt-4 border-t border-slate-200/60 space-y-1">
             <button
               onClick={() => setActiveView('dashboard')}
-              className="p-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all flex items-center gap-2 text-xs font-bold shadow-xs"
+              className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-sky-600 hover:bg-white/80 transition-colors cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Back to Dashboard</span>
             </button>
 
-            <div>
-              <h1 className="text-xl sm:text-2xl font-display font-black text-slate-900 tracking-tight flex items-center gap-2">
-                <span>Media & Files Vault</span>
-                <span className="px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-700 text-xs font-bold">
-                  {files.length} Objects
-                </span>
-              </h1>
-              <span className="text-xs text-slate-400">
-                Personal Shielded Storage • Quota {session.quotaGB} GB Allocated
-              </span>
-            </div>
-          </div>
-
-          {/* Action Button: Direct Upload */}
-          <div className="flex items-center space-x-2 w-full sm:w-auto">
             <button
-              onClick={() => fileInputRef.current?.click()}
-              className="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs transition-all shadow-md shadow-sky-500/25 flex items-center justify-center gap-2 cursor-pointer"
+              onClick={() => setActiveView('dashboard')}
+              className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/80 transition-colors cursor-pointer"
             >
-              <Plus className="w-4 h-4" />
-              <span>Upload Photos / Files</span>
+              <Settings className="w-4 h-4 text-slate-400" />
+              <span>Settings</span>
             </button>
           </div>
-        </div>
+        </aside>
 
-        {/* Hidden File Input */}
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileSelect}
-          multiple
-          className="hidden"
-        />
+        {/* ============================================================ */}
+        {/* 2. MAIN CENTER: Microsoft Photos Redesign Photo Wall         */}
+        {/* ============================================================ */}
+        <main className="flex-1 p-6 sm:p-8 flex flex-col justify-between overflow-y-auto space-y-6">
+          <div className="space-y-6">
+            
+            {/* Top Windows App Header Bar (Title, Actions & Search) */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+              
+              {/* Back Arrow & Main Title */}
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={() => setActiveView('dashboard')}
+                  className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+                  title="Back"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+                <h1 className="text-2xl sm:text-3xl font-display font-black text-slate-900 tracking-tight">
+                  Photos
+                </h1>
+              </div>
 
-        {/* Live Upload Progress Bar if Uploading */}
-        {isUploading && (
-          <div className="rounded-2xl p-5 border border-sky-300 bg-sky-50/90 shadow-md space-y-3">
-            <div className="flex items-center justify-between text-xs">
-              <span className="font-bold text-slate-900 truncate max-w-sm">
-                Encrypting & Uploading: {uploadFileName} ({uploadFileSizeMB} MB)
-              </span>
-              <span className="text-sky-600 font-black">{uploadProgress}%</span>
+              {/* Top Quick Actions (Matching Reference) */}
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all cursor-pointer"
+                >
+                  <Plus className="w-3.5 h-3.5 text-rose-500" />
+                  <span>New Photo</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setIsSelectionMode(!isSelectionMode);
+                    setSelectedIds([]);
+                  }}
+                  className={`inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    isSelectionMode
+                      ? 'bg-rose-500 text-white shadow-xs'
+                      : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                  }`}
+                >
+                  <CheckSquare className="w-3.5 h-3.5" />
+                  <span>{isSelectionMode ? 'Cancel' : 'Select'}</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    if (selectedIds.length > 0) {
+                      alert(`Sharing ${selectedIds.length} zero-knowledge shielded photo links!`);
+                    } else {
+                      fileInputRef.current?.click();
+                    }
+                  }}
+                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all cursor-pointer"
+                >
+                  <Share2 className="w-3.5 h-3.5" />
+                  <span>Share</span>
+                </button>
+
+                {/* Search Bar (Matching Reference) */}
+                <div className="relative w-44 sm:w-56">
+                  <Search className="absolute left-3 top-2.5 w-3.5 h-3.5 text-slate-400" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search Photos"
+                    className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-slate-100/90 border border-slate-200/60 focus:border-rose-400 focus:bg-white text-xs text-slate-800 placeholder-slate-400 outline-none transition-all shadow-2xs"
+                  />
+                </div>
+              </div>
             </div>
-            <div className="h-2.5 w-full bg-white rounded-full overflow-hidden border border-sky-200">
+
+            {/* Upload Progress Bar if Uploading */}
+            {isUploading && (
+              <div className="p-4 rounded-2xl bg-rose-50/80 border border-rose-200 space-y-2">
+                <div className="flex justify-between text-xs font-bold text-slate-800">
+                  <span>{uploadStage}</span>
+                  <span className="text-rose-600">{uploadProgress}%</span>
+                </div>
+                <div className="w-full h-2 bg-white rounded-full overflow-hidden border border-rose-100">
+                  <div
+                    style={{ width: `${uploadProgress}%` }}
+                    className="h-full bg-gradient-to-r from-rose-500 to-amber-500 rounded-full transition-all duration-150"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Timeline Header & Density Switcher (Matching Reference) */}
+            <div className="flex items-center justify-between pt-2 pb-1 border-b border-slate-200/50">
+              <div className="text-xs font-bold text-slate-700">
+                {timelineDateString}
+              </div>
+
+              {/* Density Controls (Small, Medium, Large Grid with Active Underline Indicator) */}
+              <div className="flex items-center space-x-2 text-slate-400">
+                <button
+                  onClick={() => setGridDensity('small')}
+                  className={`p-1 rounded-md transition-colors relative cursor-pointer ${
+                    gridDensity === 'small' ? 'text-slate-900 font-bold' : 'hover:text-slate-700'
+                  }`}
+                  title="Small Grid"
+                >
+                  <Square className="w-3.5 h-3.5" />
+                  {gridDensity === 'small' && (
+                    <div className="absolute bottom-0 left-1 right-1 h-0.5 bg-rose-500 rounded-full" />
+                  )}
+                </button>
+
+                <button
+                  onClick={() => setGridDensity('medium')}
+                  className={`p-1 rounded-md transition-colors relative cursor-pointer ${
+                    gridDensity === 'medium' ? 'text-slate-900 font-bold' : 'hover:text-slate-700'
+                  }`}
+                  title="Medium Grid (Masonry)"
+                >
+                  <Grid className="w-3.5 h-3.5" />
+                  {gridDensity === 'medium' && (
+                    <div className="absolute bottom-0 left-1 right-1 h-0.5 bg-rose-500 rounded-full" />
+                  )}
+                </button>
+
+                <button
+                  onClick={() => setGridDensity('large')}
+                  className={`p-1 rounded-md transition-colors relative cursor-pointer ${
+                    gridDensity === 'large' ? 'text-slate-900 font-bold' : 'hover:text-slate-700'
+                  }`}
+                  title="Large Grid"
+                >
+                  <Layers className="w-3.5 h-3.5" />
+                  {gridDensity === 'large' && (
+                    <div className="absolute bottom-0 left-1 right-1 h-0.5 bg-rose-500 rounded-full" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Seamless Photographic Grid Wall (Matching Reference Photo Wall) */}
+            {filteredMedia.length === 0 ? (
               <div
-                style={{ width: `${uploadProgress}%` }}
-                className="h-full bg-gradient-to-r from-sky-400 to-emerald-400 rounded-full transition-all duration-150"
-              />
+                onClick={() => fileInputRef.current?.click()}
+                className="p-12 sm:p-16 rounded-3xl border-2 border-dashed border-slate-200 hover:border-rose-400 bg-slate-50/50 hover:bg-rose-50/20 text-center transition-all cursor-pointer space-y-3"
+              >
+                <div className="w-14 h-14 rounded-2xl bg-rose-100 text-rose-500 flex items-center justify-center mx-auto shadow-xs">
+                  <UploadCloud className="w-7 h-7" />
+                </div>
+                <h3 className="font-bold text-sm text-slate-800">
+                  No photos in vault yet
+                </h3>
+                <p className="text-xs text-slate-400 max-w-sm mx-auto">
+                  Click anywhere here to upload and envelope-encrypt your photos with client-side zero-knowledge proofs.
+                </p>
+                <button
+                  type="button"
+                  className="px-4 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs shadow-md shadow-rose-500/25 transition-all"
+                >
+                  + Upload Photos Now
+                </button>
+              </div>
+            ) : (
+              <div
+                className={`grid gap-2.5 sm:gap-3 ${
+                  gridDensity === 'small'
+                    ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8'
+                    : gridDensity === 'large'
+                    ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3'
+                    : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'
+                }`}
+              >
+                {filteredMedia.map((file, idx) => (
+                  <MediaTile
+                    key={file.id}
+                    file={file}
+                    category={getMediaCategory(file)}
+                    gridDensity={gridDensity}
+                    index={idx}
+                    isSelectionMode={isSelectionMode}
+                    isSelected={selectedIds.includes(file.id)}
+                    onSelectToggle={() => toggleSelectId(file.id)}
+                    onClick={() => setActivePreviewFile(file)}
+                    onSave={() => decryptAndDownloadFile(file)}
+                    onDelete={() => deleteFilePermanently(file.id)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Bottom Floating Stats Bar */}
+          <div className="pt-4 border-t border-slate-200/60 flex items-center justify-between text-xs text-slate-400 font-medium">
+            <div className="flex items-center space-x-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>AES-256-GCM Envelope Encryption Enabled</span>
             </div>
-            <div className="flex items-center space-x-2 text-[11px] text-sky-700 font-semibold">
-              <Loader2 className="w-3.5 h-3.5 animate-spin text-sky-600" />
-              <span>{uploadStage}</span>
-            </div>
+            <span>{filteredMedia.length} Photos in Shielded Ledger</span>
           </div>
-        )}
-
-        {/* Drag & Drop Quick Zone */}
-        <div
-          onDragOver={(e) => {
-            e.preventDefault();
-            setIsDragging(true);
-          }}
-          onDragLeave={() => setIsDragging(false)}
-          onDrop={handleFileDrop}
-          onClick={() => fileInputRef.current?.click()}
-          className={`rounded-2xl p-6 sm:p-7 border-2 border-dashed text-center cursor-pointer transition-all ${
-            isDragging
-              ? 'border-sky-500 bg-sky-50'
-              : 'border-slate-300 hover:border-sky-400 bg-slate-50/60'
-          }`}
-        >
-          <div className="w-10 h-10 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center mx-auto mb-2">
-            <UploadCloud className="w-5 h-5" />
-          </div>
-          <h3 className="text-xs sm:text-sm font-bold text-slate-800">
-            Drag & drop any Photo, Video, PDF, DOC, or Code file here
-          </h3>
-          <p className="text-[11px] text-slate-400 mt-0.5">
-            All formats (JPG, PNG, MP4, PDF, DOCX, ZIP, TXT) are envelope-encrypted with AES-256-GCM.
-          </p>
-        </div>
-
-        {/* Gallery Filter & Search Control Bar */}
-        <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          
-          {/* Category Tabs */}
-          <div className="flex flex-wrap items-center bg-white p-1 rounded-xl border border-slate-200 text-xs">
-            <button
-              onClick={() => setActiveCategory('all')}
-              className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
-                activeCategory === 'all'
-                  ? 'bg-sky-500 text-white font-bold shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>All ({activeFiles.length})</span>
-            </button>
-
-            <button
-              onClick={() => setActiveCategory('photos')}
-              className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
-                activeCategory === 'photos'
-                  ? 'bg-sky-500 text-white font-bold shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <ImageIcon className="w-3.5 h-3.5" />
-              <span>Photos ({photoFiles.length})</span>
-            </button>
-
-            <button
-              onClick={() => setActiveCategory('videos')}
-              className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
-                activeCategory === 'videos'
-                  ? 'bg-sky-500 text-white font-bold shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <Film className="w-3.5 h-3.5" />
-              <span>Videos ({videoFiles.length})</span>
-            </button>
-
-            <button
-              onClick={() => setActiveCategory('audio')}
-              className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
-                activeCategory === 'audio'
-                  ? 'bg-sky-500 text-white font-bold shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <Music className="w-3.5 h-3.5" />
-              <span>Audio ({audioFiles.length})</span>
-            </button>
-
-            <button
-              onClick={() => setActiveCategory('files')}
-              className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
-                activeCategory === 'files'
-                  ? 'bg-sky-500 text-white font-bold shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <FileText className="w-3.5 h-3.5" />
-              <span>Docs ({docFiles.length})</span>
-            </button>
-          </div>
-
-          {/* Search Bar */}
-          <div className="relative w-full md:w-72">
-            <Search className="absolute left-3.5 top-2.5 w-4 h-4 text-slate-400" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by file name..."
-              className="w-full pl-10 pr-4 py-2 rounded-xl bg-white border border-slate-200 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 text-xs text-slate-800 placeholder-slate-400 outline-none transition-all shadow-xs"
-            />
-          </div>
-        </div>
-
-        {/* Media Grid Cards */}
-        {filteredMedia.length === 0 ? (
-          <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center space-y-3">
-            <div className="w-12 h-12 rounded-2xl bg-sky-50 text-sky-500 flex items-center justify-center mx-auto shadow-xs">
-              <ImageIcon className="w-6 h-6" />
-            </div>
-            <h3 className="text-sm font-bold text-slate-800">No media items found</h3>
-            <p className="text-xs text-slate-400 max-w-sm mx-auto">
-              Upload photos, videos, or documents to store them in your zero-knowledge shielded vault partition.
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {filteredMedia.map((file) => (
-              <MediaCard
-                key={file.id}
-                file={file}
-                category={getMediaCategory(file)}
-                onClick={() => setActivePreviewFile(file)}
-                onSave={() => decryptAndDownloadFile(file)}
-                onDelete={() => deleteFilePermanently(file.id)}
-              />
-            ))}
-          </div>
-        )}
+        </main>
       </div>
     </section>
   );
