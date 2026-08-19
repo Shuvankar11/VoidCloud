@@ -18,10 +18,14 @@ import {
 export const Navbar: React.FC = () => {
   const { session, activeView, setActiveView } = useVault();
   const { user, setIsAuthModalOpen, signOut } = useAuth();
-  const { wallet, setIsWalletModalOpen, setIsPricingModalOpen } = useWeb3Wallet();
+  const { wallet, disconnectWallet, setIsWalletModalOpen, setIsPricingModalOpen } = useWeb3Wallet();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleNavClick = (targetView: 'landing' | 'dashboard' | 'home' | 'gallery' | 'payments', hash?: string) => {
+    if (!user && (targetView === 'dashboard' || targetView === 'gallery' || targetView === 'payments')) {
+      setIsAuthModalOpen(true);
+      return;
+    }
     setActiveView(targetView);
     setMobileMenuOpen(false);
     if ((targetView === 'home' || targetView === 'landing') && hash) {
@@ -155,10 +159,11 @@ export const Navbar: React.FC = () => {
               <button
                 onClick={() => {
                   signOut();
+                  disconnectWallet();
                   setActiveView('landing');
                 }}
                 title="Sign out"
-                className="text-slate-400 hover:text-rose-500 transition-colors p-0.5"
+                className="text-slate-400 hover:text-rose-500 transition-colors p-0.5 cursor-pointer"
               >
                 <LogOut className="w-3.5 h-3.5" />
               </button>

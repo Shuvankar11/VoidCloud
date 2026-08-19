@@ -20,8 +20,8 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
   onClose,
   initialMode = 'signin',
 }) => {
-  const { signInWithEmail, signUpWithEmail, signInWithGoogle, resetPassword } = useAuth();
-  const { connectWallet } = useWeb3Wallet();
+  const { signInWithEmail, signUpWithEmail, signInWithGoogle, signInWithWallet, resetPassword } = useAuth();
+  const { connectWallet, wallet } = useWeb3Wallet();
   const { setActiveView } = useVault();
 
   const [mode, setMode] = useState<'signin' | 'signup' | 'forgot'>(initialMode);
@@ -103,6 +103,8 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
     setLoading(true);
     try {
       await connectWallet('Midnight Lace', true);
+      const activeAddress = wallet.address || 'mn_preprod1qzn6...98k2';
+      await signInWithWallet('Midnight Lace', activeAddress);
       setActiveView('dashboard');
       onClose();
     } catch (err: any) {

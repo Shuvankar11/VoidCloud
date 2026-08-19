@@ -56,7 +56,7 @@ const AppContent: React.FC = () => {
   const { user, isAuthModalOpen, setIsAuthModalOpen } = useAuth();
   const { isExplorerModalOpen, setIsExplorerModalOpen, selectedExplorerTx, setSelectedExplorerTx } = useWeb3Wallet();
 
-  const isDashboardView = activeView === 'dashboard' || (Boolean(user) && activeView !== 'landing' && activeView !== 'gallery' && activeView !== 'payments');
+  const isDashboardView = Boolean(user) && (activeView === 'dashboard' || (activeView !== 'landing' && activeView !== 'gallery' && activeView !== 'payments'));
 
   const handleStartJourney = () => {
     if (user) {
@@ -79,9 +79,9 @@ const AppContent: React.FC = () => {
 
       {/* Conditional Page Views: Dedicated Media Vault VS. Payment History VS. Dedicated Dashboard VS. Hero Landing */}
       <main className="space-y-0">
-        {activeView === 'gallery' ? (
+        {user && activeView === 'gallery' ? (
           <MediaGallery />
-        ) : activeView === 'payments' ? (
+        ) : user && activeView === 'payments' ? (
           <PaymentHistory />
         ) : isDashboardView ? (
           /* DEDICATED STORAGE VAULT DASHBOARD VIEW (Reference 3 & 4) */

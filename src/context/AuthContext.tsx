@@ -29,6 +29,7 @@ interface AuthContextType {
   signUpWithEmail: (email: string, pass: string, name?: string) => Promise<void>;
   signInWithEmail: (email: string, pass: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
+  signInWithWallet: (walletName: string, address: string) => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
@@ -196,11 +197,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signInWithGoogle = useCallback(async () => {
     // Simulates instant Google Auth or connects if Firebase configured
-    const mockEmail = 'shuvankar.google@voidcloud.io';
+    const mockEmail = 'shuvankar8282@gmail.com';
     const profile: UserProfile = {
       uid: 'usr_g_' + Math.random().toString(36).substring(2, 9),
       email: mockEmail,
       displayName: 'Shuvankar Samanta',
+      createdAt: new Date().toISOString(),
+      isAnonymous: false,
+    };
+    setUser(profile);
+    localStorage.setItem(LOCAL_SESSION_KEY, JSON.stringify(profile));
+    setIsAuthModalOpen(false);
+  }, []);
+
+  const signInWithWallet = useCallback(async (walletName: string, address: string) => {
+    const formattedAddress = address.length > 14
+      ? `${address.slice(0, 8)}...${address.slice(-4)}`
+      : address;
+    const profile: UserProfile = {
+      uid: 'usr_w3_' + address.replace(/[^a-zA-Z0-9]/g, '').slice(0, 16),
+      email: `${formattedAddress}@midnight.network`,
+      displayName: `${walletName} (${formattedAddress})`,
       createdAt: new Date().toISOString(),
       isAnonymous: false,
     };
@@ -234,6 +251,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         signUpWithEmail,
         signInWithEmail,
         signInWithGoogle,
+        signInWithWallet,
         resetPassword,
         signOut,
       }}
