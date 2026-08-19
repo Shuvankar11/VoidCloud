@@ -12,406 +12,9 @@ import {
   ArrowRight,
   ShieldCheck,
   Sparkles,
+  CheckCircle2,
+  Shield,
 } from 'lucide-react';
-
-interface PixarYetiProps {
-  mouseX: number;
-  mouseY: number;
-  isPasswordFocused: boolean;
-  showPassword: boolean;
-  isEmailFocused: boolean;
-  isLoading: boolean;
-}
-
-export const Pixar3DYetiGuardian: React.FC<PixarYetiProps> = ({
-  mouseX,
-  mouseY,
-  isPasswordFocused,
-  showPassword,
-  isEmailFocused,
-  isLoading,
-}) => {
-  const [pupilOffset, setPupilOffset] = useState({ x: 0, y: 0 });
-  const [isBlinking, setIsBlinking] = useState(false);
-  const headRef = useRef<SVGGElement>(null);
-
-  // Natural Blinking
-  useEffect(() => {
-    const blinkInterval = setInterval(() => {
-      setIsBlinking(true);
-      setTimeout(() => setIsBlinking(false), 170);
-    }, 4000);
-    return () => clearInterval(blinkInterval);
-  }, []);
-
-  // Real-time cursor tracking for 3D eyes
-  useEffect(() => {
-    if (isPasswordFocused && !showPassword) {
-      setPupilOffset({ x: 0, y: 0 });
-      return;
-    }
-
-    if (isEmailFocused) {
-      setPupilOffset({ x: 8, y: 9 });
-      return;
-    }
-
-    if (headRef.current) {
-      const rect = headRef.current.getBoundingClientRect();
-      const headCenterX = rect.left + rect.width / 2;
-      const headCenterY = rect.top + rect.height * 0.45;
-
-      const deltaX = mouseX - headCenterX;
-      const deltaY = mouseY - headCenterY;
-
-      const angle = Math.atan2(deltaY, deltaX);
-      const distance = Math.hypot(deltaX, deltaY);
-      const maxRadius = 9;
-      const radius = Math.min(distance / 32, maxRadius);
-
-      setPupilOffset({
-        x: Math.cos(angle) * radius,
-        y: Math.sin(angle) * radius,
-      });
-    }
-  }, [mouseX, mouseY, isPasswordFocused, showPassword, isEmailFocused]);
-
-  // Head 3D rotation angles
-  const headRotateX = isEmailFocused
-    ? 10
-    : Math.max(Math.min((mouseY - window.innerHeight / 2) / 30, 14), -14);
-  const headRotateY = isEmailFocused
-    ? 12
-    : Math.max(Math.min((mouseX - window.innerWidth / 2) / 30, 16), -16);
-
-  const coveringEyes = isPasswordFocused && !showPassword;
-  const peeking = isPasswordFocused && showPassword;
-
-  return (
-    <div className="relative w-full h-full flex items-center justify-center select-none">
-      <motion.div
-        className="relative w-[320px] h-[370px] flex items-center justify-center"
-        style={{ perspective: 1200 }}
-      >
-        <motion.svg
-          viewBox="0 0 380 440"
-          className="w-full h-full drop-shadow-[0_25px_45px_rgba(15,23,42,0.35)]"
-          animate={{
-            rotateX: headRotateX,
-            rotateY: headRotateY,
-            scale: isLoading ? 1.04 : 1,
-          }}
-          transition={{
-            type: 'spring',
-            stiffness: 280,
-            damping: 24,
-            mass: 0.7,
-          }}
-        >
-          <defs>
-            {/* 3D Volumetric Lighting Gradients */}
-            {/* 1. Body & Fur Sphere Shader */}
-            <radialGradient id="pixarBodyFur" cx="35%" cy="30%" r="70%">
-              <stop offset="0%" stopColor="#FFFFFF" />
-              <stop offset="55%" stopColor="#F0F7FD" />
-              <stop offset="85%" stopColor="#D4E6F6" />
-              <stop offset="100%" stopColor="#A8C8E6" />
-            </radialGradient>
-
-            {/* 2. Head Shader with High Soft Specular */}
-            <radialGradient id="pixarHeadFur" cx="35%" cy="25%" r="65%">
-              <stop offset="0%" stopColor="#FFFFFF" />
-              <stop offset="60%" stopColor="#F2F8FE" />
-              <stop offset="88%" stopColor="#D2E5F7" />
-              <stop offset="100%" stopColor="#9EC2E4" />
-            </radialGradient>
-
-            {/* 3. Soft Baby Blue Pixar Face Mask */}
-            <radialGradient id="pixarFace" cx="40%" cy="35%" r="65%">
-              <stop offset="0%" stopColor="#CFEEFC" />
-              <stop offset="70%" stopColor="#93CEF3" />
-              <stop offset="100%" stopColor="#5CAEE4" />
-            </radialGradient>
-
-            {/* 4. Deep Metallic Horns */}
-            <linearGradient id="pixarHorns" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#7E9EB8" />
-              <stop offset="50%" stopColor="#4D708F" />
-              <stop offset="100%" stopColor="#2A435A" />
-            </linearGradient>
-
-            {/* 5. Volumetric Knitted Blue Scarf */}
-            <linearGradient id="pixarScarf" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#3B82F6" />
-              <stop offset="40%" stopColor="#2563EB" />
-              <stop offset="100%" stopColor="#1E40AF" />
-            </linearGradient>
-
-            {/* 6. Realistic 3D Glass Eye Gradients */}
-            <radialGradient id="irisGrad" cx="35%" cy="30%" r="65%">
-              <stop offset="0%" stopColor="#38BDF8" />
-              <stop offset="40%" stopColor="#0284C7" />
-              <stop offset="85%" stopColor="#0369A1" />
-              <stop offset="100%" stopColor="#082F49" />
-            </radialGradient>
-
-            <radialGradient id="scleraGrad" cx="30%" cy="25%" r="75%">
-              <stop offset="0%" stopColor="#FFFFFF" />
-              <stop offset="75%" stopColor="#FFFFFF" />
-              <stop offset="95%" stopColor="#E2E8F0" />
-              <stop offset="100%" stopColor="#CBD5E1" />
-            </radialGradient>
-
-            <filter id="pixarShadow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="8" stdDeviation="8" floodOpacity="0.22" floodColor="#0F172A" />
-            </filter>
-
-            <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
-          </defs>
-
-          {/* ======================================================== */}
-          {/* 1. HORNS (Layered Behind Head)                           */}
-          {/* ======================================================== */}
-          {/* Left Horn */}
-          <path
-            d="M 125 125 C 95 85, 75 55, 55 75 C 65 110, 90 135, 120 150 Z"
-            fill="url(#pixarHorns)"
-            filter="url(#pixarShadow)"
-          />
-          {/* Right Horn */}
-          <path
-            d="M 255 125 C 285 85, 305 55, 325 75 C 315 110, 290 135, 260 150 Z"
-            fill="url(#pixarHorns)"
-            filter="url(#pixarShadow)"
-          />
-
-          {/* ======================================================== */}
-          {/* 2. FLUFFY 3D BODY                                        */}
-          {/* ======================================================== */}
-          <ellipse
-            cx="190"
-            cy="330"
-            rx="135"
-            ry="105"
-            fill="url(#pixarBodyFur)"
-            filter="url(#pixarShadow)"
-          />
-
-          {/* Fur Tufts around Body */}
-          <circle cx="95" cy="340" r="18" fill="url(#pixarBodyFur)" opacity="0.9" />
-          <circle cx="285" cy="340" r="18" fill="url(#pixarBodyFur)" opacity="0.9" />
-
-          {/* ======================================================== */}
-          {/* 3. FLUFFY 3D HEAD & HAIR TUFTS                           */}
-          {/* ======================================================== */}
-          <g ref={headRef}>
-            {/* Base Head Sphere */}
-            <ellipse
-              cx="190"
-              cy="200"
-              rx="105"
-              ry="98"
-              fill="url(#pixarHeadFur)"
-              filter="url(#pixarShadow)"
-            />
-
-            {/* Top Crown Fur Tufts */}
-            <path
-              d="M 175 105 C 160 55, 210 65, 195 105 Z"
-              fill="url(#pixarHeadFur)"
-            />
-            <path
-              d="M 190 105 C 205 50, 240 65, 210 105 Z"
-              fill="url(#pixarHeadFur)"
-            />
-            <path
-              d="M 160 115 C 140 75, 180 85, 175 115 Z"
-              fill="url(#pixarHeadFur)"
-            />
-
-            {/* Side Fur Cheek Tufts */}
-            <circle cx="95" cy="210" r="22" fill="url(#pixarHeadFur)" />
-            <circle cx="85" cy="190" r="16" fill="url(#pixarHeadFur)" />
-            <circle cx="285" cy="210" r="22" fill="url(#pixarHeadFur)" />
-            <circle cx="295" cy="190" r="16" fill="url(#pixarHeadFur)" />
-
-            {/* ======================================================== */}
-            {/* 4. SOFT 3D PIXAR FACE MASK                               */}
-            {/* ======================================================== */}
-            <ellipse
-              cx="190"
-              cy="200"
-              rx="68"
-              ry="58"
-              fill="url(#pixarFace)"
-            />
-
-            {/* Soft Pink Blush Cheeks */}
-            <ellipse cx="145" cy="220" rx="14" ry="9" fill="#F472B6" opacity="0.4" filter="url(#softGlow)" />
-            <ellipse cx="235" cy="220" rx="14" ry="9" fill="#F472B6" opacity="0.4" filter="url(#softGlow)" />
-
-            {/* ======================================================== */}
-            {/* 5. 3D GLOSSY EYES WITH REAL-TIME CURSOR TRACKING          */}
-            {/* ======================================================== */}
-            {/* Left Eye */}
-            <g id="leftEye">
-              {/* Sclera Eyeball (White Sphere) */}
-              <ellipse
-                cx="160"
-                cy="185"
-                rx="18"
-                ry={isBlinking || (coveringEyes && !peeking) ? 2 : 22}
-                fill="url(#scleraGrad)"
-                stroke="#93CEF3"
-                strokeWidth="1.5"
-              />
-
-              {/* Dynamic Tracking Iris & Pupil */}
-              {(!coveringEyes || peeking) && !isBlinking && (
-                <g transform={`translate(${pupilOffset.x}, ${pupilOffset.y})`}>
-                  {/* Glowing Blue Iris */}
-                  <circle cx="160" cy="185" r="12.5" fill="url(#irisGrad)" />
-                  {/* Inner Dark Pupil */}
-                  <circle cx="160" cy="185" r="7" fill="#0A0F1D" />
-                  {/* Primary Star Specular Glint */}
-                  <circle cx="156" cy="180" r="4" fill="#FFFFFF" />
-                  {/* Secondary Tiny Sparkle */}
-                  <circle cx="164" cy="189" r="1.8" fill="#FFFFFF" opacity="0.9" />
-                </g>
-              )}
-            </g>
-
-            {/* Right Eye */}
-            <g id="rightEye">
-              {/* Sclera Eyeball (White Sphere) */}
-              <ellipse
-                cx="220"
-                cy="185"
-                rx="18"
-                ry={isBlinking || coveringEyes ? 2 : 22}
-                fill="url(#scleraGrad)"
-                stroke="#93CEF3"
-                strokeWidth="1.5"
-              />
-
-              {/* Dynamic Tracking Iris & Pupil */}
-              {!coveringEyes && !isBlinking && (
-                <g transform={`translate(${pupilOffset.x}, ${pupilOffset.y})`}>
-                  {/* Glowing Blue Iris */}
-                  <circle cx="220" cy="185" r="12.5" fill="url(#irisGrad)" />
-                  {/* Inner Dark Pupil */}
-                  <circle cx="220" cy="185" r="7" fill="#0A0F1D" />
-                  {/* Primary Star Specular Glint */}
-                  <circle cx="216" cy="180" r="4" fill="#FFFFFF" />
-                  {/* Secondary Tiny Sparkle */}
-                  <circle cx="224" cy="189" r="1.8" fill="#FFFFFF" opacity="0.9" />
-                </g>
-              )}
-            </g>
-
-            {/* ======================================================== */}
-            {/* 6. CUTE NOSE & SMILE                                     */}
-            {/* ======================================================== */}
-            {/* 3D Black Button Nose */}
-            <ellipse cx="190" cy="205" rx="10" ry="6.5" fill="#1E293B" />
-            <ellipse cx="188" cy="203" rx="3.5" ry="2" fill="#FFFFFF" opacity="0.7" />
-
-            {/* Cute Smile Mouth */}
-            {isLoading ? (
-              <ellipse cx="190" cy="226" rx="7" ry="5.5" fill="#1E293B" />
-            ) : (
-              <path
-                d="M 178 222 Q 190 234 202 222"
-                fill="none"
-                stroke="#1E293B"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-              />
-            )}
-          </g>
-
-          {/* ======================================================== */}
-          {/* 7. COZY BLUE KNITTED SCARF WITH GOLD SHIELD              */}
-          {/* ======================================================== */}
-          {/* Scarf Wrap */}
-          <path
-            d="M 110 270 C 150 255, 230 255, 270 270 C 255 305, 125 305, 110 270 Z"
-            fill="url(#pixarScarf)"
-            filter="url(#pixarShadow)"
-          />
-          {/* Scarf Hanging Tail */}
-          <path
-            d="M 130 280 L 145 355 L 175 350 L 160 280 Z"
-            fill="url(#pixarScarf)"
-            filter="url(#pixarShadow)"
-          />
-          {/* Gold Embossed Shield Medallion */}
-          <circle cx="152" cy="325" r="9" fill="#FBBF24" stroke="#D97706" strokeWidth="1.5" />
-          <path
-            d="M 149 322 L 155 322 L 155 326 C 155 329, 152 331, 152 331 C 152 331, 149 329, 149 326 Z"
-            fill="#B45309"
-          />
-
-          {/* ======================================================== */}
-          {/* 8. 3D FLUFFY PAWS (Interactive Cover Eyes / Wave)        */}
-          {/* ======================================================== */}
-          {/* Left Paw */}
-          <motion.g
-            animate={{
-              y: coveringEyes ? -95 : peeking ? -50 : 0,
-              x: coveringEyes ? 42 : peeking ? 18 : 0,
-              rotate: coveringEyes ? 30 : peeking ? 12 : 0,
-            }}
-            transition={{ type: 'spring', stiffness: 280, damping: 20 }}
-          >
-            <ellipse
-              cx="100"
-              cy="285"
-              rx="26"
-              ry="22"
-              fill="url(#pixarBodyFur)"
-              filter="url(#pixarShadow)"
-            />
-            {/* Claws */}
-            <circle cx="88" cy="274" r="5" fill="#E2E8F0" />
-            <circle cx="100" cy="270" r="5" fill="#E2E8F0" />
-            <circle cx="112" cy="274" r="5" fill="#E2E8F0" />
-          </motion.g>
-
-          {/* Right Paw (Waving or Covering Right Eye) */}
-          <motion.g
-            animate={{
-              y: coveringEyes ? -95 : 0,
-              x: coveringEyes ? -42 : 0,
-              rotate: coveringEyes ? -30 : [0, 8, -8, 0],
-            }}
-            transition={
-              coveringEyes
-                ? { type: 'spring', stiffness: 280, damping: 20 }
-                : { repeat: Infinity, duration: 2.8, ease: 'easeInOut' }
-            }
-          >
-            <ellipse
-              cx="280"
-              cy="285"
-              rx="26"
-              ry="22"
-              fill="url(#pixarBodyFur)"
-              filter="url(#pixarShadow)"
-            />
-            {/* Claws */}
-            <circle cx="268" cy="274" r="5" fill="#E2E8F0" />
-            <circle cx="280" cy="270" r="5" fill="#E2E8F0" />
-            <circle cx="292" cy="274" r="5" fill="#E2E8F0" />
-          </motion.g>
-        </motion.svg>
-      </motion.div>
-    </div>
-  );
-};
 
 interface YetiAuthModalProps {
   isOpen: boolean;
@@ -438,12 +41,13 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  // Focus tracking for Yeti reactions
+  // Focus tracking for Yeti reactive dialogue & animations
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [isEmailFocused, setIsEmailFocused] = useState(false);
 
-  // Mouse tracking
-  const [mousePos, setMousePos] = useState({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+  // 3D Parallax Tilt Physics
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [parallax, setParallax] = useState({ rotateX: 0, rotateY: 0, glowX: 50, glowY: 50 });
 
   useEffect(() => {
     setMode(initialMode);
@@ -451,10 +55,22 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
     setSuccessMessage(null);
   }, [initialMode, isOpen]);
 
+  // Real-time 3D cursor parallax tracking
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (!isOpen) return;
-      setMousePos({ x: e.clientX, y: e.clientY });
+      if (!isOpen || !containerRef.current) return;
+
+      const rect = containerRef.current.getBoundingClientRect();
+      const relativeX = (e.clientX - rect.left) / rect.width - 0.5;
+      const relativeY = (e.clientY - rect.top) / rect.height - 0.5;
+
+      const rotY = Math.max(Math.min(relativeX * 18, 12), -12);
+      const rotX = Math.max(Math.min(-relativeY * 18, 12), -12);
+
+      const glowX = ((e.clientX - rect.left) / rect.width) * 100;
+      const glowY = ((e.clientY - rect.top) / rect.height) * 100;
+
+      setParallax({ rotateX: rotX, rotateY: rotY, glowX, glowY });
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -523,13 +139,27 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
     }
   };
 
+  // Dynamic Mascot Dialogue
+  const mascotDialogue = isPasswordFocused
+    ? showPassword
+      ? "I'm looking away! 🙈 Your secrets are client-side shielded!"
+      : "Zero-Knowledge Active! 🔒 I won't look at your password!"
+    : isEmailFocused
+    ? "Type your email! I'll set up your private ZK storage! 📧"
+    : loading
+    ? "Synthesizing Midnight Halo2 ZK Proof... ⚡"
+    : "Hi! 👋 I'm your 3D Void Guardian!";
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto bg-slate-950/75 backdrop-blur-md">
       {/* Background Subtle Gradient Glow */}
       <div className="absolute inset-0 bg-gradient-to-tr from-sky-400/15 via-purple-500/15 to-indigo-500/15 pointer-events-none" />
 
       {/* Main Split Modal Container */}
-      <div className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden flex flex-col md:flex-row my-auto transition-all duration-300 animate-in fade-in zoom-in-95">
+      <div
+        ref={containerRef}
+        className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden flex flex-col md:flex-row my-auto transition-all duration-300 animate-in fade-in zoom-in-95"
+      >
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -540,49 +170,98 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
         </button>
 
         {/* ============================================================ */}
-        {/* LEFT PANEL: 3D Pixar Volumetric Yeti Scene                   */}
+        {/* LEFT PANEL: 8K Pixar 3D Cinematic Scene (Full Bleed)         */}
         {/* ============================================================ */}
-        <div
-          className="md:w-1/2 relative overflow-hidden min-h-[420px] md:min-h-[580px] flex flex-col justify-between p-6 sm:p-8 bg-cover bg-center select-none"
-          style={{
-            backgroundImage: 'url(/aurora-bg.jpg)',
-            backgroundColor: '#D9EEFD',
-          }}
-        >
-          {/* Top Brand Pill Overlay */}
-          <div className="relative z-20 flex items-center justify-between">
-            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-white/80 text-slate-800 font-bold text-xs shadow-md">
-              <Sparkles className="w-3.5 h-3.5 text-sky-500" />
-              <span>VOID GUARDIAN</span>
+        <div className="md:w-1/2 relative overflow-hidden min-h-[420px] md:min-h-[580px] flex flex-col justify-between p-6 sm:p-8 bg-sky-900 select-none">
+          
+          {/* 8K Pixar 3D Cinematic Artwork with 3D Parallax Response */}
+          <motion.div
+            className="absolute inset-0 w-full h-full pointer-events-none"
+            animate={{
+              rotateY: parallax.rotateY,
+              rotateX: parallax.rotateX,
+              scale: 1.08,
+            }}
+            transition={{ type: 'spring', stiffness: 260, damping: 26, mass: 0.6 }}
+          >
+            <img
+              src="/yeti-mascot.jpg"
+              alt="8K Pixar 3D Yeti Mascot"
+              className="w-full h-full object-cover object-center"
+            />
+            {/* Dynamic Cursor Light Shimmer */}
+            <div
+              className="absolute inset-0 pointer-events-none transition-opacity duration-300"
+              style={{
+                background: `radial-gradient(circle 320px at ${parallax.glowX}% ${parallax.glowY}%, rgba(56, 189, 248, 0.22), transparent 70%)`,
+              }}
+            />
+          </motion.div>
+
+          {/* Top Brand Pill & Live Dialogue Bubble */}
+          <div className="relative z-20 flex flex-col space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-white/80 text-slate-900 font-bold text-xs shadow-md">
+                <Sparkles className="w-3.5 h-3.5 text-sky-500" />
+                <span>VOID GUARDIAN</span>
+              </div>
+
+              {isPasswordFocused && (
+                <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-slate-900/90 text-white font-bold text-[11px] shadow-md border border-white/20 animate-pulse">
+                  <Lock className="w-3 h-3 text-sky-400" />
+                  <span>ZK Shield Active</span>
+                </div>
+              )}
             </div>
 
-            {isPasswordFocused && (
-              <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-slate-900/90 text-white font-bold text-[11px] shadow-md border border-white/20 animate-pulse">
-                <Lock className="w-3 h-3 text-sky-400" />
-                <span>{showPassword ? 'Peeking 👀' : 'Eyes Shielded 🙈'}</span>
+            {/* Reactive Mascot Speech Bubble */}
+            <motion.div
+              key={mascotDialogue}
+              initial={{ opacity: 0, y: -8, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.2 }}
+              className="self-start max-w-[280px] p-3 rounded-2xl bg-white/95 backdrop-blur-md border border-white/90 shadow-xl text-slate-800 text-xs font-semibold relative"
+            >
+              <div className="flex items-center space-x-2">
+                <span className="text-base">✨</span>
+                <span>{mascotDialogue}</span>
               </div>
-            )}
+              {/* Bubble Pointer Tail */}
+              <div className="absolute -bottom-1.5 left-6 w-3 h-3 bg-white/95 transform rotate-45 border-b border-r border-white/90" />
+            </motion.div>
           </div>
 
-          {/* 3D Pixar Animated Character Center */}
-          <div className="relative z-10 flex-1 flex items-center justify-center my-auto py-2">
-            <Pixar3DYetiGuardian
-              mouseX={mousePos.x}
-              mouseY={mousePos.y}
-              isPasswordFocused={isPasswordFocused}
-              showPassword={showPassword}
-              isEmailFocused={isEmailFocused}
-              isLoading={loading}
-            />
-          </div>
+          {/* Blindfold Privacy Overlay when Password is Focused */}
+          <AnimatePresence>
+            {isPasswordFocused && !showPassword && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.2 }}
+                className="absolute inset-0 z-25 bg-slate-950/40 backdrop-blur-[3px] flex flex-col items-center justify-center p-6 text-center"
+              >
+                <div className="w-16 h-16 rounded-3xl bg-white/95 text-sky-600 flex items-center justify-center shadow-2xl mb-3 border border-white">
+                  <Lock className="w-8 h-8 animate-bounce" />
+                </div>
+                <div className="px-4 py-2 rounded-2xl bg-white/95 text-slate-900 font-display font-black text-xs shadow-2xl flex items-center space-x-2">
+                  <Shield className="w-4 h-4 text-emerald-500" />
+                  <span>Zero-Knowledge Shield: Privacy Active</span>
+                </div>
+                <p className="text-[11px] text-sky-100 font-semibold mt-2 drop-shadow-md">
+                  Your password never leaves your browser.
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Bottom Headline Overlay */}
-          <div className="relative z-20 mt-auto">
-            <div className="p-4 sm:p-5 rounded-2xl bg-white/85 backdrop-blur-md border border-white/80 shadow-md text-slate-800 space-y-0.5">
-              <h3 className="font-display font-black text-lg sm:text-xl tracking-wider uppercase text-slate-900">
+          <div className="relative z-20 mt-auto pt-16">
+            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-t from-slate-950/85 via-slate-950/60 to-transparent backdrop-blur-xs text-white space-y-1">
+              <h3 className="font-display font-black text-xl sm:text-2xl tracking-wider leading-none uppercase drop-shadow-md">
                 EXPLORE. LEARN. GROW.
               </h3>
-              <p className="text-xs text-sky-600 font-bold">
+              <p className="text-xs text-sky-200 font-medium drop-shadow-sm">
                 Zero-Knowledge Shielded Cloud Vault
               </p>
             </div>
