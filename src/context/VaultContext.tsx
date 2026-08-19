@@ -43,6 +43,9 @@ interface VaultContextType {
   claimBonusWithZKProof: () => Promise<{ success: boolean; error?: string }>;
   uploadAndEncryptFile: (file: File, onProgress?: UploadProgressCallback) => Promise<ShieldedFile>;
   shredFile: (fileId: string) => Promise<void>;
+  restoreFile: (fileId: string) => Promise<void>;
+  emptyTrash: () => Promise<void>;
+  restoreAllTrash: () => Promise<void>;
   deleteFilePermanently: (fileId: string) => Promise<void>;
   decryptAndDownloadFile: (file: ShieldedFile) => Promise<void>;
   toggleStarFile: (fileId: string) => void;
@@ -507,6 +510,56 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     );
   }, [files, telegramConfig]);
 
+  // Restore file from Trash back to active shielded status
+  const restoreFile = useCallback(async (fileId: string) => {
+    setFiles((prev) => {
+      const updated = prev.map((f) => {
+        if (f.id === fileId) {
+          return {
+            ...f,
+            status: 'shielded' as const,
+          };
+        }
+        return f;
+      });
+      try {
+        localStorage.setItem(`voidcloud_v2_files_${activeUserId}`, JSON.stringify(updated));
+      } catch (e) {
+        console.error(e);
+      }
+      return updated;
+    });
+  }, [activeUserId]);
+
+  // Permanently Empty Trash
+  const emptyTrash = useCallback(async () => {
+    const trash = files.filter(f => f.status === 'shredded');
+    for (const f of trash) {
+      if (f.telegramMessageId) {
+        await deleteFromTelegramChannel(f.telegramMessageId, telegramConfig);
+      }
+      await deleteFileBlob(f.id);
+    }
+    setFiles(prev => {
+      const remaining = prev.filter(f => f.status !== 'shredded');
+      try {
+        localStorage.setItem(`voidcloud_v2_files_${activeUserId}`, JSON.stringify(remaining));
+      } catch (e) {}
+      return remaining;
+    });
+  }, [files, telegramConfig, activeUserId]);
+
+  // Restore All files from Trash
+  const restoreAllTrash = useCallback(async () => {
+    setFiles(prev => {
+      const updated = prev.map(f => f.status === 'shredded' ? { ...f, status: 'shielded' as const } : f);
+      try {
+        localStorage.setItem(`voidcloud_v2_files_${activeUserId}`, JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
+  }, [activeUserId]);
+
   // Permanently Delete file from storage and remove from list
   const deleteFilePermanently = useCallback(async (fileId: string) => {
     const fileToDelete = files.find(f => f.id === fileId);
@@ -515,8 +568,14 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
     await deleteFileBlob(fileId);
 
-    setFiles((prev) => prev.filter(f => f.id !== fileId));
-  }, [files, telegramConfig]);
+    setFiles((prev) => {
+      const remaining = prev.filter(f => f.id !== fileId);
+      try {
+        localStorage.setItem(`voidcloud_v2_files_${activeUserId}`, JSON.stringify(remaining));
+      } catch (e) {}
+      return remaining;
+    });
+  }, [files, telegramConfig, activeUserId]);
 
   // Decrypt and Download File Client-Side
   const decryptAndDownloadFile = useCallback(async (file: ShieldedFile) => {
@@ -591,6 +650,9 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         claimBonusWithZKProof,
         uploadAndEncryptFile,
         shredFile,
+        restoreFile,
+        emptyTrash,
+        restoreAllTrash,
         deleteFilePermanently,
         decryptAndDownloadFile,
         toggleStarFile,
