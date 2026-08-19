@@ -1,96 +1,81 @@
 import React from 'react';
 import { useVault } from '../context/VaultContext';
-import { Cloud, Github, ArrowUpRight, CheckCircle2, Shield, HardDrive, Lock } from 'lucide-react';
+import { Cloud, Github, CheckCircle2, Shield, HardDrive, Lock } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   const { metrics, session, setActiveView } = useVault();
 
   return (
-    <footer className="relative bg-[#030712] border-t border-slate-800/80 pt-16 pb-12 overflow-hidden">
-      {/* Soft Ambient Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-20 bg-sky-500/10 blur-3xl pointer-events-none" />
-
+    <footer className="relative bg-white/80 border-t border-slate-200/80 pt-12 pb-8 overflow-hidden text-slate-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-slate-800">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-slate-200/80">
           
           {/* Col 1: Brand & Info */}
-          <div className="md:col-span-6 space-y-4">
+          <div className="md:col-span-6 space-y-3">
             <div className="flex items-center space-x-2.5">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-500/20 via-blue-600/20 to-emerald-500/20 border border-sky-500/40 flex items-center justify-center">
-                <Cloud className="w-5 h-5 text-sky-400" />
+              <div className="w-8 h-8 rounded-xl overflow-hidden border border-sky-400 shadow-sm flex items-center justify-center bg-white">
+                <img src="/voidcloud-logo.jpg" alt="Void Logo" className="w-full h-full object-cover" />
               </div>
               <div className="flex items-center space-x-1">
-                <span className="font-display font-bold text-lg text-white">VOID</span>
-                <span className="font-display font-bold text-lg text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-400">CLOUD</span>
+                <span className="font-display font-black text-base text-slate-900">VOID</span>
+                <span className="font-display font-black text-base text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600">CLOUD</span>
               </div>
             </div>
 
-            <p className="text-xs sm:text-sm text-slate-400 max-w-sm leading-relaxed font-sans">
-              Privacy-first decentralized cloud storage powered by Midnight Network. Zero-knowledge nullifier faucet bonuses, client-side AES-256-GCM envelope encryption, and private user vault partitions.
+            <p className="text-xs text-slate-500 max-w-sm leading-relaxed">
+              Privacy-first decentralized zero-knowledge cloud storage powered by Midnight Network. Client-side AES-256-GCM envelope encryption and off-chain Halo2 ZK-SNARK verifier.
             </p>
 
-            {/* Level 1 Badge */}
-            <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-[#080D1A] border border-slate-700/80 text-[11px] font-mono text-sky-300">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Midnight Network Hackathon // Level 1 Spec</span>
+            <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-sky-50 border border-sky-200 text-[11px] font-mono text-sky-700 font-semibold">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+              <span>Midnight Network Preprod // Compact 0.20 Verified</span>
             </div>
           </div>
 
           {/* Col 2: Navigation */}
-          <div className="md:col-span-3 space-y-3">
-            <h4 className="font-display font-semibold text-xs tracking-wider uppercase text-white">Platform Navigation</h4>
-            <ul className="space-y-2 text-xs font-mono text-slate-400">
-              <li><button onClick={() => setActiveView('home')} className="hover:text-sky-400 transition-colors block text-left">Overview</button></li>
-              <li><button onClick={() => setActiveView('gallery')} className="hover:text-sky-400 transition-colors block text-left">Media & Files Gallery</button></li>
-              <li><button onClick={() => setActiveView('payments')} className="hover:text-emerald-400 transition-colors block text-left font-semibold">Payment & Ledger History</button></li>
-              <li><a href="#storage" className="hover:text-sky-400 transition-colors block">Cloud Quota ({session.quotaGB} GB)</a></li>
-              <li><a href="#vault" className="hover:text-sky-400 transition-colors block">Object Vault</a></li>
+          <div className="md:col-span-3 space-y-2.5">
+            <h4 className="font-display font-bold text-xs tracking-wider uppercase text-slate-900">Navigation</h4>
+            <ul className="space-y-1.5 text-xs text-slate-500">
+              <li><button onClick={() => setActiveView('landing')} className="hover:text-sky-600 transition-colors block text-left">Home</button></li>
+              <li><button onClick={() => setActiveView('dashboard')} className="hover:text-sky-600 transition-colors block text-left">Vault Dashboard ({session.quotaGB} GB)</button></li>
+              <li><button onClick={() => setActiveView('gallery')} className="hover:text-sky-600 transition-colors block text-left">Media Gallery</button></li>
+              <li><button onClick={() => setActiveView('payments')} className="hover:text-emerald-600 transition-colors block text-left font-semibold">Payment & Ledger History</button></li>
             </ul>
           </div>
 
           {/* Col 3: Midnight Preprod Status */}
-          <div className="md:col-span-3 space-y-3">
-            <h4 className="font-display font-semibold text-xs tracking-wider uppercase text-white">Network Status</h4>
-            <div className="bg-[#080D1A] p-4 rounded-xl border border-slate-800 space-y-2 text-xs font-mono">
+          <div className="md:col-span-3 space-y-2.5">
+            <h4 className="font-display font-bold text-xs tracking-wider uppercase text-slate-900">Network Telemetry</h4>
+            <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80 space-y-1.5 text-xs font-mono">
               <div className="flex justify-between items-center">
-                <span className="text-slate-500">Network:</span>
-                <span className="text-sky-300 font-bold">Midnight Preprod</span>
+                <span className="text-slate-400">Network:</span>
+                <span className="text-sky-600 font-bold">Midnight Preprod</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-slate-500">Proof Server:</span>
-                <span className="text-emerald-400 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                  {metrics.proofServerStatus} ({metrics.proofServerLatencyMs}ms)
+                <span className="text-slate-400">Proof Server:</span>
+                <span className="text-emerald-600 font-bold flex items-center space-x-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>ONLINE ({metrics.proofServerLatencyMs}ms)</span>
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-slate-500">Block Height:</span>
-                <span className="text-sky-300">#{metrics.blockHeight}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-slate-500">Contract:</span>
-                <span className="text-slate-400 text-[10px]">{metrics.contractAddress.slice(0, 10)}...</span>
+                <span className="text-slate-400">Block Height:</span>
+                <span className="text-slate-700 font-bold">#{metrics.blockHeight}</span>
               </div>
             </div>
           </div>
-
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-500">
-          <div>
-            © {new Date().getFullYear()} VoidCloud Protocol. Built for Midnight Network.
-          </div>
-
-          <div className="flex items-center space-x-6">
-            <a
-              href="https://midnight.network"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-sky-400 transition-colors flex items-center gap-1"
-            >
-              <span>Midnight Docs</span>
-              <ArrowUpRight className="w-3 h-3" />
+        {/* Bottom copyright */}
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+          <div>© 2026 VoidCloud. Built for Midnight Network. All rights reserved.</div>
+          <div className="flex items-center space-x-4">
+            <a href="https://github.com/Shuvankar11/VoidCloud" target="_blank" rel="noreferrer" className="hover:text-slate-800 transition-colors flex items-center space-x-1">
+              <Github className="w-3.5 h-3.5" />
+              <span>GitHub</span>
+            </a>
+            <a href="https://midnight.network" target="_blank" rel="noreferrer" className="hover:text-slate-800 transition-colors">
+              Midnight.network
             </a>
           </div>
         </div>

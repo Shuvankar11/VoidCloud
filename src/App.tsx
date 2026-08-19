@@ -67,7 +67,7 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#030712] text-slate-100 relative selection:bg-sky-500 selection:text-black">
+    <div className="min-h-screen bg-[#F0F8FF] text-slate-800 relative selection:bg-sky-500 selection:text-white font-sans">
       {/* Futuristic High-Visibility Cloud Cursor */}
       <CustomCursor />
 
@@ -87,12 +87,8 @@ const AppContent: React.FC = () => {
           /* DEDICATED STORAGE VAULT DASHBOARD VIEW (Reference 3 & 4) */
           <StorageVaultDashboard />
         ) : (
-          /* DEDICATED HERO LANDING VIEW (Reference 1) */
-          <>
-            <HeroLanding3D onStartJourney={handleStartJourney} />
-            <CompactContractViewer />
-            <FeatureGrid />
-          </>
+          /* PURE CLEAN HERO LANDING VIEW (Reference 1) */
+          <HeroLanding3D onStartJourney={handleStartJourney} />
         )}
       </main>
 

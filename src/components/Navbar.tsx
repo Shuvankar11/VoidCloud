@@ -2,7 +2,18 @@ import React, { useState } from 'react';
 import { useVault } from '../context/VaultContext';
 import { useAuth } from '../context/AuthContext';
 import { useWeb3Wallet } from '../context/WalletContext';
-import { Cloud, LogOut, LogIn, Menu, X, Wallet, Sparkles, ShieldCheck, Image as ImageIcon, HardDrive, Receipt, FileText, History } from 'lucide-react';
+import {
+  LogOut,
+  LogIn,
+  Menu,
+  X,
+  Wallet,
+  Sparkles,
+  Image as ImageIcon,
+  HardDrive,
+  History,
+  Cpu
+} from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const { session, activeView, setActiveView } = useVault();
@@ -22,106 +33,94 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full backdrop-blur-2xl bg-[#080D1A]/95 border-b border-slate-800/80">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
+    <header className="sticky top-0 z-40 w-full backdrop-blur-2xl bg-white/85 border-b border-slate-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.03)] text-slate-800 transition-all">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
         
         {/* Left: Brand Logo */}
-        <div className="flex items-center space-x-2 flex-shrink-0">
+        <div className="flex items-center space-x-2.5 flex-shrink-0">
           <button
             onClick={() => handleNavClick(user ? 'dashboard' : 'landing', '#overview')}
-            className="flex items-center space-x-2 group text-left"
+            className="flex items-center space-x-2.5 group text-left cursor-pointer"
           >
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl overflow-hidden border border-sky-500/40 flex items-center justify-center group-hover:border-sky-400 group-hover:shadow-[0_0_15px_rgba(56,189,248,0.3)] transition-all flex-shrink-0 bg-black">
-              <img src="/voidcloud-logo.jpg" alt="Void Logo" className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl overflow-hidden border border-sky-400/60 shadow-sm flex items-center justify-center group-hover:scale-105 transition-all flex-shrink-0 bg-white">
+              <img src="/voidcloud-logo.jpg" alt="Void Logo" className="w-full h-full object-cover" />
             </div>
             <div>
               <div className="flex items-center space-x-1">
-                <span className="font-display font-bold text-sm sm:text-base tracking-wide text-white">VOID</span>
-                <span className="font-display font-bold text-sm sm:text-base tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-400">CLOUD</span>
+                <span className="font-display font-black text-base sm:text-lg tracking-wide text-slate-900">VOID</span>
+                <span className="font-display font-black text-base sm:text-lg tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600">CLOUD</span>
               </div>
-              <span className="text-[9px] font-mono text-slate-400 hidden xs:block">Preprod ZK Storage</span>
+              <span className="text-[9px] font-mono text-slate-500 hidden xs:block font-semibold">Midnight ZK Vault</span>
             </div>
           </button>
         </div>
 
-        {/* Center: Navigation Links (Optimized & Compact) */}
-        <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 text-xs font-medium text-slate-300 flex-shrink">
+        {/* Center: Navigation Links (Clean Light Glass UI) */}
+        <nav className="hidden lg:flex items-center gap-1.5 text-xs font-semibold text-slate-600 flex-shrink">
+          {/* Overview / Landing Button */}
           <button
             onClick={() => handleNavClick('landing', '#overview')}
-            className={`px-2.5 py-1.5 rounded-lg transition-all whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-full transition-all whitespace-nowrap ${
               activeView === 'landing' || activeView === 'home'
-                ? 'text-white font-semibold bg-slate-800/60'
-                : 'text-slate-400 hover:text-sky-300'
+                ? 'text-sky-600 bg-sky-50 font-bold shadow-xs'
+                : 'hover:text-slate-900 hover:bg-slate-100/80'
             }`}
           >
-            Overview
+            Home
           </button>
 
-          {/* DEDICATED VAULT DASHBOARD BUTTON */}
+          {/* Dedicated Vault Dashboard Button */}
           <button
             onClick={() => handleNavClick('dashboard')}
-            className={`px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 whitespace-nowrap ${
               activeView === 'dashboard'
-                ? 'bg-sky-500/20 text-sky-300 border border-sky-500/50 shadow-[0_0_15px_rgba(56,189,248,0.3)] font-bold'
-                : 'text-slate-400 hover:text-sky-300 hover:bg-slate-800/40 border border-transparent'
+                ? 'bg-sky-500 text-white font-bold shadow-sm shadow-sky-500/30'
+                : 'hover:text-slate-900 hover:bg-slate-100/80 text-slate-600'
             }`}
           >
-            <HardDrive className="w-3.5 h-3.5 text-sky-400" />
+            <HardDrive className="w-3.5 h-3.5" />
             <span>Vault Dashboard</span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-sky-950/80 border border-sky-500/40 text-sky-300 font-mono font-bold">
+            <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold ${activeView === 'dashboard' ? 'bg-sky-700 text-white' : 'bg-sky-100 text-sky-700'}`}>
               {session.quotaGB}GB
             </span>
           </button>
 
-          {/* DEDICATED MEDIA & FILES GALLERY BUTTON */}
+          {/* Dedicated Media Gallery Button */}
           <button
             onClick={() => handleNavClick('gallery')}
-            className={`px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 whitespace-nowrap ${
               activeView === 'gallery'
-                ? 'bg-sky-500/20 text-sky-300 border border-sky-500/50 shadow-[0_0_15px_rgba(56,189,248,0.3)] font-bold'
-                : 'text-sky-400 hover:text-white hover:bg-sky-950/40 border border-sky-500/30'
+                ? 'bg-sky-500 text-white font-bold shadow-sm'
+                : 'hover:text-slate-900 hover:bg-slate-100/80 text-slate-600'
             }`}
           >
             <ImageIcon className="w-3.5 h-3.5" />
-            <span>Gallery & Files</span>
-            <span className="px-1.5 py-0.2 rounded-md bg-gradient-to-r from-sky-500/40 to-violet-500/40 border border-sky-400/40 text-[9px] font-mono text-sky-200 font-bold">
-              VAULT
-            </span>
+            <span>Gallery</span>
           </button>
 
-          {/* DEDICATED PAYMENT & TRANSACTIONS HISTORY BUTTON */}
+          {/* Dedicated History Ledger Button */}
           <button
             onClick={() => handleNavClick('payments')}
-            className={`px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 whitespace-nowrap ${
               activeView === 'payments'
-                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.3)] font-bold'
-                : 'text-slate-400 hover:text-emerald-300 hover:bg-emerald-950/30 border border-transparent'
+                ? 'bg-emerald-500 text-white font-bold shadow-sm'
+                : 'hover:text-slate-900 hover:bg-slate-100/80 text-slate-600'
             }`}
           >
-            <History className="w-3.5 h-3.5 text-emerald-400" />
-            <span>History</span>
-            <span className="px-1.5 py-0.2 rounded-md bg-emerald-950/80 border border-emerald-500/40 text-[9px] font-mono text-emerald-300 font-semibold">
-              LEDGER
-            </span>
-          </button>
-
-          <button
-            onClick={() => handleNavClick('landing', '#contract')}
-            className="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-sky-300 transition-colors whitespace-nowrap"
-          >
-            Architecture & Circuits
+            <History className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Ledger History</span>
           </button>
         </nav>
 
-        {/* Right Actions: Upgrade + Wallet + User Profile */}
-        <div className="flex items-center space-x-1.5 sm:space-x-2 flex-shrink-0">
+        {/* Right Actions: Upgrade + Wallet + User Auth */}
+        <div className="flex items-center space-x-2 flex-shrink-0">
           
           {/* Upgrade Storage Plan Button */}
           <button
             onClick={() => setIsPricingModalOpen(true)}
-            className="inline-flex items-center space-x-1 px-2 sm:px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 border border-amber-500/40 text-amber-300 text-xs font-mono font-semibold transition-all hover:scale-105"
+            className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-700 text-xs font-bold transition-all shadow-xs"
           >
-            <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400" />
+            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
             <span className="hidden sm:inline">Upgrade</span>
           </button>
 
@@ -129,28 +128,28 @@ export const Navbar: React.FC = () => {
           {wallet.isConnected ? (
             <button
               onClick={() => setIsWalletModalOpen(true)}
-              className="inline-flex items-center space-x-1.5 px-2 sm:px-2.5 py-1.5 rounded-xl bg-[#0E1424] border border-sky-500/50 hover:border-sky-400 text-sky-300 text-xs font-mono transition-colors"
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-300/80 text-slate-800 text-xs font-mono font-bold transition-colors"
             >
-              <Wallet className="w-3.5 h-3.5 text-sky-400" />
-              <span className="font-semibold text-[11px] sm:text-xs">{wallet.balances.NIGHT} NIGHT</span>
+              <Wallet className="w-3.5 h-3.5 text-sky-600" />
+              <span className="text-[11px]">{wallet.balances.NIGHT} NIGHT</span>
             </button>
           ) : (
             <button
               onClick={() => setIsWalletModalOpen(true)}
-              className="inline-flex items-center space-x-1 px-2 sm:px-2.5 py-1.5 rounded-xl bg-[#0E1424] hover:bg-[#141D30] border border-slate-700 hover:border-sky-500 text-slate-200 text-xs font-mono transition-colors"
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 text-xs font-semibold transition-colors shadow-xs"
             >
-              <Wallet className="w-3.5 h-3.5 text-sky-400" />
+              <Wallet className="w-3.5 h-3.5 text-sky-500" />
               <span className="hidden sm:inline">Wallet</span>
             </button>
           )}
 
-          {/* User Account Button (Fixed Truncation & Compact Bounds) */}
+          {/* User Account / Sign In Button (Matching Reference 1) */}
           {user ? (
-            <div className="flex items-center space-x-1.5 bg-[#0E1424] border border-slate-700 rounded-xl px-2 py-1.5 text-xs font-mono flex-shrink-0">
-              <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-sky-500 to-blue-600 flex items-center justify-center text-white font-bold text-[10px] flex-shrink-0">
+            <div className="flex items-center space-x-2 bg-slate-100 border border-slate-200 rounded-full px-2.5 py-1 text-xs font-semibold">
+              <div className="w-5 h-5 rounded-full bg-sky-500 text-white font-bold flex items-center justify-center text-[10px]">
                 {user.displayName ? user.displayName[0].toUpperCase() : 'U'}
               </div>
-              <span className="text-white font-semibold text-xs truncate max-w-[70px] sm:max-w-[90px] md:max-w-[100px]">
+              <span className="text-slate-800 font-bold max-w-[80px] sm:max-w-[110px] truncate">
                 {user.displayName || user.email.split('@')[0]}
               </span>
               <button
@@ -159,7 +158,7 @@ export const Navbar: React.FC = () => {
                   setActiveView('landing');
                 }}
                 title="Sign out"
-                className="text-slate-400 hover:text-rose-400 transition-colors p-0.5"
+                className="text-slate-400 hover:text-rose-500 transition-colors p-0.5"
               >
                 <LogOut className="w-3.5 h-3.5" />
               </button>
@@ -167,80 +166,52 @@ export const Navbar: React.FC = () => {
           ) : (
             <button
               onClick={() => setIsAuthModalOpen(true)}
-              className="inline-flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-mono text-xs font-semibold shadow-[0_0_15px_rgba(14,165,233,0.3)] transition-all hover:scale-105 whitespace-nowrap"
+              className="inline-flex items-center space-x-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-sky-400 via-sky-500 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-white text-xs font-bold shadow-md shadow-sky-500/25 transition-all hover:scale-105 whitespace-nowrap cursor-pointer"
             >
               <LogIn className="w-3.5 h-3.5" />
-              <span>Sign In</span>
+              <span>Log in</span>
             </button>
           )}
 
           {/* Mobile Menu Toggle Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors flex-shrink-0"
+            className="lg:hidden p-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors flex-shrink-0"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile / Tablet Dropdown Menu */}
+      {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#080D1A] border-b border-slate-800 px-4 py-4 space-y-3 font-mono text-xs">
+        <div className="lg:hidden px-4 pt-2 pb-4 space-y-1.5 bg-white border-b border-slate-200 text-xs font-semibold">
           <button
-            onClick={() => handleNavClick('home', '#overview')}
-            className="block w-full text-left text-slate-300 hover:text-sky-400 py-1"
+            onClick={() => handleNavClick('landing')}
+            className="w-full text-left py-2 px-3 rounded-xl hover:bg-slate-50 text-slate-800"
           >
-            Overview
+            Home / Overview
           </button>
           <button
-            onClick={() => handleNavClick('home', '#storage')}
-            className="block w-full text-left text-slate-300 hover:text-sky-400 py-1"
+            onClick={() => handleNavClick('dashboard')}
+            className="w-full text-left py-2 px-3 rounded-xl hover:bg-slate-50 text-sky-600 font-bold"
           >
-            Storage Quota ({session.quotaGB} GB)
+            Vault Dashboard ({session.quotaGB} GB)
           </button>
           <button
             onClick={() => handleNavClick('gallery')}
-            className="block w-full text-left text-sky-300 hover:text-white py-1.5 px-3 rounded-xl bg-sky-950/60 border border-sky-500/40 font-bold flex items-center justify-between"
+            className="w-full text-left py-2 px-3 rounded-xl hover:bg-slate-50 text-slate-800"
           >
-            <span>Media & Files Gallery (Photos, Videos & Docs)</span>
-            <span className="px-1.5 py-0.5 rounded-md bg-sky-500/20 text-[10px] text-sky-300">OPEN</span>
+            Media Gallery
           </button>
           <button
             onClick={() => handleNavClick('payments')}
-            className="block w-full text-left text-emerald-300 hover:text-white py-1.5 px-3 rounded-xl bg-emerald-950/60 border border-emerald-500/40 font-bold flex items-center justify-between"
+            className="w-full text-left py-2 px-3 rounded-xl hover:bg-slate-50 text-emerald-600 font-bold"
           >
-            <span>Payment & Transaction History</span>
-            <span className="px-1.5 py-0.5 rounded-md bg-emerald-500/20 text-[10px] text-emerald-300 font-mono">LEDGER</span>
+            Ledger History
           </button>
-          <button
-            onClick={() => handleNavClick('home', '#vault')}
-            className="block w-full text-left text-slate-300 hover:text-sky-400 py-1"
-          >
-            Object Vault
-          </button>
-          <button
-            onClick={() => handleNavClick('home', '#features')}
-            className="block w-full text-left text-slate-300 hover:text-sky-400 py-1"
-          >
-            Architecture
-          </button>
-
-          <div className="pt-2 border-t border-slate-800">
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                setIsPricingModalOpen(true);
-              }}
-              className="w-full py-2 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold text-center"
-            >
-              Upgrade Storage (50GB - 500GB)
-            </button>
-          </div>
         </div>
       )}
     </header>
   );
 };
-
-export default Navbar;

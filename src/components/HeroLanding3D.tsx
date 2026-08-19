@@ -14,7 +14,7 @@ export const HeroLanding3D: React.FC<HeroLanding3DProps> = ({ onStartJourney }) 
   const { wallet, setIsPricingModalOpen } = useWeb3Wallet();
 
   return (
-    <section className="relative w-full min-h-[92vh] flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#87CEEB] via-[#B0E0E6] to-[#E6F3FA] text-slate-900 select-none">
+    <section className="relative w-full min-h-[calc(100vh-80px)] flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#87CEEB] via-[#B0E0E6] to-[#E6F3FA] text-slate-900 select-none">
       {/* 3D Atmospheric Clouds Layer (Animated Drifting Clouds) */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {/* Soft Sun Ray Glow */}
