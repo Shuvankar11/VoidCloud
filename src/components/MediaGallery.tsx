@@ -17,19 +17,15 @@ import {
   Calendar,
   Clock,
   Sparkles,
-  HardDrive,
-  Shield,
   Play,
   Maximize2,
   UploadCloud,
   CheckCircle2,
   Search,
   ArrowLeft,
-  Filter,
   Loader2,
   Plus,
-  RefreshCw,
-  FolderOpen
+  Lock,
 } from 'lucide-react';
 
 interface MediaCardProps {
@@ -57,10 +53,6 @@ const MediaCard: React.FC<MediaCardProps> = ({
     day: 'numeric',
     year: 'numeric',
   });
-  const formattedTime = new Date(file.uploadedAt).toLocaleTimeString(undefined, {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
 
   useEffect(() => {
     let isMounted = true;
@@ -84,27 +76,26 @@ const MediaCard: React.FC<MediaCardProps> = ({
 
   const renderDocIcon = () => {
     const lower = file.name.toLowerCase();
-    if (lower.endsWith('.pdf')) return <FileText className="w-10 h-10 text-rose-400" />;
+    if (lower.endsWith('.pdf')) return <FileText className="w-10 h-10 text-rose-500" />;
     if (lower.endsWith('.zip') || lower.endsWith('.rar') || lower.endsWith('.tar') || lower.endsWith('.7z')) {
-      return <Archive className="w-10 h-10 text-amber-400" />;
+      return <Archive className="w-10 h-10 text-emerald-500" />;
     }
     if (lower.endsWith('.csv') || lower.endsWith('.xlsx') || lower.endsWith('.xls')) {
-      return <FileSpreadsheet className="w-10 h-10 text-emerald-400" />;
+      return <FileSpreadsheet className="w-10 h-10 text-green-600" />;
     }
     if (lower.endsWith('.json') || lower.endsWith('.js') || lower.endsWith('.ts') || lower.endsWith('.py') || lower.endsWith('.html') || lower.endsWith('.css') || lower.endsWith('.md')) {
-      return <FileCode className="w-10 h-10 text-teal-400" />;
+      return <FileCode className="w-10 h-10 text-teal-600" />;
     }
-    return <FileCheck className="w-10 h-10 text-sky-400" />;
+    return <FileCheck className="w-10 h-10 text-sky-500" />;
   };
 
   return (
     <div
       onClick={onClick}
-      className="group relative bg-[#0B1120] hover:bg-[#0E1629] rounded-2xl border border-slate-800/90 hover:border-sky-500/60 transition-all duration-300 shadow-lg hover:shadow-[0_0_25px_rgba(56,189,248,0.2)] overflow-hidden flex flex-col cursor-pointer transform hover:-translate-y-1"
+      className="group relative bg-white hover:bg-slate-50/80 rounded-2xl border border-slate-200/80 hover:border-sky-400 transition-all duration-300 shadow-sm hover:shadow-xl overflow-hidden flex flex-col cursor-pointer transform hover:-translate-y-1"
     >
       {/* Thumbnail Window / Card Header */}
-      <div className="relative w-full h-40 sm:h-48 bg-[#050811] flex items-center justify-center overflow-hidden border-b border-slate-800/80">
-        
+      <div className="relative w-full h-40 sm:h-48 bg-slate-100/70 flex items-center justify-center overflow-hidden border-b border-slate-200/80">
         {category === 'image' ? (
           blobUrl ? (
             <img
@@ -114,8 +105,8 @@ const MediaCard: React.FC<MediaCardProps> = ({
             />
           ) : (
             <div className="text-center p-4">
-              <ImageIcon className="w-10 h-10 text-sky-400 mx-auto opacity-75 group-hover:scale-110 transition-transform" />
-              <span className="text-[10px] font-mono text-slate-400 mt-1 block">Photo Shard</span>
+              <ImageIcon className="w-10 h-10 text-sky-500 mx-auto opacity-75 group-hover:scale-110 transition-transform" />
+              <span className="text-[10px] font-semibold text-slate-500 mt-1 block">Photo Shard</span>
             </div>
           )
         ) : category === 'video' ? (
@@ -128,31 +119,31 @@ const MediaCard: React.FC<MediaCardProps> = ({
                 playsInline
                 preload="metadata"
               />
-              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                <div className="w-11 h-11 rounded-full bg-sky-500/90 hover:bg-sky-400 text-slate-950 flex items-center justify-center shadow-[0_0_20px_rgba(56,189,248,0.6)] group-hover:scale-110 transition-transform">
+              <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                <div className="w-11 h-11 rounded-full bg-sky-500 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                   <Play className="w-5 h-5 fill-current ml-0.5" />
                 </div>
               </div>
             </div>
           ) : (
             <div className="text-center p-4">
-              <Film className="w-10 h-10 text-violet-400 mx-auto opacity-75 group-hover:scale-110 transition-transform" />
-              <span className="text-[10px] font-mono text-slate-400 mt-1 block">Video Shard</span>
+              <Film className="w-10 h-10 text-violet-500 mx-auto opacity-75 group-hover:scale-110 transition-transform" />
+              <span className="text-[10px] font-semibold text-slate-500 mt-1 block">Video Shard</span>
             </div>
           )
         ) : category === 'audio' ? (
           <div className="text-center p-6 space-y-2">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-xs">
               <Music className="w-6 h-6" />
             </div>
-            <span className="text-[11px] font-mono text-emerald-300 block font-semibold">Audio Shard</span>
+            <span className="text-[11px] text-emerald-700 block font-bold">Audio Shard</span>
           </div>
         ) : (
           <div className="text-center p-4 space-y-2">
-            <div className="p-3 rounded-2xl bg-[#0E1424] border border-slate-800 group-hover:border-sky-500/40 transition-colors inline-block">
+            <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 group-hover:border-sky-300 transition-colors inline-block">
               {renderDocIcon()}
             </div>
-            <span className="text-[10px] font-mono text-slate-400 block uppercase font-bold">
+            <span className="text-[10px] text-slate-600 block uppercase font-bold">
               {ext} FILE
             </span>
           </div>
@@ -160,11 +151,11 @@ const MediaCard: React.FC<MediaCardProps> = ({
 
         {/* Top Left Format Badge */}
         <div className="absolute top-2.5 left-2.5 flex items-center space-x-1.5">
-          <span className="px-2 py-0.5 rounded-md bg-[#080D1A]/90 border border-slate-700/80 text-[10px] font-mono font-bold uppercase text-sky-300 shadow-md backdrop-blur-md">
+          <span className="px-2 py-0.5 rounded-lg bg-white/90 border border-slate-200 text-[10px] font-bold uppercase text-slate-800 shadow-xs">
             {ext}
           </span>
           {isShredded && (
-            <span className="px-2 py-0.5 rounded-md bg-rose-950/90 border border-rose-500/40 text-[10px] font-mono text-rose-300">
+            <span className="px-2 py-0.5 rounded-lg bg-rose-50 border border-rose-200 text-[10px] font-bold text-rose-600">
               REVOKED
             </span>
           )}
@@ -172,14 +163,14 @@ const MediaCard: React.FC<MediaCardProps> = ({
 
         {/* Top Right Size Badge */}
         <div className="absolute top-2.5 right-2.5">
-          <span className="px-2 py-0.5 rounded-md bg-black/80 border border-slate-700/80 text-[10px] font-mono text-slate-300 backdrop-blur-md">
+          <span className="px-2 py-0.5 rounded-lg bg-white/90 border border-slate-200 text-[10px] font-bold text-slate-700 shadow-xs">
             {sizeMB} MB
           </span>
         </div>
 
         {/* Hover Quick Actions */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-end justify-between p-3">
-          <span className="text-[11px] font-mono text-sky-300 flex items-center gap-1 font-bold">
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-end justify-between p-3">
+          <span className="text-[11px] text-white flex items-center gap-1 font-bold">
             <Maximize2 className="w-3.5 h-3.5" />
             <span>Click to Enlarge</span>
           </span>
@@ -189,7 +180,7 @@ const MediaCard: React.FC<MediaCardProps> = ({
               <button
                 onClick={onSave}
                 title="Decrypt & Download"
-                className="p-1.5 rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-950 transition-colors shadow-md"
+                className="p-1.5 rounded-lg bg-sky-500 hover:bg-sky-400 text-white transition-colors shadow-md"
               >
                 <Download className="w-3.5 h-3.5" />
               </button>
@@ -197,7 +188,7 @@ const MediaCard: React.FC<MediaCardProps> = ({
             <button
               onClick={onDelete}
               title="Delete permanently"
-              className="p-1.5 rounded-lg bg-rose-950/80 hover:bg-rose-900 border border-rose-500/40 text-rose-300 hover:text-white transition-colors shadow-md"
+              className="p-1.5 rounded-lg bg-rose-500 hover:bg-rose-600 text-white transition-colors shadow-md"
             >
               <Trash2 className="w-3.5 h-3.5" />
             </button>
@@ -205,41 +196,35 @@ const MediaCard: React.FC<MediaCardProps> = ({
         </div>
       </div>
 
-      {/* Card Info */}
-      <div className="p-3.5 flex-1 flex flex-col justify-between space-y-2.5">
+      {/* Card Body Info */}
+      <div className="p-4 flex flex-col justify-between flex-1 space-y-3 bg-white">
         <div>
-          {/* File Name */}
-          <h4
-            className={`text-xs font-mono font-bold truncate transition-colors ${
-              isShredded ? 'text-slate-500 line-through' : 'text-slate-200 group-hover:text-sky-300'
-            }`}
+          <h3
+            className="font-bold text-slate-900 text-xs sm:text-sm truncate group-hover:text-sky-600 transition-colors"
             title={file.name}
           >
             {file.name}
-          </h4>
-
-          {/* Date & Time */}
-          <div className="flex items-center space-x-2 text-[10px] font-mono text-slate-400 mt-1">
-            <div className="flex items-center space-x-1">
-              <Calendar className="w-3 h-3 text-slate-500" />
-              <span>{formattedDate}</span>
-            </div>
+          </h3>
+          <div className="flex items-center space-x-2 text-[10px] text-slate-400 mt-1">
+            <span className="flex items-center gap-1">
+              <Calendar className="w-3 h-3 text-slate-400" />
+              {formattedDate}
+            </span>
             <span>•</span>
-            <div className="flex items-center space-x-1">
-              <Clock className="w-3 h-3 text-slate-500" />
-              <span>{formattedTime}</span>
-            </div>
+            <span className="flex items-center gap-1 text-emerald-600 font-semibold">
+              <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+              ZK Shielded
+            </span>
           </div>
         </div>
 
-        {/* Footer Meta */}
-        <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono">
-          <div className="flex items-center space-x-1 text-emerald-400">
-            <Shield className="w-3 h-3" />
-            <span>AES-256-GCM</span>
+        {/* Card Footer Key Metadata */}
+        <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500 font-mono">
+          <div className="flex items-center space-x-1">
+            <Lock className="w-3 h-3 text-sky-500" />
+            <span>AES-256</span>
           </div>
-
-          <span className="text-sky-400 group-hover:underline">Open ↗</span>
+          <span className="text-sky-600 font-semibold group-hover:underline">Open ↗</span>
         </div>
       </div>
     </div>
@@ -333,223 +318,213 @@ export const MediaGallery: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8 animate-fade-in">
-      
-      {/* Top Header with Back Button */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
-        <div className="flex items-center space-x-3">
-          <button
-            onClick={() => setActiveView('home')}
-            className="p-2.5 rounded-xl bg-[#0E1424] hover:bg-[#141D30] border border-slate-700 hover:border-sky-500 text-sky-400 hover:text-white transition-all flex items-center gap-2 text-xs font-mono font-bold shadow-md"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Dashboard</span>
-          </button>
-
-          <div>
-            <h1 className="text-xl sm:text-2xl font-display font-bold text-white tracking-tight flex items-center gap-2">
-              <span>Media & Files Vault</span>
-              <span className="px-2 py-0.5 rounded-full bg-sky-950/80 border border-sky-500/40 text-sky-300 font-mono text-xs font-normal">
-                {files.length} Objects
-              </span>
-            </h1>
-            <span className="text-xs font-mono text-slate-400">
-              Personal Shielded Storage • Partition {session.shieldedAddress.slice(0, 14)}...
-            </span>
-          </div>
-        </div>
-
-        {/* Action Button: Direct Upload */}
-        <div className="flex items-center space-x-2 w-full sm:w-auto">
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="w-full sm:w-auto px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-mono font-bold text-xs transition-all shadow-[0_0_20px_rgba(56,189,248,0.3)] flex items-center justify-center gap-2"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Upload Photos / Files</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Hidden File Input */}
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileSelect}
-        multiple
-        className="hidden"
-      />
-
-      {/* Live Upload Progress Bar if Uploading */}
-      {isUploading && (
-        <div className="cloud-card rounded-2xl p-6 border border-sky-500/50 bg-[#080D1A] shadow-[0_0_30px_rgba(56,189,248,0.25)] space-y-3">
-          <div className="flex items-center justify-between text-xs font-mono">
-            <span className="font-bold text-white truncate max-w-sm">
-              Encrypting & Uploading: {uploadFileName} ({uploadFileSizeMB} MB)
-            </span>
-            <span className="text-sky-300 font-extrabold">{uploadProgress}%</span>
-          </div>
-          <div className="h-2.5 w-full bg-[#0E1424] rounded-full overflow-hidden border border-slate-700/80">
-            <div
-              style={{ width: `${uploadProgress}%` }}
-              className="h-full bg-gradient-to-r from-sky-400 to-emerald-400 rounded-full transition-all duration-150 shadow-[0_0_15px_rgba(56,189,248,0.6)]"
-            />
-          </div>
-          <div className="flex items-center space-x-2 text-[11px] font-mono text-sky-300">
-            <Loader2 className="w-3.5 h-3.5 animate-spin text-sky-400" />
-            <span>{uploadStage}</span>
-          </div>
-        </div>
-      )}
-
-      {/* Drag & Drop Quick Zone */}
-      <div
-        onDragOver={(e) => {
-          e.preventDefault();
-          setIsDragging(true);
-        }}
-        onDragLeave={() => setIsDragging(false)}
-        onDrop={handleFileDrop}
-        onClick={() => fileInputRef.current?.click()}
-        className={`rounded-2xl p-6 sm:p-7 border-2 border-dashed text-center cursor-pointer transition-all ${
-          isDragging
-            ? 'border-sky-400 bg-sky-950/30'
-            : 'border-slate-800 hover:border-sky-500/50 bg-[#080D1A]/80'
-        }`}
-      >
-        <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center mx-auto mb-2 text-sky-400">
-          <UploadCloud className="w-5 h-5" />
-        </div>
-        <h3 className="text-xs sm:text-sm font-semibold text-white font-mono">
-          Drag & drop any Photo, Video, PDF, DOC, or Code file here
-        </h3>
-        <p className="text-[11px] text-slate-400 mt-0.5 font-sans">
-          All formats (JPG, PNG, MP4, PDF, DOCX, ZIP, TXT) are envelope-encrypted with AES-256-GCM.
-        </p>
-      </div>
-
-      {/* Gallery Filter & Search Control Bar */}
-      <div className="cloud-card rounded-2xl border border-slate-700/80 bg-[#080D1A]/95 p-4 sm:p-5 shadow-2xl backdrop-blur-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+    <section
+      className="min-h-screen py-8 px-3 sm:px-6 lg:px-8 bg-cover bg-center bg-no-repeat transition-all"
+      style={{
+        backgroundImage: 'url(/aurora-bg.jpg)',
+        backgroundColor: '#EBF4FF',
+      }}
+    >
+      <div className="max-w-7xl mx-auto rounded-3xl bg-white/95 backdrop-blur-2xl border border-white/80 shadow-[0_25px_80px_rgba(30,60,140,0.16)] p-6 sm:p-8 space-y-6 text-slate-800">
         
-        {/* Category Tabs */}
-        <div className="flex flex-wrap items-center bg-[#0E1424] p-1 rounded-xl border border-slate-800 text-xs font-mono">
-          <button
-            onClick={() => setActiveCategory('all')}
-            className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
-              activeCategory === 'all'
-                ? 'bg-sky-500/20 text-sky-300 border border-sky-500/40 font-bold'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>All Items ({activeFiles.length})</span>
-          </button>
+        {/* Top Header with Back Button */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-200">
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={() => setActiveView('dashboard')}
+              className="p-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all flex items-center gap-2 text-xs font-bold shadow-xs"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Back to Dashboard</span>
+            </button>
 
-          <button
-            onClick={() => setActiveCategory('photos')}
-            className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
-              activeCategory === 'photos'
-                ? 'bg-sky-500/20 text-sky-300 border border-sky-500/40 font-bold'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            <ImageIcon className="w-3.5 h-3.5 text-sky-400" />
-            <span>Photos ({photoFiles.length})</span>
-          </button>
-
-          <button
-            onClick={() => setActiveCategory('videos')}
-            className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
-              activeCategory === 'videos'
-                ? 'bg-violet-500/20 text-violet-300 border border-violet-500/40 font-bold'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            <Film className="w-3.5 h-3.5 text-violet-400" />
-            <span>Videos ({videoFiles.length})</span>
-          </button>
-
-          <button
-            onClick={() => setActiveCategory('audio')}
-            className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
-              activeCategory === 'audio'
-                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            <Music className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Audio ({audioFiles.length})</span>
-          </button>
-
-          <button
-            onClick={() => setActiveCategory('files')}
-            className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
-              activeCategory === 'files'
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            <FileText className="w-3.5 h-3.5 text-amber-400" />
-            <span>Files & Docs ({docFiles.length})</span>
-          </button>
-        </div>
-
-        {/* Search Media Box */}
-        <div className="relative w-full md:w-64">
-          <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 transform -translate-y-1/2" />
-          <input
-            type="text"
-            placeholder="Search by filename..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-[#0E1424] border border-slate-800 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-sky-500/60 font-mono"
-          />
-        </div>
-      </div>
-
-      {/* Grid of Small Media & File Boxes */}
-      {filteredMedia.length > 0 ? (
-        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
-          {filteredMedia.map((file) => (
-            <MediaCard
-              key={file.id}
-              file={file}
-              category={getMediaCategory(file)}
-              onClick={() => setActivePreviewFile(file)}
-              onSave={() => decryptAndDownloadFile(file)}
-              onDelete={() => deleteFilePermanently(file.id)}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="text-center py-16 px-4 bg-[#080D1A]/80 rounded-2xl border border-slate-800/80 max-w-lg mx-auto space-y-4">
-          <div className="w-14 h-14 rounded-2xl bg-slate-800/80 border border-slate-700 flex items-center justify-center mx-auto text-slate-400">
-            <FolderOpen className="w-7 h-7" />
+            <div>
+              <h1 className="text-xl sm:text-2xl font-display font-black text-slate-900 tracking-tight flex items-center gap-2">
+                <span>Media & Files Vault</span>
+                <span className="px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-700 text-xs font-bold">
+                  {files.length} Objects
+                </span>
+              </h1>
+              <span className="text-xs text-slate-400">
+                Personal Shielded Storage • Quota {session.quotaGB} GB Allocated
+              </span>
+            </div>
           </div>
 
-          <div>
-            <h4 className="text-sm font-semibold text-slate-200 font-mono">No Items in this Category</h4>
-            <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto font-sans">
-              {activeCategory === 'photos'
-                ? 'No photos uploaded yet. Upload .jpg, .png or .webp files.'
-                : activeCategory === 'videos'
-                ? 'No videos uploaded yet. Upload .mp4 or .webm files.'
-                : activeCategory === 'files'
-                ? 'No documents uploaded yet. Upload .pdf, .docx, .zip, or code files.'
-                : 'Upload any file above to preview it in this vault.'}
+          {/* Action Button: Direct Upload */}
+          <div className="flex items-center space-x-2 w-full sm:w-auto">
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs transition-all shadow-md shadow-sky-500/25 flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Upload Photos / Files</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Hidden File Input */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileSelect}
+          multiple
+          className="hidden"
+        />
+
+        {/* Live Upload Progress Bar if Uploading */}
+        {isUploading && (
+          <div className="rounded-2xl p-5 border border-sky-300 bg-sky-50/90 shadow-md space-y-3">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-bold text-slate-900 truncate max-w-sm">
+                Encrypting & Uploading: {uploadFileName} ({uploadFileSizeMB} MB)
+              </span>
+              <span className="text-sky-600 font-black">{uploadProgress}%</span>
+            </div>
+            <div className="h-2.5 w-full bg-white rounded-full overflow-hidden border border-sky-200">
+              <div
+                style={{ width: `${uploadProgress}%` }}
+                className="h-full bg-gradient-to-r from-sky-400 to-emerald-400 rounded-full transition-all duration-150"
+              />
+            </div>
+            <div className="flex items-center space-x-2 text-[11px] text-sky-700 font-semibold">
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-sky-600" />
+              <span>{uploadStage}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Drag & Drop Quick Zone */}
+        <div
+          onDragOver={(e) => {
+            e.preventDefault();
+            setIsDragging(true);
+          }}
+          onDragLeave={() => setIsDragging(false)}
+          onDrop={handleFileDrop}
+          onClick={() => fileInputRef.current?.click()}
+          className={`rounded-2xl p-6 sm:p-7 border-2 border-dashed text-center cursor-pointer transition-all ${
+            isDragging
+              ? 'border-sky-500 bg-sky-50'
+              : 'border-slate-300 hover:border-sky-400 bg-slate-50/60'
+          }`}
+        >
+          <div className="w-10 h-10 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center mx-auto mb-2">
+            <UploadCloud className="w-5 h-5" />
+          </div>
+          <h3 className="text-xs sm:text-sm font-bold text-slate-800">
+            Drag & drop any Photo, Video, PDF, DOC, or Code file here
+          </h3>
+          <p className="text-[11px] text-slate-400 mt-0.5">
+            All formats (JPG, PNG, MP4, PDF, DOCX, ZIP, TXT) are envelope-encrypted with AES-256-GCM.
+          </p>
+        </div>
+
+        {/* Gallery Filter & Search Control Bar */}
+        <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          
+          {/* Category Tabs */}
+          <div className="flex flex-wrap items-center bg-white p-1 rounded-xl border border-slate-200 text-xs">
+            <button
+              onClick={() => setActiveCategory('all')}
+              className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
+                activeCategory === 'all'
+                  ? 'bg-sky-500 text-white font-bold shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>All ({activeFiles.length})</span>
+            </button>
+
+            <button
+              onClick={() => setActiveCategory('photos')}
+              className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
+                activeCategory === 'photos'
+                  ? 'bg-sky-500 text-white font-bold shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <ImageIcon className="w-3.5 h-3.5" />
+              <span>Photos ({photoFiles.length})</span>
+            </button>
+
+            <button
+              onClick={() => setActiveCategory('videos')}
+              className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
+                activeCategory === 'videos'
+                  ? 'bg-sky-500 text-white font-bold shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Film className="w-3.5 h-3.5" />
+              <span>Videos ({videoFiles.length})</span>
+            </button>
+
+            <button
+              onClick={() => setActiveCategory('audio')}
+              className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
+                activeCategory === 'audio'
+                  ? 'bg-sky-500 text-white font-bold shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Music className="w-3.5 h-3.5" />
+              <span>Audio ({audioFiles.length})</span>
+            </button>
+
+            <button
+              onClick={() => setActiveCategory('files')}
+              className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
+                activeCategory === 'files'
+                  ? 'bg-sky-500 text-white font-bold shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>Docs ({docFiles.length})</span>
+            </button>
+          </div>
+
+          {/* Search Bar */}
+          <div className="relative w-full md:w-72">
+            <Search className="absolute left-3.5 top-2.5 w-4 h-4 text-slate-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by file name..."
+              className="w-full pl-10 pr-4 py-2 rounded-xl bg-white border border-slate-200 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 text-xs text-slate-800 placeholder-slate-400 outline-none transition-all shadow-xs"
+            />
+          </div>
+        </div>
+
+        {/* Media Grid Cards */}
+        {filteredMedia.length === 0 ? (
+          <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center space-y-3">
+            <div className="w-12 h-12 rounded-2xl bg-sky-50 text-sky-500 flex items-center justify-center mx-auto shadow-xs">
+              <ImageIcon className="w-6 h-6" />
+            </div>
+            <h3 className="text-sm font-bold text-slate-800">No media items found</h3>
+            <p className="text-xs text-slate-400 max-w-sm mx-auto">
+              Upload photos, videos, or documents to store them in your zero-knowledge shielded vault partition.
             </p>
           </div>
-
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold font-mono text-xs transition-all shadow-[0_0_15px_rgba(56,189,248,0.3)]"
-          >
-            <UploadCloud className="w-4 h-4" />
-            <span>Upload First File</span>
-          </button>
-        </div>
-      )}
-
-    </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+            {filteredMedia.map((file) => (
+              <MediaCard
+                key={file.id}
+                file={file}
+                category={getMediaCategory(file)}
+                onClick={() => setActivePreviewFile(file)}
+                onSave={() => decryptAndDownloadFile(file)}
+                onDelete={() => deleteFilePermanently(file.id)}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
   );
 };
