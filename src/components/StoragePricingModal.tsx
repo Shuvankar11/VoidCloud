@@ -16,12 +16,20 @@ export const StoragePricingModal: React.FC = () => {
 
   const { session, upgradeStorageQuota, setActiveView } = useVault();
 
-  const [selectedPlan, setSelectedPlan] = useState<StoragePlan>(STORAGE_PLANS[0]);
+  const [selectedPlan, setSelectedPlan] = useState<StoragePlan>(() => {
+    return session.bonusClaimed ? STORAGE_PLANS[1] : STORAGE_PLANS[0];
+  });
   const [billing, setBilling] = useState<BillingCycle>('monthly');
   const [paymentToken, setPaymentToken] = useState<'NIGHT' | 'tDUST' | 'ADA' | 'USDT' | 'ETH'>('NIGHT');
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
   const [successTx, setSuccessTx] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (session.bonusClaimed && selectedPlan.id === 'plan_20gb') {
+      setSelectedPlan(STORAGE_PLANS[1]);
+    }
+  }, [session.bonusClaimed, isPricingModalOpen]);
 
   // Close on Escape key
   useEffect(() => {
@@ -51,6 +59,11 @@ export const StoragePricingModal: React.FC = () => {
   const handlePurchase = async () => {
     setError('');
     setSuccessTx(null);
+
+    if (selectedPlan.id === 'plan_20gb' && session.bonusClaimed) {
+      setError('You have already claimed this 1-time 20GB Testnet bonus!');
+      return;
+    }
 
     if (!wallet.isConnected) {
       setIsWalletModalOpen(true);
@@ -202,24 +215,35 @@ export const StoragePricingModal: React.FC = () => {
               /* Plans Grid */
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 {STORAGE_PLANS.map((plan) => {
-                  const isSelected = selectedPlan.id === plan.id;
+                  const isAlreadyClaimedBonus = plan.id === 'plan_20gb' && session.bonusClaimed;
+                  const isSelected = selectedPlan.id === plan.id && !isAlreadyClaimedBonus;
                   const price = plan.pricing[billing][paymentToken];
 
                   return (
                     <div
                       key={plan.id}
-                      onClick={() => setSelectedPlan(plan)}
-                      className={`relative rounded-2xl p-5 transition-all cursor-pointer flex flex-col justify-between border ${
-                        isSelected
-                          ? 'border-sky-500 bg-sky-50/70 shadow-lg ring-2 ring-sky-200'
-                          : 'border-slate-200 bg-white hover:border-sky-300 hover:shadow-md'
+                      onClick={() => {
+                        if (!isAlreadyClaimedBonus) {
+                          setSelectedPlan(plan);
+                        }
+                      }}
+                      className={`relative rounded-2xl p-5 transition-all flex flex-col justify-between border ${
+                        isAlreadyClaimedBonus
+                          ? 'border-emerald-300 bg-emerald-50/40 opacity-90 cursor-default ring-1 ring-emerald-200'
+                          : isSelected
+                          ? 'border-sky-500 bg-sky-50/70 shadow-lg ring-2 ring-sky-200 cursor-pointer'
+                          : 'border-slate-200 bg-white hover:border-sky-300 hover:shadow-md cursor-pointer'
                       }`}
                     >
-                      {plan.badge && (
+                      {isAlreadyClaimedBonus ? (
+                        <div className="absolute -top-2.5 right-4 px-2 py-0.5 rounded-full bg-emerald-600 text-white font-bold text-[9px] shadow-sm uppercase">
+                          ✓ 1-Time Claimed
+                        </div>
+                      ) : plan.badge ? (
                         <div className="absolute -top-2.5 right-4 px-2 py-0.5 rounded-full bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold text-[9px] shadow-sm uppercase">
                           {plan.badge}
                         </div>
-                      )}
+                      ) : null}
 
                       <div>
                         <div className="text-xs font-bold text-slate-500 uppercase tracking-wide">
@@ -250,21 +274,27 @@ export const StoragePricingModal: React.FC = () => {
                         </ul>
                       </div>
 
-                      {/* Select Button */}
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedPlan(plan);
-                        }}
-                        className={`w-full mt-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                          isSelected
-                            ? 'bg-sky-500 text-white shadow-sm'
-                            : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                        }`}
-                      >
-                        {isSelected ? 'Selected' : 'Choose Tier'}
-                      </button>
+                      {/* Select / Claimed Button */}
+                      {isAlreadyClaimedBonus ? (
+                        <div className="w-full mt-4 py-2 rounded-xl text-xs font-bold text-center bg-emerald-100 text-emerald-700 border border-emerald-200">
+                          ✓ Claimed ({session.quotaGB}GB Active)
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedPlan(plan);
+                          }}
+                          className={`w-full mt-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                            isSelected
+                              ? 'bg-sky-500 text-white shadow-sm'
+                              : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                          }`}
+                        >
+                          {isSelected ? 'Selected' : 'Choose Tier'}
+                        </button>
+                      )}
                     </div>
                   );
                 })}
