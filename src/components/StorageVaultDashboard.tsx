@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { useVault } from '../context/VaultContext';
 import { useAuth } from '../context/AuthContext';
 import { useWeb3Wallet } from '../context/WalletContext';
@@ -20,14 +20,15 @@ import {
   Cloud,
   Download,
   Eye,
-  Info,
   X,
   Grid,
   List,
   CheckCircle2,
-  ChevronDown,
   UploadCloud,
   FileUp,
+  FileCode,
+  Music,
+  Lock,
 } from 'lucide-react';
 
 export const StorageVaultDashboard: React.FC = () => {
@@ -50,326 +51,266 @@ export const StorageVaultDashboard: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'doc' | 'image' | 'video' | 'archive'>('all');
   const [activeMenuFileId, setActiveMenuFileId] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadStage, setUploadStage] = useState('');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Mock initial demo items blended with live uploaded files
-  const mockPresetFiles: ShieldedFile[] = [
-    {
-      id: 'demo-1',
-      name: 'UX Principles & Design Tokens.docx',
-      sizeBytes: 678 * 1024,
-      encryptedCid: 'bafybeiclk4...docx_enc',
-      zkCommitment: '0x8f2a...91b0',
-      uploadedAt: '2026-08-16T14:30:00Z',
-      status: 'shielded',
-      encryptionAlgo: 'AES-256-GCM',
-      mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    },
-    {
-      id: 'demo-2',
-      name: 'Dont Make Me Think (Shielded).pdf',
-      sizeBytes: 14 * 1024 * 1024,
-      encryptedCid: 'bafybeidmmt...pdf_enc',
-      zkCommitment: '0x3c7e...4419',
-      uploadedAt: '2026-08-15T11:20:00Z',
-      status: 'shielded',
-      encryptionAlgo: 'AES-256-GCM',
-      mimeType: 'application/pdf',
-    },
-    {
-      id: 'demo-3',
-      name: 'UI/UX Interactive Portfolio 2026.zip',
-      sizeBytes: 1100 * 1024 * 1024,
-      encryptedCid: 'bafybeifoli...zip_enc',
-      zkCommitment: '0x992d...aa41',
-      uploadedAt: '2026-08-14T09:15:00Z',
-      status: 'shielded',
-      encryptionAlgo: 'AES-256-GCM',
-      mimeType: 'application/zip',
-    },
-    {
-      id: 'demo-4',
-      name: 'Atomic Design System Spec.pdf',
-      sizeBytes: 6 * 1024 * 1024,
-      encryptedCid: 'bafybeiatom...pdf_enc',
-      zkCommitment: '0x10ae...ff32',
-      uploadedAt: '2026-08-13T16:45:00Z',
-      status: 'shielded',
-      encryptionAlgo: 'AES-256-GCM',
-      mimeType: 'application/pdf',
-    },
-    {
-      id: 'demo-5',
-      name: 'Midnight Compact Plugin Package.zip',
-      sizeBytes: 381 * 1024 * 1024,
-      encryptedCid: 'bafybeizipp...zip_enc',
-      zkCommitment: '0x77ba...6201',
-      uploadedAt: '2026-08-12T18:00:00Z',
-      status: 'shielded',
-      encryptionAlgo: 'AES-256-GCM',
-      mimeType: 'application/zip',
-    },
-    {
-      id: 'demo-6',
-      name: 'Actionable Guide to Starting Design System.docx',
-      sizeBytes: 2 * 1024 * 1024,
-      encryptedCid: 'bafybeiguide...docx_enc',
-      zkCommitment: '0x44ee...9902',
-      uploadedAt: '2026-08-10T10:10:00Z',
-      status: 'shielded',
-      encryptionAlgo: 'AES-256-GCM',
-      mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    },
-  ];
+  // Real Category Helper
+  const getFileCategory = (f: ShieldedFile): 'image' | 'video' | 'doc' | 'archive' => {
+    const name = f.name.toLowerCase();
+    const mime = f.mimeType?.toLowerCase() || '';
+    if (mime.startsWith('image/') || /\.(jpg|jpeg|png|gif|webp|svg|bmp|ico)$/i.test(name)) return 'image';
+    if (mime.startsWith('video/') || /\.(mp4|webm|ogg|mov|mkv|avi|m4v)$/i.test(name)) return 'video';
+    if (mime.startsWith('audio/') || /\.(mp3|wav|ogg|m4a|aac|flac)$/i.test(name)) return 'archive';
+    if (
+      mime.includes('pdf') ||
+      mime.includes('word') ||
+      mime.includes('document') ||
+      mime.includes('text') ||
+      /\.(pdf|docx|doc|txt|md|csv|xlsx|json|ts|js|py|html|css)$/i.test(name)
+    ) {
+      return 'doc';
+    }
+    return 'archive';
+  };
 
-  // Combined real + demo files
-  const allVaultFiles = files.length > 0 ? files : mockPresetFiles;
+  // Real Active Files & Category Breakdown
+  const activeFiles = useMemo(() => files.filter((f) => f.status === 'shielded'), [files]);
+  const trashFiles = useMemo(() => files.filter((f) => f.status === 'shredded'), [files]);
+
+  const imageFiles = useMemo(() => activeFiles.filter((f) => getFileCategory(f) === 'image'), [activeFiles]);
+  const videoFiles = useMemo(() => activeFiles.filter((f) => getFileCategory(f) === 'video'), [activeFiles]);
+  const docFiles = useMemo(() => activeFiles.filter((f) => getFileCategory(f) === 'doc'), [activeFiles]);
+  const otherFiles = useMemo(() => activeFiles.filter((f) => getFileCategory(f) === 'archive'), [activeFiles]);
+
+  // Real Bytes Calculations
+  const imageBytes = useMemo(() => imageFiles.reduce((acc, f) => acc + f.sizeBytes, 0), [imageFiles]);
+  const videoBytes = useMemo(() => videoFiles.reduce((acc, f) => acc + f.sizeBytes, 0), [videoFiles]);
+  const docBytes = useMemo(() => docFiles.reduce((acc, f) => acc + f.sizeBytes, 0), [docFiles]);
+  const otherBytes = useMemo(() => otherFiles.reduce((acc, f) => acc + f.sizeBytes, 0), [otherFiles]);
+  const totalUsedBytes = useMemo(() => imageBytes + videoBytes + docBytes + otherBytes, [imageBytes, videoBytes, docBytes, otherBytes]);
+
+  const formatSizeDynamic = (bytes: number) => {
+    if (bytes === 0) return '0.0 MB';
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
+  };
+
+  const totalQuotaBytes = Math.max((session.quotaGB || 40) * 1024 * 1024 * 1024, 1);
+  const imagePct = Math.min((imageBytes / totalQuotaBytes) * 100, 100);
+  const videoPct = Math.min((videoBytes / totalQuotaBytes) * 100, 100);
+  const docPct = Math.min((docBytes / totalQuotaBytes) * 100, 100);
+  const otherPct = Math.min((otherBytes / totalQuotaBytes) * 100, 100);
 
   // Filtered files
-  const filteredFiles = allVaultFiles.filter((file) => {
-    const matchesSearch = file.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const mime = file.mimeType || '';
-    const name = file.name.toLowerCase();
+  const filteredFiles = useMemo(() => {
+    const list = activeTab === 'trash' ? trashFiles : activeFiles;
+    return list.filter((file) => {
+      const matchesSearch = file.name.toLowerCase().includes(searchQuery.toLowerCase());
+      if (!matchesSearch) return false;
 
-    if (activeTab === 'trash') return matchesSearch && file.status === 'shredded';
-    if (file.status === 'shredded') return false;
-
-    if (selectedCategory === 'doc') {
-      return matchesSearch && (mime.includes('pdf') || mime.includes('word') || name.endsWith('.pdf') || name.endsWith('.docx') || name.endsWith('.doc'));
-    }
-    if (selectedCategory === 'image') {
-      return matchesSearch && (mime.startsWith('image/') || name.endsWith('.png') || name.endsWith('.jpg') || name.endsWith('.jpeg'));
-    }
-    if (selectedCategory === 'video') {
-      return matchesSearch && (mime.startsWith('video/') || name.endsWith('.mp4') || name.endsWith('.mkv'));
-    }
-    if (selectedCategory === 'archive') {
-      return matchesSearch && (mime.includes('zip') || mime.includes('tar') || name.endsWith('.zip') || name.endsWith('.tar'));
-    }
-    return matchesSearch;
-  });
-
-  const formatFileSize = (bytes: number): string => {
-    if (bytes >= 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
-    if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-    if (bytes >= 1024) return `${(bytes / 1024).toFixed(0)} KB`;
-    return `${bytes} B`;
-  };
-
-  const getFileIcon = (file: ShieldedFile) => {
-    const name = file.name.toLowerCase();
-    const mime = file.mimeType || '';
-
-    if (name.endsWith('.pdf') || mime.includes('pdf')) {
-      return (
-        <div className="w-9 h-9 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center flex-shrink-0 font-bold text-[10px]">
-          PDF
-        </div>
-      );
-    }
-    if (name.endsWith('.docx') || name.endsWith('.doc') || mime.includes('word')) {
-      return (
-        <div className="w-9 h-9 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center flex-shrink-0 font-bold text-[10px]">
-          DOC
-        </div>
-      );
-    }
-    if (name.endsWith('.zip') || name.endsWith('.tar') || mime.includes('zip')) {
-      return (
-        <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 font-bold text-[10px]">
-          ZIP
-        </div>
-      );
-    }
-    if (mime.startsWith('image/') || name.endsWith('.png') || name.endsWith('.jpg') || name.endsWith('.jpeg')) {
-      return (
-        <div className="w-9 h-9 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center flex-shrink-0">
-          <ImageIcon className="w-4 h-4" />
-        </div>
-      );
-    }
-    return (
-      <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center flex-shrink-0">
-        <FileText className="w-4 h-4" />
-      </div>
-    );
-  };
+      if (selectedCategory === 'all') return true;
+      return getFileCategory(file) === selectedCategory;
+    });
+  }, [activeFiles, trashFiles, activeTab, searchQuery, selectedCategory]);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0) return;
-    const selected = e.target.files[0];
-    setIsUploading(true);
-    try {
-      await uploadAndEncryptFile(selected);
-    } catch (err: any) {
-      alert(err.message || 'File upload and ZK proof generation failed.');
-    } finally {
-      setIsUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = '';
+    if (e.target.files && e.target.files.length > 0) {
+      setIsUploading(true);
+      setUploadProgress(10);
+      setUploadStage('Encrypting file with AES-256-GCM...');
+
+      for (let i = 0; i < e.target.files.length; i++) {
+        const file = e.target.files[i];
+        await uploadAndEncryptFile(file, (percent, stage) => {
+          setUploadProgress(percent);
+          setUploadStage(stage);
+        });
+      }
+
+      setTimeout(() => {
+        setIsUploading(false);
+        setUploadProgress(0);
+        setUploadStage('');
+      }, 600);
     }
+  };
+
+  const renderFileIcon = (file: ShieldedFile) => {
+    const cat = getFileCategory(file);
+    if (cat === 'image') return <ImageIcon className="w-5 h-5 text-emerald-500" />;
+    if (cat === 'video') return <Video className="w-5 h-5 text-sky-500" />;
+    if (cat === 'doc') return <FileText className="w-5 h-5 text-amber-500" />;
+    return <Archive className="w-5 h-5 text-purple-500" />;
   };
 
   return (
     <section
       id="vault-dashboard"
-      className="relative w-full min-h-screen py-8 px-2 sm:px-4 md:px-6 lg:px-8 bg-cover bg-center bg-no-repeat transition-all duration-300"
+      className="min-h-screen py-6 sm:py-8 px-3 sm:px-6 lg:px-8 bg-cover bg-center bg-no-repeat transition-all select-none"
       style={{
         backgroundImage: 'url(/aurora-bg.jpg)',
         backgroundColor: '#EBF4FF',
       }}
     >
-      {/* Hidden File Input for Clean Upload Trigger */}
+      {/* Hidden File Input */}
       <input
-        ref={fileInputRef}
         type="file"
-        id="file-upload-input"
-        className="hidden"
+        ref={fileInputRef}
         onChange={handleFileUpload}
+        multiple
+        className="hidden"
       />
 
-      {/* Background Subtle Gradient Overlay */}
-      <div className="absolute inset-0 bg-sky-900/10 backdrop-blur-[2px] pointer-events-none" />
-
-      {/* Main Unified Dashboard Container (Matching Reference 3) */}
-      <div className="relative z-10 max-w-7xl mx-auto rounded-3xl bg-white/95 backdrop-blur-2xl border border-white/80 shadow-[0_25px_80px_rgba(30,60,140,0.16)] overflow-hidden flex flex-col lg:flex-row text-slate-800">
+      {/* Main Dashboard Card Container (Matching Reference 3) */}
+      <div className="max-w-7xl mx-auto rounded-3xl bg-white/95 backdrop-blur-2xl border border-white/80 shadow-[0_25px_80px_rgba(30,60,140,0.16)] flex flex-col lg:flex-row overflow-hidden min-h-[820px] text-slate-800">
         
         {/* ============================================================ */}
-        {/* 1. LEFT SIDEBAR NAVIGATION                                   */}
+        {/* 1. LEFT SIDEBAR: LOGO & NAV LINKS (Matching Reference 3)     */}
         {/* ============================================================ */}
-        <aside className="lg:w-64 bg-slate-50/90 border-r border-slate-200/80 p-5 flex flex-col justify-between flex-shrink-0">
-          <div>
+        <aside className="lg:w-64 bg-slate-50/70 border-r border-slate-200/80 p-5 sm:p-6 flex flex-col justify-between flex-shrink-0">
+          <div className="space-y-6">
             {/* Top Brand Logo */}
-            <div className="flex items-center space-x-2.5 mb-6 px-1">
-              <div className="w-8 h-8 rounded-xl bg-sky-500 text-white flex items-center justify-center shadow-md shadow-sky-500/30">
-                <Cloud className="w-4 h-4" />
+            <div className="flex items-center space-x-2.5">
+              <div className="w-9 h-9 rounded-2xl bg-sky-500 text-white flex items-center justify-center shadow-md shadow-sky-500/25">
+                <Cloud className="w-5 h-5" />
               </div>
-              <span className="font-display font-black text-lg text-slate-900 tracking-tight">
+              <span className="font-display font-black text-lg tracking-wide text-slate-900">
                 VOID<span className="text-sky-500">CLOUD</span>
               </span>
             </div>
 
-            {/* + Add New File Button */}
+            {/* "+ Add New File" CTA Button */}
             <button
               onClick={() => fileInputRef.current?.click()}
-              disabled={isUploading}
-              className="w-full py-3 px-4 rounded-2xl bg-sky-500 hover:bg-sky-600 active:scale-[0.98] text-white font-bold text-xs shadow-md shadow-sky-500/25 flex items-center justify-center space-x-2 transition-all mb-6"
+              className="w-full py-3 px-4 rounded-2xl bg-sky-500 hover:bg-sky-600 active:scale-[0.98] text-white font-bold text-xs shadow-md shadow-sky-500/25 transition-all flex items-center justify-center space-x-2 cursor-pointer"
             >
-              {isUploading ? (
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <>
-                  <Plus className="w-4 h-4" />
-                  <span>Add New File</span>
-                </>
-              )}
+              <Plus className="w-4 h-4" />
+              <span>Add New File</span>
             </button>
 
-            {/* Navigation Menu */}
-            <nav className="space-y-1 text-xs font-semibold text-slate-600">
+            {/* Navigation Menu Links */}
+            <nav className="space-y-1 text-xs font-semibold">
               <button
-                onClick={() => setActiveTab('home')}
-                className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl transition-all ${
+                onClick={() => {
+                  setActiveTab('home');
+                  setSelectedCategory('all');
+                }}
+                className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-2xl transition-colors cursor-pointer ${
                   activeTab === 'home'
-                    ? 'bg-sky-50 text-sky-600 font-bold shadow-xs'
-                    : 'hover:bg-slate-100 hover:text-slate-900'
+                    ? 'bg-sky-50 text-sky-600 font-bold'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
-                <Home className="w-4 h-4" />
+                <Home className="w-4 h-4 text-sky-500" />
                 <span>Home</span>
               </button>
 
               <button
-                onClick={() => setActiveTab('files')}
-                className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl transition-all ${
+                onClick={() => {
+                  setActiveTab('files');
+                  setSelectedCategory('all');
+                }}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl transition-colors cursor-pointer ${
                   activeTab === 'files'
-                    ? 'bg-sky-50 text-sky-600 font-bold shadow-xs'
-                    : 'hover:bg-slate-100 hover:text-slate-900'
+                    ? 'bg-sky-50 text-sky-600 font-bold'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
-                <Folder className="w-4 h-4" />
-                <span>My Files</span>
+                <div className="flex items-center space-x-3">
+                  <Folder className="w-4 h-4 text-slate-400" />
+                  <span>My Files</span>
+                </div>
+                <span className="text-[11px] font-bold text-slate-400">{activeFiles.length}</span>
               </button>
 
               <button
                 onClick={() => setActiveTab('shared')}
-                className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl transition-all ${
+                className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-2xl transition-colors cursor-pointer ${
                   activeTab === 'shared'
-                    ? 'bg-sky-50 text-sky-600 font-bold shadow-xs'
-                    : 'hover:bg-slate-100 hover:text-slate-900'
+                    ? 'bg-sky-50 text-sky-600 font-bold'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
-                <Share2 className="w-4 h-4" />
+                <Share2 className="w-4 h-4 text-slate-400" />
                 <span>Shared Files</span>
               </button>
 
               <button
                 onClick={() => setActiveTab('starred')}
-                className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl transition-all ${
+                className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-2xl transition-colors cursor-pointer ${
                   activeTab === 'starred'
-                    ? 'bg-sky-50 text-sky-600 font-bold shadow-xs'
-                    : 'hover:bg-slate-100 hover:text-slate-900'
+                    ? 'bg-sky-50 text-sky-600 font-bold'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
-                <Star className="w-4 h-4" />
+                <Star className="w-4 h-4 text-slate-400" />
                 <span>Starred</span>
               </button>
 
               <button
                 onClick={() => setActiveTab('trash')}
-                className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl transition-all ${
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl transition-colors cursor-pointer ${
                   activeTab === 'trash'
-                    ? 'bg-sky-50 text-sky-600 font-bold shadow-xs'
-                    : 'hover:bg-slate-100 hover:text-slate-900'
+                    ? 'bg-rose-50 text-rose-600 font-bold'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
-                <Trash2 className="w-4 h-4" />
-                <span>Trash</span>
+                <div className="flex items-center space-x-3">
+                  <Trash2 className="w-4 h-4 text-rose-400" />
+                  <span>Trash</span>
+                </div>
+                {trashFiles.length > 0 && (
+                  <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-rose-100 text-rose-700 font-bold">
+                    {trashFiles.length}
+                  </span>
+                )}
               </button>
             </nav>
           </div>
 
-          {/* Bottom Account Indicator (Personal - Only You) */}
-          <div className="mt-8 pt-4 border-t border-slate-200/80">
-            <div className="flex items-center justify-between px-2 py-2 rounded-xl bg-white border border-slate-200/80 shadow-xs">
-              <div className="flex items-center space-x-2">
-                <div className="w-7 h-7 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center font-bold text-xs">
+          {/* Bottom Account Switcher */}
+          <div className="pt-4 border-t border-slate-200/80">
+            <div className="p-3 rounded-2xl bg-white border border-slate-200/80 flex items-center justify-between shadow-xs">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-7 h-7 rounded-lg bg-sky-100 text-sky-700 font-bold flex items-center justify-center text-xs">
                   P
                 </div>
                 <div>
-                  <div className="font-bold text-xs text-slate-800">Personal</div>
-                  <div className="text-[10px] text-slate-400">Only You</div>
+                  <div className="font-bold text-xs text-slate-900">Personal</div>
+                  <div className="text-[10px] text-slate-400 font-medium">Only You</div>
                 </div>
               </div>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
             </div>
           </div>
         </aside>
 
         {/* ============================================================ */}
-        {/* 2. CENTER CONTENT: QUICK ACCESS & RECENTS TABLE              */}
+        {/* 2. MAIN CENTER: SEARCH, QUICK ACCESS & RECENTS TABLE         */}
         {/* ============================================================ */}
-        <main className="flex-1 p-5 sm:p-7 overflow-y-auto max-h-[880px]">
+        <main className="flex-1 p-5 sm:p-7 md:p-8 space-y-6 overflow-y-auto">
           
-          {/* Top Search Bar & Action Toggles */}
-          <div className="flex items-center justify-between gap-3 mb-5">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3.5 top-2.5 w-4 h-4 text-slate-400" />
+          {/* Top Search Bar & View Mode Switcher */}
+          <div className="flex items-center space-x-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-4 top-3 w-4 h-4 text-slate-400" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search files, documents or ZK proofs..."
-                className="w-full pl-10 pr-4 py-2 rounded-2xl bg-slate-100/80 border border-slate-200/60 focus:bg-white focus:border-sky-400 focus:ring-2 focus:ring-sky-100 text-xs text-slate-800 placeholder-slate-400 outline-none transition-all"
+                placeholder="Search files, documents, or ZK commitments..."
+                className="w-full pl-11 pr-4 py-2.5 rounded-2xl bg-slate-100/80 border border-slate-200/80 focus:border-sky-400 focus:bg-white focus:ring-2 focus:ring-sky-100 text-xs text-slate-800 placeholder-slate-400 outline-none transition-all"
               />
             </div>
 
-            {/* Layout Toggles */}
-            <div className="flex items-center space-x-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200/60">
+            <div className="flex items-center bg-slate-100/80 p-1 rounded-2xl border border-slate-200/80">
               <button
                 onClick={() => setViewLayout('grid')}
-                className={`p-1.5 rounded-lg transition-colors ${
-                  viewLayout === 'grid' ? 'bg-white text-slate-800 shadow-xs' : 'text-slate-400 hover:text-slate-600'
+                className={`p-1.5 rounded-xl transition-colors cursor-pointer ${
+                  viewLayout === 'grid' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-400 hover:text-slate-700'
                 }`}
                 title="Grid View"
               >
@@ -377,8 +318,8 @@ export const StorageVaultDashboard: React.FC = () => {
               </button>
               <button
                 onClick={() => setViewLayout('list')}
-                className={`p-1.5 rounded-lg transition-colors ${
-                  viewLayout === 'list' ? 'bg-white text-slate-800 shadow-xs' : 'text-slate-400 hover:text-slate-600'
+                className={`p-1.5 rounded-xl transition-colors cursor-pointer ${
+                  viewLayout === 'list' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-400 hover:text-slate-700'
                 }`}
                 title="List View"
               >
@@ -387,219 +328,314 @@ export const StorageVaultDashboard: React.FC = () => {
             </div>
           </div>
 
-          {/* Top Announcement Banner (Matching Reference 3) */}
+          {/* Announcement Banner */}
           {showAnnouncement && (
-            <div className="mb-6 p-3.5 rounded-2xl bg-sky-50/90 border border-sky-200/70 text-sky-900 text-xs flex items-center justify-between shadow-xs">
-              <div className="flex items-center space-x-2.5">
-                <Info className="w-4 h-4 text-sky-600 flex-shrink-0" />
+            <div className="p-3.5 rounded-2xl bg-sky-50 border border-sky-200/80 flex items-center justify-between text-xs text-sky-800">
+              <div className="flex items-center space-x-2">
+                <span className="w-2 h-2 rounded-full bg-sky-500 animate-pulse" />
                 <span>
-                  <strong>Notice:</strong> We have updated our zero-knowledge proof circuits on Midnight Preprod!
+                  <strong className="font-bold">Notice:</strong> Your zero-knowledge shielded vault is live on Midnight Preprod with {session.quotaGB} GB allocated capacity!
                 </span>
               </div>
               <button
                 onClick={() => setShowAnnouncement(false)}
-                className="text-sky-500 hover:text-sky-700 p-1"
-                title="Dismiss"
+                className="text-sky-600 hover:text-sky-900 p-1 cursor-pointer"
               >
-                <X className="w-4 h-4" />
+                <X className="w-3.5 h-3.5" />
               </button>
             </div>
           )}
 
-          {/* Quick Access Section */}
-          <div className="mb-7">
+          {/* Upload Progress Bar if Uploading */}
+          {isUploading && (
+            <div className="p-4 rounded-2xl bg-sky-50 border border-sky-200 space-y-2">
+              <div className="flex justify-between text-xs font-bold text-slate-800">
+                <span>{uploadStage}</span>
+                <span className="text-sky-600">{uploadProgress}%</span>
+              </div>
+              <div className="w-full h-2 bg-white rounded-full overflow-hidden border border-sky-100">
+                <div
+                  style={{ width: `${uploadProgress}%` }}
+                  className="h-full bg-gradient-to-r from-sky-400 to-blue-600 rounded-full transition-all duration-150"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* ============================================================ */}
+          {/* QUICK ACCESS CARDS (Real Category Filters / Upload Actions)  */}
+          {/* ============================================================ */}
+          <div>
             <div className="flex items-center justify-between mb-3.5">
-              <h2 className="font-display font-bold text-sm text-slate-900 tracking-tight">
+              <h2 className="font-display font-black text-sm text-slate-900 tracking-tight">
                 Quick Access
               </h2>
-              <span className="text-[11px] text-slate-400 font-medium">4 pinned vaults</span>
+              <span className="text-xs text-slate-400 font-semibold">
+                {activeFiles.length} {activeFiles.length === 1 ? 'file' : 'files'} stored
+              </span>
             </div>
 
-            {/* Quick Access Horizontal Cards (Matching Reference 3) */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-              {/* Card 1: Folder */}
+              {/* Card 1: Images */}
               <div
-                onClick={() => setSelectedCategory(selectedCategory === 'archive' ? 'all' : 'archive')}
-                className="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-sky-300 hover:shadow-md transition-all cursor-pointer group"
+                onClick={() => setSelectedCategory(selectedCategory === 'image' ? 'all' : 'image')}
+                className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between h-28 ${
+                  selectedCategory === 'image'
+                    ? 'border-emerald-500 bg-emerald-50/70 shadow-sm ring-2 ring-emerald-200'
+                    : 'border-slate-200 bg-slate-50/50 hover:bg-slate-50 hover:border-slate-300'
+                }`}
               >
-                <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center mb-3 group-hover:bg-sky-50 group-hover:text-sky-600 transition-colors">
-                  <Folder className="w-5 h-5" />
+                <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shadow-xs">
+                  <ImageIcon className="w-5 h-5" />
                 </div>
-                <div className="font-bold text-xs text-slate-800 truncate">Human Centered Design</div>
-                <div className="text-[10px] text-slate-400 mt-0.5">Encrypted Folder</div>
+                <div>
+                  <div className="font-bold text-xs text-slate-900">Photos & Images</div>
+                  <div className="text-[11px] text-slate-400 font-medium">
+                    {imageFiles.length} files • {formatSizeDynamic(imageBytes)}
+                  </div>
+                </div>
               </div>
 
-              {/* Card 2: PDF */}
+              {/* Card 2: Videos */}
+              <div
+                onClick={() => setSelectedCategory(selectedCategory === 'video' ? 'all' : 'video')}
+                className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between h-28 ${
+                  selectedCategory === 'video'
+                    ? 'border-sky-500 bg-sky-50/70 shadow-sm ring-2 ring-sky-200'
+                    : 'border-slate-200 bg-slate-50/50 hover:bg-slate-50 hover:border-slate-300'
+                }`}
+              >
+                <div className="w-9 h-9 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center shadow-xs">
+                  <Video className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="font-bold text-xs text-slate-900">Video Vault</div>
+                  <div className="text-[11px] text-slate-400 font-medium">
+                    {videoFiles.length} files • {formatSizeDynamic(videoBytes)}
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 3: Documents */}
               <div
                 onClick={() => setSelectedCategory(selectedCategory === 'doc' ? 'all' : 'doc')}
-                className="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-rose-300 hover:shadow-md transition-all cursor-pointer group"
+                className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between h-28 ${
+                  selectedCategory === 'doc'
+                    ? 'border-amber-500 bg-amber-50/70 shadow-sm ring-2 ring-amber-200'
+                    : 'border-slate-200 bg-slate-50/50 hover:bg-slate-50 hover:border-slate-300'
+                }`}
               >
-                <div className="w-10 h-10 rounded-xl bg-rose-500 text-white font-bold text-xs flex items-center justify-center mb-3 shadow-xs">
-                  PDF
+                <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shadow-xs">
+                  <FileText className="w-5 h-5" />
                 </div>
-                <div className="font-bold text-xs text-slate-800 truncate">Thinking With Type.pdf</div>
-                <div className="text-[10px] text-slate-400 mt-0.5">14.0 MB</div>
+                <div>
+                  <div className="font-bold text-xs text-slate-900">PDFs & Docs</div>
+                  <div className="text-[11px] text-slate-400 font-medium">
+                    {docFiles.length} files • {formatSizeDynamic(docBytes)}
+                  </div>
+                </div>
               </div>
 
-              {/* Card 3: DOCX */}
-              <div
-                onClick={() => setSelectedCategory(selectedCategory === 'doc' ? 'all' : 'doc')}
-                className="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-blue-300 hover:shadow-md transition-all cursor-pointer group"
-              >
-                <div className="w-10 h-10 rounded-xl bg-blue-500 text-white font-bold text-xs flex items-center justify-center mb-3 shadow-xs">
-                  DOC
-                </div>
-                <div className="font-bold text-xs text-slate-800 truncate">Product Roadmap.docx</div>
-                <div className="text-[10px] text-slate-400 mt-0.5">678 KB</div>
-              </div>
-
-              {/* Card 4: ZIP */}
+              {/* Card 4: Archives & Code */}
               <div
                 onClick={() => setSelectedCategory(selectedCategory === 'archive' ? 'all' : 'archive')}
-                className="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-emerald-300 hover:shadow-md transition-all cursor-pointer group"
+                className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between h-28 ${
+                  selectedCategory === 'archive'
+                    ? 'border-purple-500 bg-purple-50/70 shadow-sm ring-2 ring-purple-200'
+                    : 'border-slate-200 bg-slate-50/50 hover:bg-slate-50 hover:border-slate-300'
+                }`}
               >
-                <div className="w-10 h-10 rounded-xl bg-emerald-500 text-white font-bold text-xs flex items-center justify-center mb-3 shadow-xs">
-                  ZIP
+                <div className="w-9 h-9 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center shadow-xs">
+                  <Archive className="w-5 h-5" />
                 </div>
-                <div className="font-bold text-xs text-slate-800 truncate">3D Illustration Pack</div>
-                <div className="text-[10px] text-slate-400 mt-0.5">381 MB</div>
+                <div>
+                  <div className="font-bold text-xs text-slate-900">ZIP & Code</div>
+                  <div className="text-[11px] text-slate-400 font-medium">
+                    {otherFiles.length} files • {formatSizeDynamic(otherBytes)}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Recents Section */}
+          {/* ============================================================ */}
+          {/* RECENTS FILE TABLE / GRID                                    */}
+          {/* ============================================================ */}
           <div>
             <div className="flex items-center justify-between mb-3.5">
-              <h2 className="font-display font-bold text-sm text-slate-900 tracking-tight">
-                Recents
+              <h2 className="font-display font-black text-sm text-slate-900 tracking-tight">
+                {activeTab === 'trash' ? 'Trash & Revoked Files' : 'Recent Files'}
               </h2>
-              <div className="flex items-center space-x-2 text-xs">
-                <span className="text-slate-400">Sort by:</span>
-                <span className="font-bold text-slate-700">Modified Date ↓</span>
+              <span className="text-xs text-slate-400 font-semibold">
+                Sort by: <strong className="text-slate-700">Modified Date ↓</strong>
+              </span>
+            </div>
+
+            {/* Empty State */}
+            {filteredFiles.length === 0 ? (
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="p-10 rounded-2xl border-2 border-dashed border-slate-200 hover:border-sky-400 bg-slate-50/50 hover:bg-sky-50/30 text-center transition-all cursor-pointer space-y-2"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center mx-auto shadow-xs">
+                  <UploadCloud className="w-6 h-6" />
+                </div>
+                <div className="font-bold text-xs text-slate-800">
+                  {activeTab === 'trash' ? 'Trash is empty' : 'No files uploaded yet'}
+                </div>
+                <p className="text-[11px] text-slate-400 max-w-sm mx-auto">
+                  {activeTab === 'trash'
+                    ? 'Revoked and shredded files will appear here.'
+                    : 'Click here or drag and drop any image, video, PDF, or document to upload with zero-knowledge envelope encryption.'}
+                </p>
               </div>
-            </div>
+            ) : viewLayout === 'grid' ? (
+              /* Grid Layout */
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
+                {filteredFiles.map((file) => (
+                  <div
+                    key={file.id}
+                    onClick={() => setActivePreviewFile(file)}
+                    className="p-4 rounded-2xl bg-white border border-slate-200 hover:border-sky-300 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between space-y-3 group"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 group-hover:scale-105 transition-transform">
+                        {renderFileIcon(file)}
+                      </div>
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
+                        ZK Proven
+                      </span>
+                    </div>
 
-            {/* Recents Table View (Matching Reference 3) */}
-            <div className="overflow-x-auto rounded-2xl border border-slate-200/80 bg-white">
-              <table className="w-full text-left border-collapse text-xs">
-                <thead>
-                  <tr className="border-b border-slate-200/80 text-[11px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50/60">
-                    <th className="py-3 px-4">Name ↑</th>
-                    <th className="py-3 px-4">Modified</th>
-                    <th className="py-3 px-4">Size</th>
-                    <th className="py-3 px-4 text-center">ZK Shield</th>
-                    <th className="py-3 px-4 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {filteredFiles.map((file) => (
-                    <tr
-                      key={file.id}
-                      className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
-                      onClick={() => setActivePreviewFile(file)}
-                    >
-                      {/* Name Column */}
-                      <td className="py-3.5 px-4">
-                        <div className="flex items-center space-x-3">
-                          {getFileIcon(file)}
-                          <div>
-                            <span className="font-bold text-slate-800 text-xs block group-hover:text-sky-600 transition-colors max-w-[220px] sm:max-w-[280px] truncate">
-                              {file.name}
-                            </span>
-                            <span className="text-[10px] text-slate-400">
-                              AES-256-GCM • ZK Protected
-                            </span>
-                          </div>
-                        </div>
-                      </td>
-
-                      {/* Modified Date */}
-                      <td className="py-3.5 px-4 text-slate-500 whitespace-nowrap">
-                        {new Date(file.uploadedAt).toLocaleDateString(undefined, {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric',
-                        })}
-                      </td>
-
-                      {/* File Size */}
-                      <td className="py-3.5 px-4 font-mono text-slate-600 whitespace-nowrap">
-                        {formatFileSize(file.sizeBytes)}
-                      </td>
-
-                      {/* ZK Shield Status */}
-                      <td className="py-3.5 px-4 text-center whitespace-nowrap">
-                        <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">
-                          <CheckCircle2 className="w-3 h-3 text-emerald-500" />
-                          <span>ZK Proven</span>
-                        </span>
-                      </td>
-
-                      {/* Actions Column */}
-                      <td
-                        className="py-3.5 px-4 text-right whitespace-nowrap"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <div className="relative inline-block">
-                          <button
-                            onClick={() =>
-                              setActiveMenuFileId(activeMenuFileId === file.id ? null : file.id)
-                            }
-                            className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors"
-                            title="File Options"
-                          >
-                            <MoreHorizontal className="w-4 h-4" />
-                          </button>
-
-                          {/* Dropdown Menu */}
-                          {activeMenuFileId === file.id && (
-                            <div className="absolute right-0 top-8 z-30 w-36 bg-white rounded-xl shadow-lg border border-slate-200/80 py-1 text-left text-xs">
-                              <button
-                                onClick={() => {
-                                  setActivePreviewFile(file);
-                                  setActiveMenuFileId(null);
-                                }}
-                                className="w-full px-3 py-1.5 hover:bg-sky-50 text-slate-700 flex items-center space-x-2"
-                              >
-                                <Eye className="w-3.5 h-3.5 text-sky-500" />
-                                <span>Preview</span>
-                              </button>
-
-                              <button
-                                onClick={() => {
-                                  decryptAndDownloadFile(file);
-                                  setActiveMenuFileId(null);
-                                }}
-                                className="w-full px-3 py-1.5 hover:bg-sky-50 text-slate-700 flex items-center space-x-2"
-                              >
-                                <Download className="w-3.5 h-3.5 text-emerald-500" />
-                                <span>Download</span>
-                              </button>
-
-                              <button
-                                onClick={() => {
-                                  shredFile(file.id);
-                                  setActiveMenuFileId(null);
-                                }}
-                                className="w-full px-3 py-1.5 hover:bg-rose-50 text-rose-600 flex items-center space-x-2"
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                                <span>Shred</span>
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      </td>
+                    <div>
+                      <h4 className="font-bold text-xs text-slate-900 truncate" title={file.name}>
+                        {file.name}
+                      </h4>
+                      <div className="text-[10px] text-slate-400 mt-0.5">
+                        {formatSizeDynamic(file.sizeBytes)} • {new Date(file.uploadedAt).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              /* List Table Layout */
+              <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-slate-100 text-slate-400 font-semibold text-[11px] bg-slate-50/60">
+                      <th className="py-3 px-4 font-bold">NAME ↑</th>
+                      <th className="py-3 px-4 font-bold">MODIFIED</th>
+                      <th className="py-3 px-4 font-bold">SIZE</th>
+                      <th className="py-3 px-4 font-bold">ZK SHIELD</th>
+                      <th className="py-3 px-4 font-bold text-right">ACTIONS</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {filteredFiles.map((file) => (
+                      <tr
+                        key={file.id}
+                        className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
+                        onClick={() => setActivePreviewFile(file)}
+                      >
+                        {/* File Name & Icon */}
+                        <td className="py-3 px-4">
+                          <div className="flex items-center space-x-3">
+                            <div className="p-2 rounded-xl bg-slate-50 border border-slate-100">
+                              {renderFileIcon(file)}
+                            </div>
+                            <div className="truncate max-w-[220px] sm:max-w-xs">
+                              <div className="font-bold text-slate-900 truncate" title={file.name}>
+                                {file.name}
+                              </div>
+                              <div className="text-[10px] text-slate-400 font-mono">
+                                AES-256-GCM • ZK Protected
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+
+                        {/* Modified Date */}
+                        <td className="py-3 px-4 text-slate-500 whitespace-nowrap text-[11px]">
+                          {new Date(file.uploadedAt).toLocaleDateString(undefined, {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                          })}
+                        </td>
+
+                        {/* Size */}
+                        <td className="py-3 px-4 text-slate-700 font-mono font-semibold whitespace-nowrap">
+                          {formatSizeDynamic(file.sizeBytes)}
+                        </td>
+
+                        {/* ZK Shield Status */}
+                        <td className="py-3 px-4 whitespace-nowrap">
+                          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold">
+                            <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                            <span>ZK Proven</span>
+                          </span>
+                        </td>
+
+                        {/* Actions Menu */}
+                        <td className="py-3 px-4 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                          <div className="relative inline-block text-left">
+                            <button
+                              onClick={() => setActiveMenuFileId(activeMenuFileId === file.id ? null : file.id)}
+                              className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors"
+                            >
+                              <MoreHorizontal className="w-4 h-4" />
+                            </button>
+
+                            {activeMenuFileId === file.id && (
+                              <div className="absolute right-0 mt-1 w-36 rounded-xl bg-white border border-slate-200 shadow-lg py-1 z-30 text-xs font-semibold">
+                                <button
+                                  onClick={() => {
+                                    setActivePreviewFile(file);
+                                    setActiveMenuFileId(null);
+                                  }}
+                                  className="w-full px-3 py-1.5 hover:bg-sky-50 text-slate-700 flex items-center space-x-2 cursor-pointer"
+                                >
+                                  <Eye className="w-3.5 h-3.5 text-sky-500" />
+                                  <span>Preview</span>
+                                </button>
+
+                                <button
+                                  onClick={() => {
+                                    decryptAndDownloadFile(file);
+                                    setActiveMenuFileId(null);
+                                  }}
+                                  className="w-full px-3 py-1.5 hover:bg-sky-50 text-slate-700 flex items-center space-x-2 cursor-pointer"
+                                >
+                                  <Download className="w-3.5 h-3.5 text-emerald-500" />
+                                  <span>Download</span>
+                                </button>
+
+                                <button
+                                  onClick={() => {
+                                    shredFile(file.id);
+                                    setActiveMenuFileId(null);
+                                  }}
+                                  className="w-full px-3 py-1.5 hover:bg-rose-50 text-rose-600 flex items-center space-x-2 cursor-pointer"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                  <span>Shred</span>
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </main>
 
         {/* ============================================================ */}
-        {/* 3. RIGHT SIDEBAR: STORAGE METER & BREAKDOWN                   */}
+        {/* 3. RIGHT SIDEBAR: REAL STORAGE METER & CATEGORY BREAKDOWN    */}
         {/* ============================================================ */}
         <aside className="lg:w-80 bg-slate-50/70 border-l border-slate-200/80 p-5 sm:p-6 flex flex-col justify-between flex-shrink-0">
           <div>
@@ -607,43 +643,63 @@ export const StorageVaultDashboard: React.FC = () => {
             <div className="flex items-center justify-between pb-5 mb-6 border-b border-slate-200/80">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-sky-400 to-blue-600 text-white font-bold flex items-center justify-center shadow-sm text-sm">
-                  {user?.email ? user.email.slice(0, 1).toUpperCase() : 'S'}
+                  {user?.displayName ? user.displayName.slice(0, 1).toUpperCase() : user?.email ? user.email.slice(0, 1).toUpperCase() : 'U'}
                 </div>
                 <div>
-                  <div className="font-bold text-xs text-slate-900">
-                    {user?.displayName || 'Shuvankar Samanta'}
+                  <div className="font-bold text-xs text-slate-900 truncate max-w-[140px]">
+                    {user?.displayName || user?.email?.split('@')[0] || 'Authenticated User'}
                   </div>
-                  <div className="text-[10px] text-slate-400 truncate max-w-[150px]">
-                    {user?.email || 'kgp.shuvankar112@gmail.com'}
+                  <div className="text-[10px] text-slate-400 truncate max-w-[140px]">
+                    {user?.email || 'vault-user@voidcloud.io'}
                   </div>
                 </div>
               </div>
-              <button className="p-2 rounded-xl hover:bg-slate-200/60 text-slate-400 hover:text-slate-700 transition-colors">
+              <button
+                onClick={() => setIsPricingModalOpen(true)}
+                className="p-2 rounded-xl hover:bg-slate-200/60 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+                title="Account Settings & Upgrades"
+              >
                 <Settings className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Storage Meter Header (Matching Reference 3) */}
+            {/* Storage Meter Header (100% Real Calculation) */}
             <div className="mb-6">
               <div className="flex items-baseline space-x-1.5">
                 <span className="font-display font-black text-2xl sm:text-3xl text-slate-900 tracking-tight">
-                  {(session.usedBytes / (1024 * 1024 * 1024)).toFixed(1)} GB
+                  {formatSizeDynamic(totalUsedBytes)}
                 </span>
                 <span className="text-xs text-slate-400 font-semibold">
                   used of {session.quotaGB} GB
                 </span>
               </div>
 
-              {/* Segmented Multi-Color Progress Bar */}
+              {/* Segmented Multi-Color Progress Bar (Real Dynamic Percentages) */}
               <div className="w-full h-2.5 bg-slate-200 rounded-full flex overflow-hidden mt-3 shadow-inner">
-                <div style={{ width: '45%' }} className="bg-emerald-500 h-full" title="Images 45%" />
-                <div style={{ width: '25%' }} className="bg-sky-500 h-full" title="Videos 25%" />
-                <div style={{ width: '15%' }} className="bg-amber-400 h-full" title="Documents 15%" />
-                <div style={{ width: '5%' }} className="bg-rose-400 h-full" title="Others 5%" />
+                <div
+                  style={{ width: `${Math.max(imagePct, totalUsedBytes === 0 ? 0 : 2)}%` }}
+                  className="bg-emerald-500 h-full transition-all duration-300"
+                  title={`Images ${imagePct.toFixed(1)}%`}
+                />
+                <div
+                  style={{ width: `${Math.max(videoPct, 0)}%` }}
+                  className="bg-sky-500 h-full transition-all duration-300"
+                  title={`Videos ${videoPct.toFixed(1)}%`}
+                />
+                <div
+                  style={{ width: `${Math.max(docPct, 0)}%` }}
+                  className="bg-amber-400 h-full transition-all duration-300"
+                  title={`Documents ${docPct.toFixed(1)}%`}
+                />
+                <div
+                  style={{ width: `${Math.max(otherPct, 0)}%` }}
+                  className="bg-purple-500 h-full transition-all duration-300"
+                  title={`Others ${otherPct.toFixed(1)}%`}
+                />
               </div>
             </div>
 
-            {/* Category Breakdown List (Matching Reference 3) */}
+            {/* Category Breakdown List (100% Real Live Calculation from Uploaded Files) */}
             <div className="space-y-3.5 mb-6 text-xs">
               {/* Images */}
               <div className="flex items-center justify-between">
@@ -653,10 +709,14 @@ export const StorageVaultDashboard: React.FC = () => {
                   </div>
                   <div>
                     <div className="font-bold text-slate-800">Images</div>
-                    <div className="text-[10px] text-slate-400">1,195 files</div>
+                    <div className="text-[10px] text-slate-400">
+                      {imageFiles.length} {imageFiles.length === 1 ? 'file' : 'files'}
+                    </div>
                   </div>
                 </div>
-                <span className="font-bold text-slate-700">12.2 GB</span>
+                <span className="font-bold text-slate-700 font-mono">
+                  {formatSizeDynamic(imageBytes)}
+                </span>
               </div>
 
               {/* Videos */}
@@ -667,10 +727,14 @@ export const StorageVaultDashboard: React.FC = () => {
                   </div>
                   <div>
                     <div className="font-bold text-slate-800">Videos</div>
-                    <div className="text-[10px] text-slate-400">53 files</div>
+                    <div className="text-[10px] text-slate-400">
+                      {videoFiles.length} {videoFiles.length === 1 ? 'file' : 'files'}
+                    </div>
                   </div>
                 </div>
-                <span className="font-bold text-slate-700">6.1 GB</span>
+                <span className="font-bold text-slate-700 font-mono">
+                  {formatSizeDynamic(videoBytes)}
+                </span>
               </div>
 
               {/* Documents */}
@@ -681,29 +745,37 @@ export const StorageVaultDashboard: React.FC = () => {
                   </div>
                   <div>
                     <div className="font-bold text-slate-800">Documents</div>
-                    <div className="text-[10px] text-slate-400">486 files</div>
+                    <div className="text-[10px] text-slate-400">
+                      {docFiles.length} {docFiles.length === 1 ? 'file' : 'files'}
+                    </div>
                   </div>
                 </div>
-                <span className="font-bold text-slate-700">1.7 GB</span>
+                <span className="font-bold text-slate-700 font-mono">
+                  {formatSizeDynamic(docBytes)}
+                </span>
               </div>
 
               {/* Others */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center">
+                  <div className="w-7 h-7 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
                     <Archive className="w-3.5 h-3.5" />
                   </div>
                   <div>
-                    <div className="font-bold text-slate-800">Others</div>
-                    <div className="text-[10px] text-slate-400">32 files</div>
+                    <div className="font-bold text-slate-800">Others & ZIP</div>
+                    <div className="text-[10px] text-slate-400">
+                      {otherFiles.length} {otherFiles.length === 1 ? 'file' : 'files'}
+                    </div>
                   </div>
                 </div>
-                <span className="font-bold text-slate-700">13 MB</span>
+                <span className="font-bold text-slate-700 font-mono">
+                  {formatSizeDynamic(otherBytes)}
+                </span>
               </div>
             </div>
           </div>
 
-          {/* "Need More Space?" Card (Matching Reference 3) */}
+          {/* "Need More Space?" Card */}
           <div className="p-4 rounded-2xl bg-sky-50/90 border border-sky-200/70 mt-4">
             <h3 className="font-display font-bold text-xs text-slate-900 mb-1">
               Need More Space?
@@ -714,14 +786,14 @@ export const StorageVaultDashboard: React.FC = () => {
             <div className="space-y-2">
               <button
                 onClick={() => setIsPricingModalOpen(true)}
-                className="w-full py-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs shadow-xs transition-colors"
+                className="w-full py-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs shadow-xs transition-colors cursor-pointer"
               >
                 Upgrade Plan
               </button>
               {!session.bonusClaimed && (
                 <button
                   onClick={() => claimBonusWithZKProof()}
-                  className="w-full py-2 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-700 font-semibold text-[11px] transition-colors"
+                  className="w-full py-2 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-700 font-semibold text-[11px] transition-colors cursor-pointer"
                 >
                   ⚡ Claim +20GB ZK Bonus
                 </button>
