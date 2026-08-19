@@ -70,11 +70,11 @@ export const Footer: React.FC = () => {
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
           <div>© 2026 VoidCloud. Built for Midnight Network. All rights reserved.</div>
           <div className="flex items-center space-x-4">
-            <a href="https://x.com/VoidCloud_ZK" target="_blank" rel="noreferrer" className="hover:text-sky-600 transition-colors flex items-center space-x-1 font-medium">
+            <a href="https://x.com/Voidcloud18" target="_blank" rel="noreferrer" className="hover:text-sky-600 transition-colors flex items-center space-x-1 font-medium">
               <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
               </svg>
-              <span>X (Twitter)</span>
+              <span>X (@Voidcloud18)</span>
             </a>
             <a href="https://github.com/Shuvankar11/VoidCloud" target="_blank" rel="noreferrer" className="hover:text-slate-800 transition-colors flex items-center space-x-1 font-medium">
               <Github className="w-3.5 h-3.5" />

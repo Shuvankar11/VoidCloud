@@ -11,7 +11,7 @@
 <p align="center">
   <a href="https://github.com/Shuvankar11/VoidCloud/actions/workflows/ci.yml"><img src="https://github.com/Shuvankar11/VoidCloud/actions/workflows/ci.yml/badge.svg" alt="CI/CD Pipeline" /></a>
   <a href="https://void-cloude.vercel.app/"><img src="https://img.shields.io/badge/Live%20dApp-void--cloude.vercel.app-00F2FE?style=for-the-badge&logo=vercel" alt="Live dApp" /></a>
-  <a href="https://x.com/VoidCloud_ZK"><img src="https://img.shields.io/badge/X%20(Twitter)-Product%20Profile-000000?style=for-the-badge&logo=x&logoColor=white" alt="X (Twitter)" /></a>
+  <a href="https://x.com/Voidcloud18"><img src="https://img.shields.io/badge/X%20(Twitter)-@Voidcloud18-000000?style=for-the-badge&logo=x&logoColor=white" alt="X (Twitter)" /></a>
   <a href="https://midnight.network"><img src="https://img.shields.io/badge/Midnight-Preprod-7F00FF?style=for-the-badge&logo=shield" alt="Midnight Network" /></a>
   <a href="https://midnight.network"><img src="https://img.shields.io/badge/ZK--SNARK-Halo2%20%2F%20PLONK-00F2FE?style=for-the-badge" alt="ZK-SNARK" /></a>
   <a href="https://midnight.network"><img src="https://img.shields.io/badge/Compact-v0.20.4-10B981?style=for-the-badge" alt="Smart Contract" /></a>
@@ -21,7 +21,7 @@
 > 🌐 **Live Production dApp**: [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/)  
 > 📜 **Deployed Preprod Contract**: `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e`  
 > 🔗 **Public GitHub Repository**: [https://github.com/Shuvankar11/VoidCloud](https://github.com/Shuvankar11/VoidCloud)  
-> 🐦 **Product X Profile**: [https://x.com/VoidCloud_ZK](https://x.com/VoidCloud_ZK)  
+> 🐦 **Product X Profile**: [https://x.com/Voidcloud18](https://x.com/Voidcloud18)  
 > 🛡️ **Level 4 - Waxing Gibbous Verified Submission** (Working MVP on Preprod, 85+ Commits, CI/CD Pipeline Passing, Full Technical Docs, Product X Profile Linked).
 
 ---
@@ -274,7 +274,7 @@ $ npm test
 | **Working MVP live on Preprod (verifiable address)** | ✅ PASS | Live deployed dApp at [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/) interacting with Midnight Preprod contract `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e`. |
 | **Documentation (README + setup + usage)** | ✅ PASS | Complete technical & user-facing documentation in README, including local quickstart, Compact contract specs, observer privacy model, and Antigravity CLI guide. |
 | **CI/CD pipeline running on the product repo** | ✅ PASS | Continuous Integration pipeline configured in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) with 13 passing Vitest unit tests and production build verification. |
-| **Product X profile created, linked in README** | ✅ PASS | Official product profile launched on X: [https://x.com/VoidCloud_ZK](https://x.com/VoidCloud_ZK) and prominently linked in README badges, header anchors, and footer. |
+| **Product X profile created, linked in README** | ✅ PASS | Official product profile launched on X: [https://x.com/Voidcloud18](https://x.com/Voidcloud18) and prominently linked in README badges, header anchors, and footer. |
 | **Minimum 15 meaningful commits** | ✅ PASS | **85+ meaningful conventional commits** on branch `main` (`git rev-list --count HEAD`). |
 
 #### 📋 Level 4 Submission Checklist Verification Matrix
@@ -285,7 +285,7 @@ $ npm test
 | **Live Preprod Demo Link** | [`https://void-cloude.vercel.app/`](https://void-cloude.vercel.app/) | ✅ READY |
 | **Midnight Preprod Contract Address** | `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e` (Block `#849210`) | ✅ READY |
 | **CI/CD Badge & Workflow** | [`.github/workflows/ci.yml`](.github/workflows/ci.yml) & [Passing Badge](https://github.com/Shuvankar11/VoidCloud/actions/workflows/ci.yml) | ✅ READY |
-| **Link to Product X Profile** | [`https://x.com/VoidCloud_ZK`](https://x.com/VoidCloud_ZK) | ✅ READY |
+| **Link to Product X Profile** | [`https://x.com/Voidcloud18`](https://x.com/Voidcloud18) | ✅ READY |
 | **Demo Video of the MVP** | [Watch VoidCloud Level 4 MVP Walkthrough](https://youtu.be/VOIDCLOUD_DEMO_LINK) | ✅ READY |
 | **Meaningful Commit History** | **85 Commits** (`git rev-list --count HEAD` verified) | ✅ READY |
 
