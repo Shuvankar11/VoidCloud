@@ -126,19 +126,6 @@ export const HeroLanding3D: React.FC<HeroLanding3DProps> = ({ onStartJourney }) 
           </div>
         </div>
       </div>
-
-      {/* PARTNER / TRUST LOGO TICKER FOOTER (Matching Reference 1) */}
-      <div className="relative z-10 w-full bg-white/80 backdrop-blur-xl border-t border-slate-100 py-6 px-4">
-        <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-6 sm:gap-8 opacity-70 hover:opacity-100 transition-opacity">
-          <div className="font-display font-black text-lg text-slate-800 tracking-wider">Google</div>
-          <div className="font-display font-black text-lg text-slate-800 tracking-wider">pepsi</div>
-          <div className="font-display font-black text-lg text-slate-800 tracking-wider">∞ Meta</div>
-          <div className="font-display font-bold text-xs border border-slate-800 px-2 py-0.5 rounded text-slate-800 tracking-tight">HDFC BANK</div>
-          <div className="font-display font-bold text-sm text-slate-800 tracking-wider">vodafone</div>
-          <div className="font-display font-black text-lg text-slate-800 tracking-wider">amazon</div>
-          <div className="font-display font-bold text-sm text-slate-800 tracking-wider">HSBC</div>
-        </div>
-      </div>
     </section>
   );
 };
