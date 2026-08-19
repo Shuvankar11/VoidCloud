@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useWeb3Wallet } from '../context/WalletContext';
 import { useVault } from '../context/VaultContext';
-import { X, Eye, EyeOff, Lock, Mail, ArrowRight, ShieldCheck } from 'lucide-react';
+import { X, Eye, EyeOff, Lock, Mail, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
 
 interface YetiAuthModalProps {
   isOpen: boolean;
@@ -32,10 +32,9 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
   // Focus tracking for Yeti reactions
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
-  // Mouse tracking for 3D Yeti Card Tilt & Eye Tracking
+  // Mouse tracking for 3D Parallax Tilt
   const containerRef = useRef<HTMLDivElement>(null);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const [pupilOffset, setPupilOffset] = useState({ x: 0, y: 0 });
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     setMode(initialMode);
@@ -48,26 +47,12 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
       if (!isOpen || !containerRef.current) return;
 
       const rect = containerRef.current.getBoundingClientRect();
-      const cardCenterX = rect.left + rect.width * 0.25;
-      const cardCenterY = rect.top + rect.height * 0.45;
+      const relativeX = (e.clientX - rect.left) / rect.width - 0.5;
+      const relativeY = (e.clientY - rect.top) / rect.height - 0.5;
 
-      const deltaX = e.clientX - cardCenterX;
-      const deltaY = e.clientY - cardCenterY;
-
-      // 3D Perspective Tilt Math
-      const tiltX = Math.min(Math.max((deltaX / rect.width) * 14, -14), 14);
-      const tiltY = Math.min(Math.max((deltaY / rect.height) * 14, -14), 14);
-
-      // Eye pupil vector calculation
-      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-      const maxDist = 400;
-      const magnitude = Math.min(distance / maxDist, 1) * 8;
-      const angle = Math.atan2(deltaY, deltaX);
-
-      setTilt({ x: tiltX, y: tiltY });
-      setPupilOffset({
-        x: Math.cos(angle) * magnitude,
-        y: Math.sin(angle) * magnitude,
+      setMousePos({
+        x: Math.min(Math.max(relativeX * 20, -20), 20),
+        y: Math.min(Math.max(relativeY * 20, -20), 20),
       });
     };
 
@@ -150,69 +135,59 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"
+          className="absolute top-4 right-4 z-30 p-2 rounded-full bg-slate-100/90 hover:bg-slate-200 text-slate-600 transition-colors shadow-sm cursor-pointer"
           title="Close"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* ============================================================ */}
-        {/* LEFT PANEL: Photorealistic 3D Yeti Mascot (Matching Ref 2)   */}
+        {/* LEFT PANEL: 8K Pixar 3D Yeti Scene (Full Edge-to-Edge)       */}
         {/* ============================================================ */}
-        <div className="md:w-1/2 relative bg-gradient-to-b from-sky-300 via-sky-200 to-sky-100 p-6 sm:p-8 flex items-center justify-center overflow-hidden min-h-[380px] md:min-h-[540px]">
+        <div className="md:w-1/2 relative overflow-hidden min-h-[400px] md:min-h-[580px] flex flex-col justify-between p-6 sm:p-8 bg-sky-100 select-none">
           
-          {/* Fluffy Background Cloud Blurs */}
-          <div className="absolute top-6 left-6 w-36 h-20 bg-white/70 rounded-full blur-md -z-0 animate-pulse" />
-          <div className="absolute top-16 right-8 w-44 h-24 bg-white/80 rounded-full blur-md -z-0" />
-
-          {/* 3D Tilt Card containing the Photorealistic Yeti Mascot */}
+          {/* Full bleed 3D Scene Background Image with Parallax Response */}
           <div
-            className="relative z-10 w-full h-full max-w-[340px] max-h-[440px] rounded-3xl overflow-hidden shadow-2xl border-2 border-white transition-transform duration-100 ease-out"
+            className="absolute inset-0 w-full h-full transition-transform duration-200 ease-out"
             style={{
-              transform: `perspective(800px) rotateY(${tilt.x}deg) rotateX(${-tilt.y}deg) scale(${isPasswordFocused ? 0.96 : 1})`,
+              transform: `scale(1.08) translate(${-mousePos.x * 0.4}px, ${-mousePos.y * 0.4}px)`,
             }}
           >
-            {/* Real 3D Yeti Image */}
             <img
-              src="/yeti-mascot.png"
-              alt="Yeti Guardian Mascot"
-              className="w-full h-full object-cover select-none pointer-events-none"
+              src="/yeti-mascot.jpg"
+              alt="3D Pixar Yeti Guardian"
+              className="w-full h-full object-cover object-center pointer-events-none"
             />
+          </div>
 
-            {/* Dynamic Cursor-Reactive Eye Glow Overlays */}
-            <div
-              className="absolute pointer-events-none transition-transform duration-75"
-              style={{
-                top: '39%',
-                left: '38%',
-                transform: `translate(${pupilOffset.x}px, ${pupilOffset.y}px)`,
-              }}
-            >
-              {/* Left pupil highlight */}
-              <div className="w-2.5 h-2.5 rounded-full bg-white/70 blur-[0.5px] shadow-sm" />
+          {/* Top Brand Pill Overlay */}
+          <div className="relative z-20 flex items-center justify-between">
+            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-white/80 text-slate-800 font-bold text-xs shadow-md">
+              <Sparkles className="w-3.5 h-3.5 text-sky-500" />
+              <span>VOID GUARDIAN</span>
             </div>
+          </div>
 
-            <div
-              className="absolute pointer-events-none transition-transform duration-75"
-              style={{
-                top: '39%',
-                left: '58%',
-                transform: `translate(${pupilOffset.x}px, ${pupilOffset.y}px)`,
-              }}
-            >
-              {/* Right pupil highlight */}
-              <div className="w-2.5 h-2.5 rounded-full bg-white/70 blur-[0.5px] shadow-sm" />
-            </div>
-
-            {/* Password Focus Shy Mask Overlay */}
-            {isPasswordFocused && (
-              <div className="absolute inset-0 bg-sky-950/20 backdrop-blur-[1px] flex items-center justify-center animate-fade-in">
-                <div className="px-4 py-2 rounded-full bg-white/90 text-slate-800 font-bold text-xs shadow-lg flex items-center space-x-1.5">
-                  <Lock className="w-3.5 h-3.5 text-sky-600" />
-                  <span>Zero-Knowledge Shielded</span>
-                </div>
+          {/* Password Focus Shielded Mask Animation */}
+          {isPasswordFocused && (
+            <div className="absolute inset-0 z-25 bg-slate-900/30 backdrop-blur-[2px] flex items-center justify-center animate-fade-in">
+              <div className="px-5 py-2.5 rounded-2xl bg-white/95 text-slate-900 font-bold text-xs shadow-2xl flex items-center space-x-2 border border-white">
+                <Lock className="w-4 h-4 text-sky-600 animate-bounce" />
+                <span>Zero-Knowledge Shield Active</span>
               </div>
-            )}
+            </div>
+          )}
+
+          {/* Bottom Headline Gradient Overlay (Matching Reference 2) */}
+          <div className="relative z-20 mt-auto pt-16">
+            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-t from-slate-950/85 via-slate-950/60 to-transparent backdrop-blur-xs text-white space-y-1">
+              <h3 className="font-display font-black text-xl sm:text-2xl tracking-wider leading-none uppercase drop-shadow-md">
+                EXPLORE. LEARN. GROW.
+              </h3>
+              <p className="text-xs text-sky-200 font-medium drop-shadow-sm">
+                Zero-Knowledge Shielded Cloud Vault
+              </p>
+            </div>
           </div>
         </div>
 
@@ -236,7 +211,7 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
             </h2>
             <p className="text-xs text-slate-500 mt-1 text-center md:text-left">
               {mode === 'signin'
-                ? 'Enter your email and password to access your vault'
+                ? 'Enter your email and password to access your encrypted vault'
                 : mode === 'signup'
                 ? 'Start storing files privately with client-side zero-knowledge proofs'
                 : 'Enter your registered email to receive recovery instructions'}
@@ -269,7 +244,7 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-100 text-xs text-slate-800 placeholder-slate-400 outline-none transition-all"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-100 text-xs text-slate-800 placeholder-slate-400 outline-none transition-all shadow-xs"
                 />
                 <Mail className="absolute right-3.5 top-3 w-4 h-4 text-slate-400" />
               </div>
@@ -290,7 +265,7 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
                     onFocus={() => setIsPasswordFocused(true)}
                     onBlur={() => setIsPasswordFocused(false)}
                     placeholder="Enter your password"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-100 text-xs text-slate-800 placeholder-slate-400 outline-none transition-all"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-100 text-xs text-slate-800 placeholder-slate-400 outline-none transition-all shadow-xs"
                   />
                   <button
                     type="button"
@@ -318,7 +293,7 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
                     onFocus={() => setIsPasswordFocused(true)}
                     onBlur={() => setIsPasswordFocused(false)}
                     placeholder="Confirm your password"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-100 text-xs text-slate-800 placeholder-slate-400 outline-none transition-all"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-100 text-xs text-slate-800 placeholder-slate-400 outline-none transition-all shadow-xs"
                   />
                   <Lock className="absolute right-3.5 top-3 w-4 h-4 text-slate-400" />
                 </div>
@@ -351,7 +326,7 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 active:scale-[0.99] text-white font-bold text-xs font-mono shadow-md transition-all flex items-center justify-center space-x-2 mt-2"
+              className="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 active:scale-[0.99] text-white font-bold text-xs font-mono shadow-md transition-all flex items-center justify-center space-x-2 mt-2 cursor-pointer"
             >
               {loading ? (
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -379,7 +354,7 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
                 type="button"
                 onClick={handleGoogleSignIn}
                 disabled={loading}
-                className="w-full py-2.5 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium text-xs flex items-center justify-center space-x-2 transition-colors"
+                className="w-full py-2.5 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold text-xs flex items-center justify-center space-x-2 transition-colors cursor-pointer shadow-xs"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24">
                   <path
@@ -407,7 +382,7 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
                 type="button"
                 onClick={handleLaceConnect}
                 disabled={loading}
-                className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200/80 hover:border-purple-300 text-purple-900 font-semibold text-xs flex items-center justify-center space-x-2 transition-all"
+                className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200/80 hover:border-purple-300 text-purple-900 font-semibold text-xs flex items-center justify-center space-x-2 transition-all cursor-pointer shadow-xs"
               >
                 <div className="w-4 h-4 rounded-full bg-purple-600 text-white flex items-center justify-center text-[9px] font-bold">
                   N
@@ -425,7 +400,7 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setMode('signup')}
-                  className="font-bold text-sky-600 hover:text-sky-700 underline ml-1"
+                  className="font-bold text-sky-600 hover:text-sky-700 underline ml-1 cursor-pointer"
                 >
                   Sign up
                 </button>
@@ -436,7 +411,7 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setMode('signin')}
-                  className="font-bold text-sky-600 hover:text-sky-700 underline ml-1"
+                  className="font-bold text-sky-600 hover:text-sky-700 underline ml-1 cursor-pointer"
                 >
                   Sign in
                 </button>
@@ -445,7 +420,7 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
               <button
                 type="button"
                 onClick={() => setMode('signin')}
-                className="font-bold text-sky-600 hover:text-sky-700 underline"
+                className="font-bold text-sky-600 hover:text-sky-700 underline cursor-pointer"
               >
                 ← Back to Sign in
               </button>
