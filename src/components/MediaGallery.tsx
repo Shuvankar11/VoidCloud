@@ -25,28 +25,21 @@ import {
   Loader2,
   Plus,
   Lock,
-  Folder,
-  FolderArchive,
-  Users,
-  MapPin,
   Cloud,
   Settings,
   Share2,
   CheckSquare,
-  MoreHorizontal,
   Grid,
   Layers,
-  ChevronDown,
-  Minus,
   Square,
-  X
+  X,
+  Volume2,
 } from 'lucide-react';
 
 interface MediaTileProps {
   file: ShieldedFile;
   category: 'image' | 'video' | 'audio' | 'doc';
   gridDensity: 'small' | 'medium' | 'large';
-  index: number;
   isSelected?: boolean;
   onSelectToggle?: () => void;
   isSelectionMode?: boolean;
@@ -59,7 +52,6 @@ const MediaTile: React.FC<MediaTileProps> = ({
   file,
   category,
   gridDensity,
-  index,
   isSelected = false,
   onSelectToggle,
   isSelectionMode = false,
@@ -92,24 +84,19 @@ const MediaTile: React.FC<MediaTileProps> = ({
     };
   }, [file.id]);
 
-  // Determine span classes for masonry grid look (matching reference)
-  const isLargeFeature = (index === 0 || index === 8 || index === 14) && gridDensity === 'medium';
-  const isWideFeature = (index === 3 || index === 11) && gridDensity === 'medium';
+  const heightClass =
+    gridDensity === 'small'
+      ? 'h-32 sm:h-36'
+      : gridDensity === 'large'
+      ? 'h-64 sm:h-72'
+      : 'h-44 sm:h-52';
 
   return (
     <div
       onClick={isSelectionMode ? onSelectToggle : onClick}
-      className={`group relative rounded-xl overflow-hidden cursor-pointer transition-all duration-200 bg-slate-100 shadow-xs hover:shadow-md ${
-        isLargeFeature
-          ? 'col-span-2 row-span-2 h-72 sm:h-80'
-          : isWideFeature
-          ? 'col-span-2 h-36 sm:h-40'
-          : gridDensity === 'small'
-          ? 'h-28 sm:h-32'
-          : gridDensity === 'large'
-          ? 'h-52 sm:h-64'
-          : 'h-36 sm:h-40'
-      } ${isSelected ? 'ring-3 ring-rose-500 scale-[0.98]' : 'hover:scale-[1.01]'}`}
+      className={`group relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 bg-slate-100 shadow-xs hover:shadow-md border border-slate-200/80 ${heightClass} ${
+        isSelected ? 'ring-3 ring-rose-500 scale-[0.98]' : 'hover:scale-[1.01]'
+      }`}
     >
       {/* Visual Content */}
       {category === 'image' ? (
@@ -122,7 +109,7 @@ const MediaTile: React.FC<MediaTileProps> = ({
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center p-3 bg-gradient-to-tr from-sky-100 to-indigo-50 text-slate-700">
             <ImageIcon className="w-8 h-8 text-sky-500 mb-1" />
-            <span className="text-[10px] font-bold truncate max-w-full">{file.name}</span>
+            <span className="text-[11px] font-bold truncate max-w-[90%]">{file.name}</span>
           </div>
         )
       ) : category === 'video' ? (
@@ -135,8 +122,8 @@ const MediaTile: React.FC<MediaTileProps> = ({
               playsInline
               preload="metadata"
             />
-            <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-              <div className="w-9 h-9 rounded-full bg-white/90 text-slate-900 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+            <div className="absolute inset-0 bg-black/25 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-full bg-white/95 text-slate-900 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                 <Play className="w-4 h-4 fill-current ml-0.5" />
               </div>
             </div>
@@ -144,13 +131,21 @@ const MediaTile: React.FC<MediaTileProps> = ({
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center p-3 bg-gradient-to-tr from-purple-100 to-pink-50 text-slate-700">
             <Film className="w-8 h-8 text-purple-500 mb-1" />
-            <span className="text-[10px] font-bold truncate max-w-full">{file.name}</span>
+            <span className="text-[11px] font-bold truncate max-w-[90%]">{file.name}</span>
           </div>
         )
+      ) : category === 'audio' ? (
+        <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-tr from-indigo-50 to-purple-50 border border-slate-200 text-center">
+          <div className="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-2 shadow-xs group-hover:scale-110 transition-transform">
+            <Volume2 className="w-6 h-6" />
+          </div>
+          <span className="text-xs font-bold text-slate-900 truncate max-w-[90%]">{file.name}</span>
+          <span className="text-[10px] text-slate-400 font-mono mt-0.5">{sizeMB} MB • {ext}</span>
+        </div>
       ) : (
         <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-slate-50 border border-slate-200 text-center">
           <FileText className="w-8 h-8 text-amber-500 mb-1" />
-          <span className="text-xs font-bold text-slate-800 truncate max-w-full">{file.name}</span>
+          <span className="text-xs font-bold text-slate-800 truncate max-w-[90%]">{file.name}</span>
           <span className="text-[10px] text-slate-400 font-mono mt-0.5">{sizeMB} MB • {ext}</span>
         </div>
       )}
@@ -165,7 +160,7 @@ const MediaTile: React.FC<MediaTileProps> = ({
       )}
 
       {/* Hover Overlay Controls */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-150 flex flex-col justify-between p-2.5 text-white">
+      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-150 flex flex-col justify-between p-3 text-white">
         <div className="flex items-center justify-between">
           <span className="px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-md text-[10px] font-mono font-bold uppercase">
             {ext}
@@ -176,7 +171,7 @@ const MediaTile: React.FC<MediaTileProps> = ({
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-[11px] font-bold truncate max-w-[130px] drop-shadow-sm">
+          <span className="text-[11px] font-bold truncate max-w-[140px] drop-shadow-sm">
             {file.name}
           </span>
 
@@ -216,7 +211,8 @@ export const MediaGallery: React.FC = () => {
   } = useVault();
   const { user } = useAuth();
 
-  const [activeSidebarTab, setActiveSidebarTab] = useState<'photos' | 'albums' | 'folders' | 'memories' | 'people' | 'locations'>('photos');
+  // Sidebar media filter tab: 'all' | 'photos' | 'videos' | 'songs' | 'files'
+  const [activeTab, setActiveTab] = useState<'all' | 'photos' | 'videos' | 'songs' | 'files'>('photos');
   const [gridDensity, setGridDensity] = useState<'small' | 'medium' | 'large'>('medium');
   const [searchQuery, setSearchQuery] = useState('');
   const [isSelectionMode, setIsSelectionMode] = useState(false);
@@ -238,17 +234,31 @@ export const MediaGallery: React.FC = () => {
 
   const activeFiles = useMemo(() => files.filter((f) => f.status === 'shielded'), [files]);
 
+  // Real Counts for Categories
+  const counts = useMemo(() => {
+    return {
+      all: activeFiles.length,
+      photos: activeFiles.filter((f) => getMediaCategory(f) === 'image').length,
+      videos: activeFiles.filter((f) => getMediaCategory(f) === 'video').length,
+      songs: activeFiles.filter((f) => getMediaCategory(f) === 'audio').length,
+      files: activeFiles.filter((f) => getMediaCategory(f) === 'doc').length,
+    };
+  }, [activeFiles]);
+
   const filteredMedia = useMemo(() => {
     return activeFiles.filter((f) => {
       const matchesSearch = f.name.toLowerCase().includes(searchQuery.toLowerCase());
       if (!matchesSearch) return false;
 
-      if (activeSidebarTab === 'albums') {
-        return getMediaCategory(f) === 'image' || getMediaCategory(f) === 'video';
-      }
+      const cat = getMediaCategory(f);
+      if (activeTab === 'all') return true;
+      if (activeTab === 'photos') return cat === 'image';
+      if (activeTab === 'videos') return cat === 'video';
+      if (activeTab === 'songs') return cat === 'audio';
+      if (activeTab === 'files') return cat === 'doc';
       return true;
     });
-  }, [activeFiles, searchQuery, activeSidebarTab]);
+  }, [activeFiles, searchQuery, activeTab]);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -278,11 +288,22 @@ export const MediaGallery: React.FC = () => {
     );
   };
 
+  const tabTitle =
+    activeTab === 'photos'
+      ? 'Photos'
+      : activeTab === 'videos'
+      ? 'Videos'
+      : activeTab === 'songs'
+      ? 'Songs & Audio'
+      : activeTab === 'files'
+      ? 'Documents & Files'
+      : 'All Media';
+
   // Grouping timeline header
   const timelineDateString = useMemo(() => {
     const d = new Date();
-    return `${d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })} - ${filteredMedia.length} shielded photos`;
-  }, [filteredMedia.length]);
+    return `${d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })} • ${filteredMedia.length} shielded ${activeTab}`;
+  }, [filteredMedia.length, activeTab]);
 
   return (
     <section
@@ -298,7 +319,7 @@ export const MediaGallery: React.FC = () => {
         ref={fileInputRef}
         onChange={handleFileUpload}
         multiple
-        accept="image/*,video/*,audio/*,.pdf,.doc,.docx"
+        accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.zip,.rar,.txt"
         className="hidden"
       />
 
@@ -306,12 +327,12 @@ export const MediaGallery: React.FC = () => {
       <div className="max-w-7xl mx-auto rounded-3xl bg-white/95 backdrop-blur-2xl border border-white/80 shadow-[0_25px_80px_rgba(30,60,140,0.16)] flex flex-col md:flex-row overflow-hidden min-h-[820px] text-slate-800 relative">
         
         {/* ============================================================ */}
-        {/* 1. LEFT SIDEBAR: User Profile & Photos Navigation            */}
+        {/* 1. LEFT SIDEBAR: User Profile & Media Category Tabs          */}
         {/* ============================================================ */}
-        <aside className="md:w-60 bg-gradient-to-b from-slate-50/90 via-rose-50/30 to-slate-50/90 border-r border-slate-200/80 p-5 flex flex-col justify-between flex-shrink-0">
+        <aside className="md:w-60 bg-gradient-to-b from-slate-50/90 via-rose-50/20 to-slate-50/90 border-r border-slate-200/80 p-5 flex flex-col justify-between flex-shrink-0">
           <div className="space-y-6">
             
-            {/* Top User Profile (Matching Reference: Aroha / Avatar) */}
+            {/* Top User Profile */}
             <div className="flex flex-col items-center text-center pt-2 pb-4 border-b border-slate-200/60">
               <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-slate-900 to-slate-700 text-white font-bold flex items-center justify-center shadow-md mb-2 overflow-hidden border-2 border-white">
                 <img
@@ -328,112 +349,119 @@ export const MediaGallery: React.FC = () => {
               </p>
             </div>
 
-            {/* Section 1: Library */}
+            {/* Media Categories Navigation (Replaces old memories/people/locations) */}
             <div className="space-y-1">
-              <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-1.5">
-                Library
+              <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">
+                Media Library
               </div>
 
+              {/* 1. Photos */}
               <button
-                onClick={() => setActiveSidebarTab('photos')}
-                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all relative cursor-pointer ${
-                  activeSidebarTab === 'photos'
+                onClick={() => setActiveTab('photos')}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all relative cursor-pointer ${
+                  activeTab === 'photos'
                     ? 'text-slate-900 bg-white shadow-xs font-bold'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
                 }`}
               >
-                {/* Active Coral Indicator Bar (Matching Reference) */}
-                {activeSidebarTab === 'photos' && (
-                  <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-rose-500 rounded-r-full" />
-                )}
-                <ImageIcon className={`w-4 h-4 ${activeSidebarTab === 'photos' ? 'text-rose-500' : 'text-slate-400'}`} />
-                <span>Photos</span>
+                <div className="flex items-center space-x-3">
+                  {activeTab === 'photos' && (
+                    <div className="absolute left-0 top-2 bottom-2 w-1 bg-rose-500 rounded-r-full" />
+                  )}
+                  <ImageIcon className={`w-4 h-4 ${activeTab === 'photos' ? 'text-rose-500' : 'text-slate-400'}`} />
+                  <span>Photos</span>
+                </div>
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-500">
+                  {counts.photos}
+                </span>
               </button>
 
+              {/* 2. Videos */}
               <button
-                onClick={() => setActiveSidebarTab('albums')}
-                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all relative cursor-pointer ${
-                  activeSidebarTab === 'albums'
+                onClick={() => setActiveTab('videos')}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all relative cursor-pointer ${
+                  activeTab === 'videos'
                     ? 'text-slate-900 bg-white shadow-xs font-bold'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
                 }`}
               >
-                {activeSidebarTab === 'albums' && (
-                  <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-rose-500 rounded-r-full" />
-                )}
-                <FolderArchive className={`w-4 h-4 ${activeSidebarTab === 'albums' ? 'text-rose-500' : 'text-slate-400'}`} />
-                <span>Albums</span>
+                <div className="flex items-center space-x-3">
+                  {activeTab === 'videos' && (
+                    <div className="absolute left-0 top-2 bottom-2 w-1 bg-rose-500 rounded-r-full" />
+                  )}
+                  <Film className={`w-4 h-4 ${activeTab === 'videos' ? 'text-rose-500' : 'text-slate-400'}`} />
+                  <span>Videos</span>
+                </div>
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-500">
+                  {counts.videos}
+                </span>
               </button>
 
+              {/* 3. Songs & Audio */}
               <button
-                onClick={() => setActiveSidebarTab('folders')}
-                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all relative cursor-pointer ${
-                  activeSidebarTab === 'folders'
+                onClick={() => setActiveTab('songs')}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all relative cursor-pointer ${
+                  activeTab === 'songs'
                     ? 'text-slate-900 bg-white shadow-xs font-bold'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
                 }`}
               >
-                {activeSidebarTab === 'folders' && (
-                  <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-rose-500 rounded-r-full" />
-                )}
-                <Folder className={`w-4 h-4 ${activeSidebarTab === 'folders' ? 'text-rose-500' : 'text-slate-400'}`} />
-                <span>Folders</span>
+                <div className="flex items-center space-x-3">
+                  {activeTab === 'songs' && (
+                    <div className="absolute left-0 top-2 bottom-2 w-1 bg-rose-500 rounded-r-full" />
+                  )}
+                  <Music className={`w-4 h-4 ${activeTab === 'songs' ? 'text-rose-500' : 'text-slate-400'}`} />
+                  <span>Songs / Audio</span>
+                </div>
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-500">
+                  {counts.songs}
+                </span>
+              </button>
+
+              {/* 4. Files & Documents */}
+              <button
+                onClick={() => setActiveTab('files')}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all relative cursor-pointer ${
+                  activeTab === 'files'
+                    ? 'text-slate-900 bg-white shadow-xs font-bold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
+                }`}
+              >
+                <div className="flex items-center space-x-3">
+                  {activeTab === 'files' && (
+                    <div className="absolute left-0 top-2 bottom-2 w-1 bg-rose-500 rounded-r-full" />
+                  )}
+                  <FileText className={`w-4 h-4 ${activeTab === 'files' ? 'text-rose-500' : 'text-slate-400'}`} />
+                  <span>Documents & Files</span>
+                </div>
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-500">
+                  {counts.files}
+                </span>
+              </button>
+
+              {/* 5. All Media */}
+              <button
+                onClick={() => setActiveTab('all')}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all relative cursor-pointer ${
+                  activeTab === 'all'
+                    ? 'text-slate-900 bg-white shadow-xs font-bold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
+                }`}
+              >
+                <div className="flex items-center space-x-3">
+                  {activeTab === 'all' && (
+                    <div className="absolute left-0 top-2 bottom-2 w-1 bg-rose-500 rounded-r-full" />
+                  )}
+                  <Layers className={`w-4 h-4 ${activeTab === 'all' ? 'text-rose-500' : 'text-slate-400'}`} />
+                  <span>All Media</span>
+                </div>
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-500">
+                  {counts.all}
+                </span>
               </button>
             </div>
 
-            {/* Section 2: Collections */}
-            <div className="space-y-1 pt-2">
-              <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-1.5">
-                Collections
-              </div>
-
-              <button
-                onClick={() => setActiveSidebarTab('memories')}
-                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all relative cursor-pointer ${
-                  activeSidebarTab === 'memories'
-                    ? 'text-slate-900 bg-white shadow-xs font-bold'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
-                }`}
-              >
-                {activeSidebarTab === 'memories' && (
-                  <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-rose-500 rounded-r-full" />
-                )}
-                <Clock className={`w-4 h-4 ${activeSidebarTab === 'memories' ? 'text-rose-500' : 'text-slate-400'}`} />
-                <span>Memories</span>
-              </button>
-
-              <button
-                onClick={() => setActiveSidebarTab('people')}
-                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all relative cursor-pointer ${
-                  activeSidebarTab === 'people'
-                    ? 'text-slate-900 bg-white shadow-xs font-bold'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
-                }`}
-              >
-                {activeSidebarTab === 'people' && (
-                  <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-rose-500 rounded-r-full" />
-                )}
-                <Users className={`w-4 h-4 ${activeSidebarTab === 'people' ? 'text-rose-500' : 'text-slate-400'}`} />
-                <span>People</span>
-              </button>
-
-              <button
-                onClick={() => setActiveSidebarTab('locations')}
-                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all relative cursor-pointer ${
-                  activeSidebarTab === 'locations'
-                    ? 'text-slate-900 bg-white shadow-xs font-bold'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
-                }`}
-              >
-                {activeSidebarTab === 'locations' && (
-                  <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-rose-500 rounded-r-full" />
-                )}
-                <MapPin className={`w-4 h-4 ${activeSidebarTab === 'locations' ? 'text-rose-500' : 'text-slate-400'}`} />
-                <span>Locations</span>
-              </button>
-            </div>
-
-            {/* Section 3: Storage */}
+            {/* Storage Quota Pill */}
             <div className="space-y-1 pt-2">
               <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-1.5">
                 Storage
@@ -472,7 +500,7 @@ export const MediaGallery: React.FC = () => {
         </aside>
 
         {/* ============================================================ */}
-        {/* 2. MAIN CENTER: Microsoft Photos Redesign Photo Wall         */}
+        {/* 2. MAIN CENTER: Media Wall & Action Bar                      */}
         {/* ============================================================ */}
         <main className="flex-1 p-6 sm:p-8 flex flex-col justify-between overflow-y-auto space-y-6">
           <div className="space-y-6">
@@ -485,23 +513,23 @@ export const MediaGallery: React.FC = () => {
                 <button
                   onClick={() => setActiveView('dashboard')}
                   className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
-                  title="Back"
+                  title="Back to Dashboard"
                 >
                   <ArrowLeft className="w-4 h-4" />
                 </button>
                 <h1 className="text-2xl sm:text-3xl font-display font-black text-slate-900 tracking-tight">
-                  Photos
+                  {tabTitle}
                 </h1>
               </div>
 
-              {/* Top Quick Actions (Matching Reference) */}
+              {/* Top Quick Actions */}
               <div className="flex flex-wrap items-center gap-2">
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5 text-rose-500" />
-                  <span>New Photo</span>
+                  <span>Upload Media</span>
                 </button>
 
                 <button
@@ -522,7 +550,7 @@ export const MediaGallery: React.FC = () => {
                 <button
                   onClick={() => {
                     if (selectedIds.length > 0) {
-                      alert(`Sharing ${selectedIds.length} zero-knowledge shielded photo links!`);
+                      alert(`Sharing ${selectedIds.length} zero-knowledge shielded media links!`);
                     } else {
                       fileInputRef.current?.click();
                     }
@@ -533,14 +561,14 @@ export const MediaGallery: React.FC = () => {
                   <span>Share</span>
                 </button>
 
-                {/* Search Bar (Matching Reference) */}
+                {/* Search Bar */}
                 <div className="relative w-44 sm:w-56">
                   <Search className="absolute left-3 top-2.5 w-3.5 h-3.5 text-slate-400" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search Photos"
+                    placeholder={`Search ${tabTitle}...`}
                     className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-slate-100/90 border border-slate-200/60 focus:border-rose-400 focus:bg-white text-xs text-slate-800 placeholder-slate-400 outline-none transition-all shadow-2xs"
                   />
                 </div>
@@ -563,7 +591,7 @@ export const MediaGallery: React.FC = () => {
               </div>
             )}
 
-            {/* Timeline Header & Density Switcher (Matching Reference) */}
+            {/* Timeline Header & Density Switcher */}
             <div className="flex items-center justify-between pt-2 pb-1 border-b border-slate-200/50">
               <div className="text-xs font-bold text-slate-700">
                 {timelineDateString}
@@ -589,7 +617,7 @@ export const MediaGallery: React.FC = () => {
                   className={`p-1 rounded-md transition-colors relative cursor-pointer ${
                     gridDensity === 'medium' ? 'text-slate-900 font-bold' : 'hover:text-slate-700'
                   }`}
-                  title="Medium Grid (Masonry)"
+                  title="Medium Grid"
                 >
                   <Grid className="w-3.5 h-3.5" />
                   {gridDensity === 'medium' && (
@@ -612,7 +640,7 @@ export const MediaGallery: React.FC = () => {
               </div>
             </div>
 
-            {/* Seamless Photographic Grid Wall (Matching Reference Photo Wall) */}
+            {/* Seamless Photographic Grid Wall */}
             {filteredMedia.length === 0 ? (
               <div
                 onClick={() => fileInputRef.current?.click()}
@@ -622,35 +650,34 @@ export const MediaGallery: React.FC = () => {
                   <UploadCloud className="w-7 h-7" />
                 </div>
                 <h3 className="font-bold text-sm text-slate-800">
-                  No photos in vault yet
+                  No {tabTitle.toLowerCase()} in vault yet
                 </h3>
                 <p className="text-xs text-slate-400 max-w-sm mx-auto">
-                  Click anywhere here to upload and envelope-encrypt your photos with client-side zero-knowledge proofs.
+                  Click anywhere here to upload and envelope-encrypt your {tabTitle.toLowerCase()} with client-side zero-knowledge proofs.
                 </p>
                 <button
                   type="button"
                   className="px-4 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs shadow-md shadow-rose-500/25 transition-all"
                 >
-                  + Upload Photos Now
+                  + Upload {tabTitle} Now
                 </button>
               </div>
             ) : (
               <div
-                className={`grid gap-2.5 sm:gap-3 ${
+                className={`grid gap-3 sm:gap-4 ${
                   gridDensity === 'small'
-                    ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8'
+                    ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7'
                     : gridDensity === 'large'
-                    ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3'
+                    ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
                     : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'
                 }`}
               >
-                {filteredMedia.map((file, idx) => (
+                {filteredMedia.map((file) => (
                   <MediaTile
                     key={file.id}
                     file={file}
                     category={getMediaCategory(file)}
                     gridDensity={gridDensity}
-                    index={idx}
                     isSelectionMode={isSelectionMode}
                     isSelected={selectedIds.includes(file.id)}
                     onSelectToggle={() => toggleSelectId(file.id)}
@@ -667,9 +694,9 @@ export const MediaGallery: React.FC = () => {
           <div className="pt-4 border-t border-slate-200/60 flex items-center justify-between text-xs text-slate-400 font-medium">
             <div className="flex items-center space-x-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>AES-256-GCM Envelope Encryption Enabled</span>
+              <span>AES-256-GCM Envelope Encryption Active</span>
             </div>
-            <span>{filteredMedia.length} Photos in Shielded Ledger</span>
+            <span>{filteredMedia.length} {tabTitle} in Shielded Ledger</span>
           </div>
         </main>
       </div>
