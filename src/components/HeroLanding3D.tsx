@@ -99,24 +99,14 @@ export const HeroLanding3D: React.FC<HeroLanding3DProps> = ({ onStartJourney }) 
           Everything you need to store, organize, and share your files—effortlessly and securely, with zero-knowledge cryptographic privacy from anywhere.
         </p>
 
-        {/* Glowing CTA Button */}
-        <div className="mt-8 flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+        {/* Glowing CTA Button (Matching Reference 1) */}
+        <div className="mt-8 flex items-center justify-center">
           <button
             onClick={onStartJourney}
-            className="group px-8 py-4 rounded-full bg-gradient-to-r from-sky-400 via-sky-500 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-white font-display font-bold text-sm sm:text-base shadow-[0_10px_30px_rgba(56,189,248,0.4)] hover:shadow-[0_15px_40px_rgba(56,189,248,0.6)] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center space-x-2.5"
+            className="group px-10 py-4 rounded-full bg-gradient-to-r from-sky-400 via-sky-500 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-white font-display font-bold text-base sm:text-lg shadow-[0_12px_35px_rgba(56,189,248,0.45)] hover:shadow-[0_16px_45px_rgba(56,189,248,0.65)] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center space-x-3 cursor-pointer"
           >
             <span>Start your journey</span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </button>
-
-          <button
-            onClick={() => {
-              const elem = document.querySelector('#vault-dashboard');
-              if (elem) elem.scrollIntoView({ behavior: 'smooth' });
-            }}
-            className="px-6 py-4 rounded-full bg-white/70 hover:bg-white/90 backdrop-blur-md border border-white text-slate-700 hover:text-slate-900 font-semibold text-xs sm:text-sm shadow-sm transition-all"
-          >
-            Open Live Vault Dashboard ↓
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
           </button>
         </div>
 

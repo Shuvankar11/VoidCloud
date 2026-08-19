@@ -33,8 +33,8 @@ interface VaultContextType {
   setProofModalOpen: (open: boolean) => void;
   activePreviewFile: ShieldedFile | null;
   setActivePreviewFile: (file: ShieldedFile | null) => void;
-  activeView: 'home' | 'gallery' | 'payments';
-  setActiveView: (view: 'home' | 'gallery' | 'payments') => void;
+  activeView: 'landing' | 'dashboard' | 'home' | 'gallery' | 'payments';
+  setActiveView: (view: 'landing' | 'dashboard' | 'home' | 'gallery' | 'payments') => void;
   telegramConfig: TelegramConfig;
   setTelegramConfig: (config: TelegramConfig) => void;
   isTelegramModalOpen: boolean;
@@ -102,24 +102,30 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [telegramConfig, setTelegramConfigState] = useState<TelegramConfig>(getStoredTelegramConfig);
   const [isTelegramModalOpen, setIsTelegramModalOpen] = useState(false);
   const [activePreviewFile, setActivePreviewFile] = useState<ShieldedFile | null>(null);
-  const [activeView, setActiveViewState] = useState<'home' | 'gallery' | 'payments'>(() => {
+  const [activeView, setActiveViewState] = useState<'landing' | 'dashboard' | 'home' | 'gallery' | 'payments'>(() => {
     if (typeof window !== 'undefined') {
       const h = window.location.hash.toLowerCase();
       if (h.includes('gallery')) return 'gallery';
       if (h.includes('payments') || h.includes('history') || h.includes('transactions')) return 'payments';
+      if (h.includes('dashboard') || h.includes('vault')) return 'dashboard';
+      if (h.includes('landing') || h.includes('overview')) return 'landing';
     }
-    return 'home';
+    return user ? 'dashboard' : 'landing';
   });
 
-  const setActiveView = useCallback((view: 'home' | 'gallery' | 'payments') => {
+  const setActiveView = useCallback((view: 'landing' | 'dashboard' | 'home' | 'gallery' | 'payments') => {
     setActiveViewState(view);
     if (typeof window !== 'undefined') {
       if (view === 'gallery') {
         window.location.hash = 'gallery';
       } else if (view === 'payments') {
         window.location.hash = 'history';
+      } else if (view === 'dashboard') {
+        window.location.hash = 'dashboard';
+      } else if (view === 'landing') {
+        window.location.hash = 'overview';
       } else {
-        if (window.location.hash.includes('gallery') || window.location.hash.includes('history') || window.location.hash.includes('payments')) {
+        if (window.location.hash.includes('gallery') || window.location.hash.includes('history') || window.location.hash.includes('payments') || window.location.hash.includes('dashboard')) {
           history.pushState('', document.title, window.location.pathname + window.location.search);
         }
       }

@@ -52,9 +52,19 @@ const GlobalFileViewer: React.FC = () => {
 };
 
 const AppContent: React.FC = () => {
-  const { activeView } = useVault();
-  const { isAuthModalOpen, setIsAuthModalOpen } = useAuth();
+  const { activeView, setActiveView } = useVault();
+  const { user, isAuthModalOpen, setIsAuthModalOpen } = useAuth();
   const { isExplorerModalOpen, setIsExplorerModalOpen, selectedExplorerTx, setSelectedExplorerTx } = useWeb3Wallet();
+
+  const isDashboardView = activeView === 'dashboard' || (Boolean(user) && activeView !== 'landing' && activeView !== 'gallery' && activeView !== 'payments');
+
+  const handleStartJourney = () => {
+    if (user) {
+      setActiveView('dashboard');
+    } else {
+      setIsAuthModalOpen(true);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#030712] text-slate-100 relative selection:bg-sky-500 selection:text-black">
@@ -67,24 +77,20 @@ const AppContent: React.FC = () => {
       {/* Navigation Bar with User Profile, Web3 Wallet & Auth Status */}
       <Navbar />
 
-      {/* Conditional Page Views: Dedicated Media Vault VS. Payment History VS. Home Landing */}
+      {/* Conditional Page Views: Dedicated Media Vault VS. Payment History VS. Dedicated Dashboard VS. Hero Landing */}
       <main className="space-y-0">
         {activeView === 'gallery' ? (
           <MediaGallery />
         ) : activeView === 'payments' ? (
           <PaymentHistory />
+        ) : isDashboardView ? (
+          /* DEDICATED STORAGE VAULT DASHBOARD VIEW (Reference 3 & 4) */
+          <StorageVaultDashboard />
         ) : (
+          /* DEDICATED HERO LANDING VIEW (Reference 1) */
           <>
-            {/* 3D Floating Clouds Hero Landing (Reference 1) */}
-            <HeroLanding3D onStartJourney={() => setIsAuthModalOpen(true)} />
-
-            {/* Clean White/Aurora Storage Vault Dashboard (Reference 3 & 4) */}
-            <StorageVaultDashboard />
-
-            {/* Midnight Preprod Compact Smart Contract Spec & Circuit Explorer */}
+            <HeroLanding3D onStartJourney={handleStartJourney} />
             <CompactContractViewer />
-
-            {/* Privacy Architecture & Infrastructure Features */}
             <FeatureGrid />
           </>
         )}

@@ -10,10 +10,10 @@ export const Navbar: React.FC = () => {
   const { wallet, setIsWalletModalOpen, setIsPricingModalOpen } = useWeb3Wallet();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleNavClick = (targetView: 'home' | 'gallery' | 'payments', hash?: string) => {
+  const handleNavClick = (targetView: 'landing' | 'dashboard' | 'home' | 'gallery' | 'payments', hash?: string) => {
     setActiveView(targetView);
     setMobileMenuOpen(false);
-    if (targetView === 'home' && hash) {
+    if ((targetView === 'home' || targetView === 'landing') && hash) {
       setTimeout(() => {
         const elem = document.querySelector(hash);
         if (elem) elem.scrollIntoView({ behavior: 'smooth' });
@@ -28,7 +28,7 @@ export const Navbar: React.FC = () => {
         {/* Left: Brand Logo */}
         <div className="flex items-center space-x-2 flex-shrink-0">
           <button
-            onClick={() => handleNavClick('home', '#overview')}
+            onClick={() => handleNavClick(user ? 'dashboard' : 'landing', '#overview')}
             className="flex items-center space-x-2 group text-left"
           >
             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl overflow-hidden border border-sky-500/40 flex items-center justify-center group-hover:border-sky-400 group-hover:shadow-[0_0_15px_rgba(56,189,248,0.3)] transition-all flex-shrink-0 bg-black">
@@ -47,9 +47,9 @@ export const Navbar: React.FC = () => {
         {/* Center: Navigation Links (Optimized & Compact) */}
         <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 text-xs font-medium text-slate-300 flex-shrink">
           <button
-            onClick={() => handleNavClick('home', '#overview')}
+            onClick={() => handleNavClick('landing', '#overview')}
             className={`px-2.5 py-1.5 rounded-lg transition-all whitespace-nowrap ${
-              activeView === 'home'
+              activeView === 'landing' || activeView === 'home'
                 ? 'text-white font-semibold bg-slate-800/60'
                 : 'text-slate-400 hover:text-sky-300'
             }`}
@@ -57,12 +57,18 @@ export const Navbar: React.FC = () => {
             Overview
           </button>
 
+          {/* DEDICATED VAULT DASHBOARD BUTTON */}
           <button
-            onClick={() => handleNavClick('home', '#storage')}
-            className="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-sky-300 transition-colors flex items-center gap-1 whitespace-nowrap"
+            onClick={() => handleNavClick('dashboard')}
+            className={`px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap ${
+              activeView === 'dashboard'
+                ? 'bg-sky-500/20 text-sky-300 border border-sky-500/50 shadow-[0_0_15px_rgba(56,189,248,0.3)] font-bold'
+                : 'text-slate-400 hover:text-sky-300 hover:bg-slate-800/40 border border-transparent'
+            }`}
           >
-            <span>Quota</span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-sky-950/80 border border-sky-500/40 text-sky-300 font-mono">
+            <HardDrive className="w-3.5 h-3.5 text-sky-400" />
+            <span>Vault Dashboard</span>
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-sky-950/80 border border-sky-500/40 text-sky-300 font-mono font-bold">
               {session.quotaGB}GB
             </span>
           </button>
@@ -100,14 +106,7 @@ export const Navbar: React.FC = () => {
           </button>
 
           <button
-            onClick={() => handleNavClick('home', '#vault-dashboard')}
-            className="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-sky-300 transition-colors whitespace-nowrap"
-          >
-            Object Vault
-          </button>
-
-          <button
-            onClick={() => handleNavClick('home', '#contract')}
+            onClick={() => handleNavClick('landing', '#contract')}
             className="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-sky-300 transition-colors whitespace-nowrap"
           >
             Architecture & Circuits
@@ -155,7 +154,10 @@ export const Navbar: React.FC = () => {
                 {user.displayName || user.email.split('@')[0]}
               </span>
               <button
-                onClick={() => signOut()}
+                onClick={() => {
+                  signOut();
+                  setActiveView('landing');
+                }}
                 title="Sign out"
                 className="text-slate-400 hover:text-rose-400 transition-colors p-0.5"
               >
