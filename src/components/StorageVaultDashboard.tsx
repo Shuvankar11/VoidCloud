@@ -39,12 +39,13 @@ export const StorageVaultDashboard: React.FC = () => {
     claimBonusWithZKProof,
     shredFile,
     decryptAndDownloadFile,
+    toggleStarFile,
     uploadAndEncryptFile,
   } = useVault();
   const { user } = useAuth();
   const { setIsPricingModalOpen } = useWeb3Wallet();
 
-  const [activeTab, setActiveTab] = useState<'home' | 'files' | 'shared' | 'starred' | 'trash'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'files' | 'starred' | 'trash'>('home');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewLayout, setViewLayout] = useState<'list' | 'grid'>('list');
   const [showAnnouncement, setShowAnnouncement] = useState(true);
@@ -78,6 +79,7 @@ export const StorageVaultDashboard: React.FC = () => {
   // Real Active Files & Category Breakdown
   const activeFiles = useMemo(() => files.filter((f) => f.status === 'shielded'), [files]);
   const trashFiles = useMemo(() => files.filter((f) => f.status === 'shredded'), [files]);
+  const starredFiles = useMemo(() => activeFiles.filter((f) => f.isStarred), [activeFiles]);
 
   const imageFiles = useMemo(() => activeFiles.filter((f) => getFileCategory(f) === 'image'), [activeFiles]);
   const videoFiles = useMemo(() => activeFiles.filter((f) => getFileCategory(f) === 'video'), [activeFiles]);
@@ -106,7 +108,12 @@ export const StorageVaultDashboard: React.FC = () => {
 
   // Filtered files
   const filteredFiles = useMemo(() => {
-    const list = activeTab === 'trash' ? trashFiles : activeFiles;
+    const list = activeTab === 'trash'
+      ? trashFiles
+      : activeTab === 'starred'
+      ? starredFiles
+      : activeFiles;
+
     return list.filter((file) => {
       const matchesSearch = file.name.toLowerCase().includes(searchQuery.toLowerCase());
       if (!matchesSearch) return false;
@@ -114,7 +121,7 @@ export const StorageVaultDashboard: React.FC = () => {
       if (selectedCategory === 'all') return true;
       return getFileCategory(file) === selectedCategory;
     });
-  }, [activeFiles, trashFiles, activeTab, searchQuery, selectedCategory]);
+  }, [activeFiles, trashFiles, starredFiles, activeTab, searchQuery, selectedCategory]);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -227,31 +234,32 @@ export const StorageVaultDashboard: React.FC = () => {
               </button>
 
               <button
-                onClick={() => setActiveTab('shared')}
-                className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-2xl transition-colors cursor-pointer ${
-                  activeTab === 'shared'
-                    ? 'bg-sky-50 text-sky-600 font-bold'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                }`}
-              >
-                <Share2 className="w-4 h-4 text-slate-400" />
-                <span>Shared Files</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('starred')}
-                className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-2xl transition-colors cursor-pointer ${
+                onClick={() => {
+                  setActiveTab('starred');
+                  setSelectedCategory('all');
+                }}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl transition-colors cursor-pointer ${
                   activeTab === 'starred'
-                    ? 'bg-sky-50 text-sky-600 font-bold'
+                    ? 'bg-amber-50 text-amber-700 font-bold'
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
-                <Star className="w-4 h-4 text-slate-400" />
-                <span>Starred</span>
+                <div className="flex items-center space-x-3">
+                  <Star className={`w-4 h-4 ${activeTab === 'starred' || starredFiles.length > 0 ? 'text-amber-500 fill-amber-400' : 'text-slate-400'}`} />
+                  <span>Starred</span>
+                </div>
+                {starredFiles.length > 0 && (
+                  <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-100 text-amber-800 font-bold">
+                    {starredFiles.length}
+                  </span>
+                )}
               </button>
 
               <button
-                onClick={() => setActiveTab('trash')}
+                onClick={() => {
+                  setActiveTab('trash');
+                  setSelectedCategory('all');
+                }}
                 className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl transition-colors cursor-pointer ${
                   activeTab === 'trash'
                     ? 'bg-rose-50 text-rose-600 font-bold'
@@ -464,7 +472,13 @@ export const StorageVaultDashboard: React.FC = () => {
           <div>
             <div className="flex items-center justify-between mb-3.5">
               <h2 className="font-display font-black text-sm text-slate-900 tracking-tight">
-                {activeTab === 'trash' ? 'Trash & Revoked Files' : 'Recent Files'}
+                {activeTab === 'trash'
+                  ? 'Trash & Revoked Files'
+                  : activeTab === 'starred'
+                  ? 'Starred Files'
+                  : activeTab === 'files'
+                  ? 'All Files'
+                  : 'Recent Files'}
               </h2>
               <span className="text-xs text-slate-400 font-semibold">
                 Sort by: <strong className="text-slate-700">Modified Date ↓</strong>
@@ -474,18 +488,30 @@ export const StorageVaultDashboard: React.FC = () => {
             {/* Empty State */}
             {filteredFiles.length === 0 ? (
               <div
-                onClick={() => fileInputRef.current?.click()}
+                onClick={() => activeTab !== 'trash' && activeTab !== 'starred' && fileInputRef.current?.click()}
                 className="p-10 rounded-2xl border-2 border-dashed border-slate-200 hover:border-sky-400 bg-slate-50/50 hover:bg-sky-50/30 text-center transition-all cursor-pointer space-y-2"
               >
                 <div className="w-12 h-12 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center mx-auto shadow-xs">
-                  <UploadCloud className="w-6 h-6" />
+                  {activeTab === 'starred' ? (
+                    <Star className="w-6 h-6 text-amber-500 fill-amber-400" />
+                  ) : activeTab === 'trash' ? (
+                    <Trash2 className="w-6 h-6 text-rose-500" />
+                  ) : (
+                    <UploadCloud className="w-6 h-6" />
+                  )}
                 </div>
                 <div className="font-bold text-xs text-slate-800">
-                  {activeTab === 'trash' ? 'Trash is empty' : 'No files uploaded yet'}
+                  {activeTab === 'trash'
+                    ? 'Trash is empty'
+                    : activeTab === 'starred'
+                    ? 'No starred files yet'
+                    : 'No files uploaded yet'}
                 </div>
                 <p className="text-[11px] text-slate-400 max-w-sm mx-auto">
                   {activeTab === 'trash'
                     ? 'Revoked and shredded files will appear here.'
+                    : activeTab === 'starred'
+                    ? 'Click the star icon (⭐) on any file in your vault to bookmark it for instant access.'
                     : 'Click here or drag and drop any image, video, PDF, or document to upload with zero-knowledge envelope encryption.'}
                 </p>
               </div>
@@ -496,15 +522,27 @@ export const StorageVaultDashboard: React.FC = () => {
                   <div
                     key={file.id}
                     onClick={() => setActivePreviewFile(file)}
-                    className="p-4 rounded-2xl bg-white border border-slate-200 hover:border-sky-300 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between space-y-3 group"
+                    className="p-4 rounded-2xl bg-white border border-slate-200 hover:border-sky-300 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between space-y-3 group relative"
                   >
                     <div className="flex items-start justify-between">
                       <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 group-hover:scale-105 transition-transform">
                         {renderFileIcon(file)}
                       </div>
-                      <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
-                        ZK Proven
-                      </span>
+                      <div className="flex items-center space-x-1.5">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleStarFile(file.id);
+                          }}
+                          title={file.isStarred ? 'Remove from Starred' : 'Add to Starred'}
+                          className="p-1 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+                        >
+                          <Star className={`w-4 h-4 ${file.isStarred ? 'text-amber-400 fill-amber-400' : 'text-slate-300 hover:text-amber-400'}`} />
+                        </button>
+                        <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
+                          ZK Proven
+                        </span>
+                      </div>
                     </div>
 
                     <div>
@@ -538,13 +576,23 @@ export const StorageVaultDashboard: React.FC = () => {
                         className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
                         onClick={() => setActivePreviewFile(file)}
                       >
-                        {/* File Name & Icon */}
+                        {/* File Name & Icon & Star */}
                         <td className="py-3 px-4">
-                          <div className="flex items-center space-x-3">
-                            <div className="p-2 rounded-xl bg-slate-50 border border-slate-100">
+                          <div className="flex items-center space-x-2.5">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleStarFile(file.id);
+                              }}
+                              title={file.isStarred ? 'Remove from Starred' : 'Add to Starred'}
+                              className="p-1 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer flex-shrink-0"
+                            >
+                              <Star className={`w-3.5 h-3.5 ${file.isStarred ? 'text-amber-400 fill-amber-400' : 'text-slate-300 hover:text-amber-400'}`} />
+                            </button>
+                            <div className="p-2 rounded-xl bg-slate-50 border border-slate-100 flex-shrink-0">
                               {renderFileIcon(file)}
                             </div>
-                            <div className="truncate max-w-[220px] sm:max-w-xs">
+                            <div className="truncate max-w-[200px] sm:max-w-xs">
                               <div className="font-bold text-slate-900 truncate" title={file.name}>
                                 {file.name}
                               </div>
@@ -589,6 +637,17 @@ export const StorageVaultDashboard: React.FC = () => {
 
                             {activeMenuFileId === file.id && (
                               <div className="absolute right-0 mt-1 w-36 rounded-xl bg-white border border-slate-200 shadow-lg py-1 z-30 text-xs font-semibold">
+                                <button
+                                  onClick={() => {
+                                    toggleStarFile(file.id);
+                                    setActiveMenuFileId(null);
+                                  }}
+                                  className="w-full px-3 py-1.5 hover:bg-amber-50 text-slate-700 flex items-center space-x-2 cursor-pointer"
+                                >
+                                  <Star className={`w-3.5 h-3.5 ${file.isStarred ? 'text-amber-500 fill-amber-400' : 'text-amber-500'}`} />
+                                  <span>{file.isStarred ? 'Unstar' : 'Star'}</span>
+                                </button>
+
                                 <button
                                   onClick={() => {
                                     setActivePreviewFile(file);

@@ -45,6 +45,7 @@ interface VaultContextType {
   shredFile: (fileId: string) => Promise<void>;
   deleteFilePermanently: (fileId: string) => Promise<void>;
   decryptAndDownloadFile: (file: ShieldedFile) => Promise<void>;
+  toggleStarFile: (fileId: string) => void;
   upgradeStorageQuota: (newTotalGB: number, planName: string) => void;
   resetToInitial: () => void;
   clearAllFiles: () => void;
@@ -548,6 +549,20 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, []);
 
+  const toggleStarFile = useCallback((fileId: string) => {
+    setFiles((prev) => {
+      const updated = prev.map((f) =>
+        f.id === fileId ? { ...f, isStarred: !f.isStarred } : f
+      );
+      try {
+        localStorage.setItem(`voidcloud_v2_files_${activeUserId}`, JSON.stringify(updated));
+      } catch (e) {
+        console.error(e);
+      }
+      return updated;
+    });
+  }, [activeUserId]);
+
   const resetToInitial = useCallback(() => {
     const freshSession = createInitialSessionForUser(activeUserId, activeUserEmail);
     setSession(freshSession);
@@ -578,6 +593,7 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         shredFile,
         deleteFilePermanently,
         decryptAndDownloadFile,
+        toggleStarFile,
         upgradeStorageQuota,
         resetToInitial,
         clearAllFiles,

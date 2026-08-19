@@ -10,6 +10,7 @@ export interface ShieldedFile {
   mimeType?: string;
   ownerId?: string;
   ownerEmail?: string;
+  isStarred?: boolean;
   rawBlob?: Blob;
   decryptedBlobUrl?: string;
   rawKeyHex?: string;
