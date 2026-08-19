@@ -5,14 +5,14 @@ import { WalletProvider } from './context/WalletContext';
 import { CustomCursor } from './components/CustomCursor';
 import { TopMarquee } from './components/TopMarquee';
 import { Navbar } from './components/Navbar';
-import { HeroSection } from './components/HeroSection';
-import { StorageVisualizer } from './components/StorageVisualizer';
+import { useAuth } from './context/AuthContext';
+import { HeroLanding3D } from './components/HeroLanding3D';
+import { StorageVaultDashboard } from './components/StorageVaultDashboard';
+import { YetiAuthModal } from './components/YetiAuthModal';
 import { MediaGallery } from './components/MediaGallery';
-import { ShieldedFileManager } from './components/ShieldedFileManager';
 import { FeatureGrid } from './components/FeatureGrid';
 import { Footer } from './components/Footer';
 import { ZKProofModal } from './components/ZKProofModal';
-import { AuthModal } from './components/AuthModal';
 import { WalletConnectModal } from './components/WalletConnectModal';
 import { StoragePricingModal } from './components/StoragePricingModal';
 import { TelegramSettingsModal } from './components/TelegramSettingsModal';
@@ -53,6 +53,7 @@ const GlobalFileViewer: React.FC = () => {
 
 const AppContent: React.FC = () => {
   const { activeView } = useVault();
+  const { isAuthModalOpen, setIsAuthModalOpen } = useAuth();
   const { isExplorerModalOpen, setIsExplorerModalOpen, selectedExplorerTx, setSelectedExplorerTx } = useWeb3Wallet();
 
   return (
@@ -67,17 +68,23 @@ const AppContent: React.FC = () => {
       <Navbar />
 
       {/* Conditional Page Views: Dedicated Media Vault VS. Payment History VS. Home Landing */}
-      <main className="space-y-6">
+      <main className="space-y-0">
         {activeView === 'gallery' ? (
           <MediaGallery />
         ) : activeView === 'payments' ? (
           <PaymentHistory />
         ) : (
           <>
-            <HeroSection />
-            <StorageVisualizer />
-            <ShieldedFileManager />
+            {/* 3D Floating Clouds Hero Landing (Reference 1) */}
+            <HeroLanding3D onStartJourney={() => setIsAuthModalOpen(true)} />
+
+            {/* Clean White/Aurora Storage Vault Dashboard (Reference 3 & 4) */}
+            <StorageVaultDashboard />
+
+            {/* Midnight Preprod Compact Smart Contract Spec & Circuit Explorer */}
             <CompactContractViewer />
+
+            {/* Privacy Architecture & Infrastructure Features */}
             <FeatureGrid />
           </>
         )}
@@ -86,11 +93,11 @@ const AppContent: React.FC = () => {
       {/* Cloud Infrastructure Footer */}
       <Footer />
 
+      {/* Interactive Cursor-Reactive Yeti Authentication Modal (Reference 2) */}
+      <YetiAuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+
       {/* Real-time ZK Proof Synthesizer Modal */}
       <ZKProofModal />
-
-      {/* User Account & Authentication Modal */}
-      <AuthModal />
 
       {/* Web3 Multi-Wallet Connect Modal (Midnight Lace / MetaMask) */}
       <WalletConnectModal />

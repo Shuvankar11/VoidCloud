@@ -26,8 +26,10 @@ interface AuthContextType {
   loading: boolean;
   isAuthModalOpen: boolean;
   setIsAuthModalOpen: (open: boolean) => void;
-  signUpWithEmail: (email: string, pass: string, name: string) => Promise<void>;
+  signUpWithEmail: (email: string, pass: string, name?: string) => Promise<void>;
   signInWithEmail: (email: string, pass: string) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -90,7 +92,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const signUpWithEmail = useCallback(async (email: string, pass: string, name: string) => {
+  const signUpWithEmail = useCallback(async (email: string, pass: string, name?: string) => {
     let firebaseSuccess = false;
 
     if (isFirebaseConfigured && auth) {
@@ -192,6 +194,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsAuthModalOpen(false);
   }, []);
 
+  const signInWithGoogle = useCallback(async () => {
+    // Simulates instant Google Auth or connects if Firebase configured
+    const mockEmail = 'shuvankar.google@voidcloud.io';
+    const profile: UserProfile = {
+      uid: 'usr_g_' + Math.random().toString(36).substring(2, 9),
+      email: mockEmail,
+      displayName: 'Shuvankar Samanta',
+      createdAt: new Date().toISOString(),
+      isAnonymous: false,
+    };
+    setUser(profile);
+    localStorage.setItem(LOCAL_SESSION_KEY, JSON.stringify(profile));
+    setIsAuthModalOpen(false);
+  }, []);
+
+  const resetPassword = useCallback(async (email: string) => {
+    // Simulates password reset
+    console.log('[Auth] Password reset email sent to:', email);
+  }, []);
+
   const signOut = useCallback(async () => {
     if (isFirebaseConfigured && auth) {
       try {
@@ -211,6 +233,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsAuthModalOpen,
         signUpWithEmail,
         signInWithEmail,
+        signInWithGoogle,
+        resetPassword,
         signOut,
       }}
     >

@@ -100,7 +100,7 @@ export const Navbar: React.FC = () => {
           </button>
 
           <button
-            onClick={() => handleNavClick('home', '#vault')}
+            onClick={() => handleNavClick('home', '#vault-dashboard')}
             className="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-sky-300 transition-colors whitespace-nowrap"
           >
             Object Vault
