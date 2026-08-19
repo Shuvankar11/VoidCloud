@@ -31,8 +31,8 @@ export const Navbar: React.FC = () => {
             onClick={() => handleNavClick('home', '#overview')}
             className="flex items-center space-x-2 group text-left"
           >
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-sky-500/20 via-blue-600/20 to-emerald-500/20 border border-sky-500/40 flex items-center justify-center group-hover:border-sky-400 group-hover:shadow-[0_0_15px_rgba(56,189,248,0.3)] transition-all flex-shrink-0">
-              <Cloud className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-sky-400 group-hover:scale-110 transition-transform" />
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl overflow-hidden border border-sky-500/40 flex items-center justify-center group-hover:border-sky-400 group-hover:shadow-[0_0_15px_rgba(56,189,248,0.3)] transition-all flex-shrink-0 bg-black">
+              <img src="/voidcloud-logo.jpg" alt="Void Logo" className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
             </div>
             <div>
               <div className="flex items-center space-x-1">

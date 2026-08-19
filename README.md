@@ -1,12 +1,21 @@
+<p align="center">
+  <img src="public/voidcloud-logo.jpg" alt="VoidCloud Logo" width="180" style="border-radius: 20px;" />
+</p>
+
 # 🌌 VoidCloud // Privacy-First Decentralized Cloud Storage on Midnight Network
 
-[![CI/CD Pipeline](https://github.com/Shuvankar11/VoidCloud/actions/workflows/ci.yml/badge.svg)](https://github.com/Shuvankar11/VoidCloud/actions/workflows/ci.yml)
-[![Live Production dApp](https://img.shields.io/badge/Live%20dApp-void--cloude.vercel.app-00F2FE?style=for-the-badge&logo=vercel)](https://void-cloude.vercel.app/)
-[![Midnight Network](https://img.shields.io/badge/Midnight-Preprod-7F00FF?style=for-the-badge&logo=shield)](https://midnight.network)
-[![ZK-SNARK](https://img.shields.io/badge/ZK--SNARK-Halo2%20%2F%20PLONK-00F2FE?style=for-the-badge)](https://midnight.network)
-[![Smart Contract](https://img.shields.io/badge/Compact-v0.20.4-10B981?style=for-the-badge)](https://midnight.network)
-[![Hackathon Submission](https://img.shields.io/badge/RiseIn%20Midnight-Level%203%20First%20Quarter-F59E0B?style=for-the-badge)]()
-[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
+<p align="center">
+  <em>Enterprise-Grade Zero-Knowledge Cloud Vault powered by Compact 0.20 Smart Contracts, Halo2 ZK Proofs, and AES-256-GCM Envelope Encryption on Midnight Preprod</em>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Shuvankar11/VoidCloud/actions/workflows/ci.yml"><img src="https://github.com/Shuvankar11/VoidCloud/actions/workflows/ci.yml/badge.svg" alt="CI/CD Pipeline" /></a>
+  <a href="https://void-cloude.vercel.app/"><img src="https://img.shields.io/badge/Live%20dApp-void--cloude.vercel.app-00F2FE?style=for-the-badge&logo=vercel" alt="Live dApp" /></a>
+  <a href="https://midnight.network"><img src="https://img.shields.io/badge/Midnight-Preprod-7F00FF?style=for-the-badge&logo=shield" alt="Midnight Network" /></a>
+  <a href="https://midnight.network"><img src="https://img.shields.io/badge/ZK--SNARK-Halo2%20%2F%20PLONK-00F2FE?style=for-the-badge" alt="ZK-SNARK" /></a>
+  <a href="https://midnight.network"><img src="https://img.shields.io/badge/Compact-v0.20.4-10B981?style=for-the-badge" alt="Smart Contract" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License" /></a>
+</p>
 
 > 🌐 **Live Production dApp**: [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/)  
 > 📜 **Deployed Preprod Contract**: `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e`  
