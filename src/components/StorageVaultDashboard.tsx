@@ -557,16 +557,16 @@ export const StorageVaultDashboard: React.FC = () => {
                 ))}
               </div>
             ) : (
-              /* List Table Layout (Clean, Overflow-Visible, No Ugly Scrollbars) */
+              /* List Table Layout (Clean, Beautiful Padding, Perfectly Centered 3 Dots) */
               <div className="rounded-2xl border border-slate-200/90 bg-white shadow-xs overflow-visible">
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
                     <tr className="border-b border-slate-100 text-slate-400 font-bold text-[11px] bg-slate-50/70">
-                      <th className="py-3.5 px-4">NAME ↑</th>
+                      <th className="py-3.5 pl-6 pr-4">NAME ↑</th>
                       <th className="py-3.5 px-4">MODIFIED</th>
                       <th className="py-3.5 px-4">SIZE</th>
                       <th className="py-3.5 px-4">ZK SHIELD</th>
-                      <th className="py-3.5 px-4 text-right">ACTIONS</th>
+                      <th className="py-3.5 pl-4 pr-6 text-center w-24">ACTIONS</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -577,7 +577,7 @@ export const StorageVaultDashboard: React.FC = () => {
                         onClick={() => setActivePreviewFile(file)}
                       >
                         {/* File Name & Icon & Star */}
-                        <td className="py-3.5 px-4">
+                        <td className="py-3.5 pl-6 pr-4">
                           <div className="flex items-center space-x-3">
                             <button
                               onClick={(e) => {
@@ -592,7 +592,7 @@ export const StorageVaultDashboard: React.FC = () => {
                             <div className="p-2 rounded-xl bg-slate-50 border border-slate-100 flex-shrink-0">
                               {renderFileIcon(file)}
                             </div>
-                            <div className="truncate max-w-[200px] sm:max-w-xs">
+                            <div className="truncate max-w-[220px] sm:max-w-xs">
                               <div className="font-bold text-slate-900 truncate" title={file.name}>
                                 {file.name}
                               </div>
@@ -625,97 +625,77 @@ export const StorageVaultDashboard: React.FC = () => {
                           </span>
                         </td>
 
-                        {/* Actions Menu */}
-                        <td className="py-3.5 px-4 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
-                          <div className="flex items-center justify-end space-x-1 relative">
-                            {/* Quick Action: Preview */}
+                        {/* Actions Menu (Centered & Well Padded) */}
+                        <td className="py-3.5 pl-4 pr-6 text-center w-24 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                          <div className="relative inline-flex items-center justify-center">
                             <button
-                              onClick={() => setActivePreviewFile(file)}
-                              title="Preview file"
-                              className="p-1.5 rounded-lg hover:bg-sky-50 text-slate-400 hover:text-sky-600 transition-colors cursor-pointer"
+                              onClick={() => setActiveMenuFileId(activeMenuFileId === file.id ? null : file.id)}
+                              title="File actions"
+                              className={`p-2 rounded-xl transition-all cursor-pointer ${
+                                activeMenuFileId === file.id
+                                  ? 'bg-slate-200 text-slate-900 shadow-xs'
+                                  : 'hover:bg-slate-100 text-slate-400 hover:text-slate-700'
+                              }`}
                             >
-                              <Eye className="w-4 h-4" />
+                              <MoreHorizontal className="w-4 h-4" />
                             </button>
 
-                            {/* Quick Action: Download */}
-                            <button
-                              onClick={() => decryptAndDownloadFile(file)}
-                              title="Decrypt and download"
-                              className="p-1.5 rounded-lg hover:bg-emerald-50 text-slate-400 hover:text-emerald-600 transition-colors cursor-pointer"
-                            >
-                              <Download className="w-4 h-4" />
-                            </button>
+                            {/* Dropdown Menu (Z-50, Unclipped, Styled Cleanly) */}
+                            {activeMenuFileId === file.id && (
+                              <>
+                                <div
+                                  className="fixed inset-0 z-40"
+                                  onClick={() => setActiveMenuFileId(null)}
+                                />
+                                <div className="absolute right-0 top-full mt-2 w-44 rounded-2xl bg-white border border-slate-200 shadow-2xl p-1.5 z-50 text-xs font-semibold animate-in fade-in zoom-in-95 text-left">
+                                  <button
+                                    onClick={() => {
+                                      toggleStarFile(file.id);
+                                      setActiveMenuFileId(null);
+                                    }}
+                                    className="w-full px-3 py-2 rounded-xl hover:bg-amber-50 text-slate-700 flex items-center space-x-2.5 transition-colors cursor-pointer text-left"
+                                  >
+                                    <Star className={`w-4 h-4 ${file.isStarred ? 'text-amber-500 fill-amber-400' : 'text-amber-500'}`} />
+                                    <span>{file.isStarred ? 'Unstar File' : 'Star File'}</span>
+                                  </button>
 
-                            {/* 3 Dots Menu Button */}
-                            <div className="relative">
-                              <button
-                                onClick={() => setActiveMenuFileId(activeMenuFileId === file.id ? null : file.id)}
-                                className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-                                  activeMenuFileId === file.id
-                                    ? 'bg-slate-200 text-slate-900'
-                                    : 'hover:bg-slate-100 text-slate-400 hover:text-slate-700'
-                                }`}
-                              >
-                                <MoreHorizontal className="w-4 h-4" />
-                              </button>
+                                  <button
+                                    onClick={() => {
+                                      setActivePreviewFile(file);
+                                      setActiveMenuFileId(null);
+                                    }}
+                                    className="w-full px-3 py-2 rounded-xl hover:bg-sky-50 text-slate-700 flex items-center space-x-2.5 transition-colors cursor-pointer text-left"
+                                  >
+                                    <Eye className="w-4 h-4 text-sky-500" />
+                                    <span>Preview</span>
+                                  </button>
 
-                              {/* Dropdown Menu (Z-50, Unclipped, Styled Cleanly) */}
-                              {activeMenuFileId === file.id && (
-                                <>
-                                  <div
-                                    className="fixed inset-0 z-40"
-                                    onClick={() => setActiveMenuFileId(null)}
-                                  />
-                                  <div className="absolute right-0 top-full mt-1.5 w-44 rounded-2xl bg-white border border-slate-200 shadow-2xl p-1.5 z-50 text-xs font-semibold animate-in fade-in zoom-in-95">
-                                    <button
-                                      onClick={() => {
-                                        toggleStarFile(file.id);
-                                        setActiveMenuFileId(null);
-                                      }}
-                                      className="w-full px-3 py-2 rounded-xl hover:bg-amber-50 text-slate-700 flex items-center space-x-2.5 transition-colors cursor-pointer text-left"
-                                    >
-                                      <Star className={`w-4 h-4 ${file.isStarred ? 'text-amber-500 fill-amber-400' : 'text-amber-500'}`} />
-                                      <span>{file.isStarred ? 'Unstar File' : 'Star File'}</span>
-                                    </button>
+                                  <button
+                                    onClick={() => {
+                                      decryptAndDownloadFile(file);
+                                      setActiveMenuFileId(null);
+                                    }}
+                                    className="w-full px-3 py-2 rounded-xl hover:bg-emerald-50 text-slate-700 flex items-center space-x-2.5 transition-colors cursor-pointer text-left"
+                                  >
+                                    <Download className="w-4 h-4 text-emerald-500" />
+                                    <span>Download</span>
+                                  </button>
 
-                                    <button
-                                      onClick={() => {
-                                        setActivePreviewFile(file);
-                                        setActiveMenuFileId(null);
-                                      }}
-                                      className="w-full px-3 py-2 rounded-xl hover:bg-sky-50 text-slate-700 flex items-center space-x-2.5 transition-colors cursor-pointer text-left"
-                                    >
-                                      <Eye className="w-4 h-4 text-sky-500" />
-                                      <span>Full Preview</span>
-                                    </button>
+                                  <div className="border-t border-slate-100 my-1" />
 
-                                    <button
-                                      onClick={() => {
-                                        decryptAndDownloadFile(file);
-                                        setActiveMenuFileId(null);
-                                      }}
-                                      className="w-full px-3 py-2 rounded-xl hover:bg-emerald-50 text-slate-700 flex items-center space-x-2.5 transition-colors cursor-pointer text-left"
-                                    >
-                                      <Download className="w-4 h-4 text-emerald-500" />
-                                      <span>Decrypt & Save</span>
-                                    </button>
-
-                                    <div className="border-t border-slate-100 my-1" />
-
-                                    <button
-                                      onClick={() => {
-                                        shredFile(file.id);
-                                        setActiveMenuFileId(null);
-                                      }}
-                                      className="w-full px-3 py-2 rounded-xl hover:bg-rose-50 text-rose-600 flex items-center space-x-2.5 transition-colors cursor-pointer text-left"
-                                    >
-                                      <Trash2 className="w-4 h-4 text-rose-500" />
-                                      <span>Revoke & Shred</span>
-                                    </button>
-                                  </div>
-                                </>
-                              )}
-                            </div>
+                                  <button
+                                    onClick={() => {
+                                      shredFile(file.id);
+                                      setActiveMenuFileId(null);
+                                    }}
+                                    className="w-full px-3 py-2 rounded-xl hover:bg-rose-50 text-rose-600 flex items-center space-x-2.5 transition-colors cursor-pointer text-left"
+                                  >
+                                    <Trash2 className="w-4 h-4 text-rose-500" />
+                                    <span>Revoke & Shred</span>
+                                  </button>
+                                </div>
+                              </>
+                            )}
                           </div>
                         </td>
                       </tr>
