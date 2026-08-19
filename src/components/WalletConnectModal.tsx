@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useWeb3Wallet } from '../context/WalletContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wallet, X, CheckCircle2, Sparkles, ArrowRight, ShieldCheck, Coins, RefreshCw, Copy } from 'lucide-react';
+import { Wallet, X, CheckCircle2, Sparkles, ArrowRight, ShieldCheck, Coins, RefreshCw, Copy, Check } from 'lucide-react';
 
 export const WalletConnectModal: React.FC = () => {
   const {
@@ -49,30 +49,30 @@ export const WalletConnectModal: React.FC = () => {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-md">
         <motion.div
           initial={{ opacity: 0, scale: 0.94, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.94, y: 15 }}
-          className="cloud-card w-full max-w-lg rounded-2xl p-6 sm:p-8 border border-sky-500/40 shadow-2xl relative overflow-hidden"
+          className="w-full max-w-lg bg-white/95 backdrop-blur-2xl rounded-3xl p-6 sm:p-8 border border-white/80 shadow-2xl relative overflow-hidden text-slate-800"
         >
           {/* Close Button */}
           <button
             onClick={() => setIsWalletModalOpen(false)}
-            className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
 
           {/* Modal Header */}
           <div className="text-center mb-6">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-500/20 via-blue-600/20 to-emerald-500/20 border border-sky-500/40 flex items-center justify-center mx-auto mb-3 shadow-[0_0_20px_rgba(56,189,248,0.25)]">
-              <Wallet className="w-6 h-6 text-sky-400" />
+            <div className="w-12 h-12 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center mx-auto mb-3 shadow-xs">
+              <Wallet className="w-6 h-6" />
             </div>
-            <h3 className="text-2xl font-display font-bold text-white tracking-tight">
+            <h3 className="text-2xl font-display font-black text-slate-900 tracking-tight">
               {wallet.isConnected ? 'Connected Web3 Wallet' : 'Connect Web3 Wallet'}
             </h3>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-slate-500 mt-1">
               Connect your Midnight Lace or EVM wallet to purchase storage tiers and pay with NIGHT, tDUST, and stablecoins.
             </p>
           </div>
@@ -81,118 +81,134 @@ export const WalletConnectModal: React.FC = () => {
             /* Connected Wallet Details & Balances */
             <div className="space-y-5">
               {/* Address Card */}
-              <div className="p-4 rounded-xl bg-[#080D1A] border border-slate-800 space-y-2">
-                <div className="flex justify-between items-center text-xs font-mono">
-                  <span className="text-slate-400">Wallet Provider:</span>
-                  <span className="text-sky-300 font-bold flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-slate-500">Wallet Provider:</span>
+                  <span className="text-slate-900 font-bold flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                     {wallet.walletName} ({wallet.network})
                   </span>
                 </div>
-                <div className="flex justify-between items-center text-xs font-mono pt-1 border-t border-slate-800/80">
-                  <span className="text-slate-400">Address:</span>
+                <div className="flex justify-between items-center text-xs pt-2 border-t border-slate-200/80">
+                  <span className="text-slate-500">Address:</span>
                   <button
                     onClick={copyAddress}
-                    className="text-slate-300 hover:text-sky-400 flex items-center gap-1 transition-colors font-mono font-semibold"
+                    className="text-sky-600 hover:text-sky-700 flex items-center gap-1 transition-colors font-mono font-bold cursor-pointer"
                     title="Click to copy full address"
                   >
                     <span>{wallet.address?.slice(0, 14)}...{wallet.address?.slice(-8)}</span>
-                    {copied ? <CheckCircle2 className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                    {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                   </button>
-                </div>
-                <div className="text-[10px] font-mono text-slate-500 pt-1 border-t border-slate-800/50 flex items-center justify-between">
-                  <span>Authorized by Lace Extension</span>
-                  <span className="text-emerald-400 font-semibold">Active Session</span>
                 </div>
               </div>
 
-              {/* Token Balances Grid */}
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-mono font-semibold text-slate-300 flex items-center gap-1">
-                    <Coins className="w-3.5 h-3.5 text-amber-400" />
-                    TOKEN BALANCES
+              {/* Balances Section */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs font-semibold text-slate-600 px-1">
+                  <span className="flex items-center gap-1">
+                    <Coins className="w-3.5 h-3.5 text-amber-500" />
+                    <span>Token Balances</span>
                   </span>
                   <button
                     onClick={handleSync}
-                    className="text-[11px] font-mono text-sky-400 hover:text-sky-300 flex items-center gap-1 transition-colors"
-                    title="Sync live balance from Lace"
+                    disabled={isSyncing}
+                    className="text-sky-600 hover:text-sky-700 flex items-center gap-1 font-bold transition-colors cursor-pointer"
                   >
                     <RefreshCw className={`w-3 h-3 ${isSyncing ? 'animate-spin' : ''}`} />
-                    <span>{isSyncing ? 'Syncing...' : 'Sync Lace Balance'}</span>
+                    <span>Sync Balance</span>
                   </button>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                  <div className="p-3 rounded-xl bg-[#080D1A] border border-sky-500/40 text-center shadow-[0_0_15px_rgba(56,189,248,0.15)]">
-                    <span className="text-[10px] font-mono text-sky-300 block font-bold">tNIGHT (UNSHIELDED)</span>
-                    <span className="text-base font-bold text-white font-mono">{wallet.balances.NIGHT.toLocaleString()}</span>
+                <div className="grid grid-cols-3 gap-2.5">
+                  {/* NIGHT */}
+                  <div className="p-3 rounded-xl bg-sky-50 border border-sky-100 text-center">
+                    <div className="text-[10px] font-bold text-sky-700 uppercase">tNIGHT</div>
+                    <div className="text-sm sm:text-base font-black text-slate-900 font-mono mt-0.5">
+                      {wallet.balances.NIGHT.toLocaleString()}
+                    </div>
                   </div>
-                  <div className="p-3 rounded-xl bg-[#080D1A] border border-slate-800 text-center">
-                    <span className="text-[10px] font-mono text-emerald-400 block font-semibold">tDUST (SHIELDED)</span>
-                    <span className="text-base font-bold text-white font-mono">{wallet.balances.tDUST.toLocaleString()}</span>
+
+                  {/* tDUST */}
+                  <div className="p-3 rounded-xl bg-purple-50 border border-purple-100 text-center">
+                    <div className="text-[10px] font-bold text-purple-700 uppercase">tDUST</div>
+                    <div className="text-sm sm:text-base font-black text-slate-900 font-mono mt-0.5">
+                      {wallet.balances.tDUST.toLocaleString()}
+                    </div>
                   </div>
-                  <div className="p-3 rounded-xl bg-[#080D1A] border border-slate-800 text-center">
-                    <span className="text-[10px] font-mono text-blue-400 block font-semibold">ADA</span>
-                    <span className="text-base font-bold text-white font-mono">{wallet.balances.ADA.toLocaleString()}</span>
+
+                  {/* ADA */}
+                  <div className="p-3 rounded-xl bg-blue-50 border border-blue-100 text-center">
+                    <div className="text-[10px] font-bold text-blue-700 uppercase">ADA</div>
+                    <div className="text-sm sm:text-base font-black text-slate-900 font-mono mt-0.5">
+                      {wallet.balances.ADA}
+                    </div>
                   </div>
-                  <div className="p-3 rounded-xl bg-[#080D1A] border border-slate-800 text-center">
-                    <span className="text-[10px] font-mono text-emerald-300 block font-semibold">USDT</span>
-                    <span className="text-base font-bold text-white font-mono">${wallet.balances.USDT.toLocaleString()}</span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2.5 pt-1">
+                  {/* USDT */}
+                  <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-100 text-center">
+                    <div className="text-[10px] font-bold text-emerald-700 uppercase">USDT</div>
+                    <div className="text-sm font-black text-slate-900 font-mono mt-0.5">
+                      ${wallet.balances.USDT}
+                    </div>
                   </div>
-                  <div className="p-3 rounded-xl bg-[#080D1A] border border-slate-800 text-center col-span-2 sm:col-span-2">
-                    <span className="text-[10px] font-mono text-purple-400 block font-semibold">ETH</span>
-                    <span className="text-base font-bold text-white font-mono">{wallet.balances.ETH} ETH</span>
+
+                  {/* ETH */}
+                  <div className="p-2.5 rounded-xl bg-indigo-50 border border-indigo-100 text-center">
+                    <div className="text-[10px] font-bold text-indigo-700 uppercase">ETH</div>
+                    <div className="text-sm font-black text-slate-900 font-mono mt-0.5">
+                      {wallet.balances.ETH} ETH
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Faucet Claim Section */}
-              <div className="p-4 rounded-xl bg-gradient-to-r from-sky-950/40 via-blue-950/30 to-emerald-950/40 border border-sky-500/30 space-y-2">
-                <div className="flex items-center justify-between text-xs font-mono text-sky-300">
-                  <div className="flex items-center space-x-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-                    <span className="font-semibold">MIDNIGHT PREPROD FAUCET</span>
-                  </div>
+              {/* Testnet Faucet Box */}
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-sky-50 to-indigo-50 border border-sky-100 space-y-2.5">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-bold text-slate-800 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-sky-500" />
+                    <span>Midnight Preprod Faucet</span>
+                  </span>
                   <a
-                    href="https://faucet.preprod.midnight.network/"
+                    href="https://docs.midnight.network"
                     target="_blank"
                     rel="noreferrer"
-                    className="text-[10px] text-sky-400 hover:text-sky-300 underline font-mono flex items-center gap-0.5"
+                    className="text-[10px] text-sky-600 hover:underline font-semibold"
                   >
-                    <span>Official Faucet</span>
-                    <span>↗</span>
+                    Docs ↗
                   </a>
                 </div>
-                <p className="text-[11px] text-slate-400 font-sans">
-                  Claim instant testnet tokens for unshielded NIGHT and shielded tDUST storage payments:
+                <p className="text-[11px] text-slate-500">
+                  Claim testnet tokens to test zero-knowledge encrypted uploads and quota purchases:
                 </p>
                 <div className="flex flex-wrap gap-2 pt-1">
                   <button
                     onClick={() => claimTestnetTokens('NIGHT')}
-                    className="px-3 py-1.5 rounded-lg bg-sky-950 hover:bg-sky-900 border border-sky-500/50 text-sky-300 text-xs font-mono transition-colors font-semibold"
+                    className="px-3 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs shadow-xs transition-all cursor-pointer"
                   >
-                    +500 NIGHT (Unshielded)
+                    +500 NIGHT
                   </button>
                   <button
                     onClick={() => claimTestnetTokens('tDUST')}
-                    className="px-3 py-1.5 rounded-lg bg-emerald-950 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-300 text-xs font-mono transition-colors font-semibold"
+                    className="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-xs transition-all cursor-pointer"
                   >
-                    +200 tDUST (Shielded)
+                    +200 tDUST
                   </button>
                   <button
                     onClick={() => claimTestnetTokens('USDT')}
-                    className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 text-xs font-mono transition-colors"
+                    className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition-all cursor-pointer"
                   >
                     +100 USDT
                   </button>
                 </div>
               </div>
 
-              {/* Disconnect */}
+              {/* Disconnect Wallet */}
               <button
                 onClick={disconnectWallet}
-                className="w-full py-2.5 rounded-xl bg-rose-950/60 hover:bg-rose-900/80 border border-rose-500/40 text-rose-300 font-mono text-xs font-semibold transition-colors"
+                className="w-full py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 font-bold text-xs transition-colors cursor-pointer"
               >
                 Disconnect Wallet
               </button>
@@ -200,140 +216,65 @@ export const WalletConnectModal: React.FC = () => {
           ) : (
             /* Wallet Provider Selection List */
             <div className="space-y-3">
-              {/* Midnight Lace Wallet */}
-              <div className="rounded-xl bg-[#080D1A] border border-sky-500/40 p-4 space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-xl bg-sky-500/20 border border-sky-500/40 flex items-center justify-center flex-shrink-0">
-                      <ShieldCheck className="w-5 h-5 text-sky-400" />
-                    </div>
-                    <div>
-                      <div className="flex items-center space-x-2">
-                        <span className="font-semibold text-white text-sm">Midnight Lace Wallet</span>
-                        <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full ${
-                          isLaceDetected
-                            ? 'bg-emerald-950 border border-emerald-500/40 text-emerald-400'
-                            : 'bg-amber-950 border border-amber-500/40 text-amber-400'
-                        }`}>
-                          {isLaceDetected ? 'EXTENSION READY' : 'NO EXTENSION'}
-                        </span>
-                      </div>
-                      <span className="text-xs text-slate-400 block font-mono">
-                        {isLaceDetected
-                          ? 'Official Midnight Preprod ZK Wallet (Click to Authorize)'
-                          : 'Lace extension not installed in this browser.'}
+              {/* Midnight Lace Option */}
+              <button
+                onClick={() => handleConnect('Midnight Lace', true)}
+                disabled={connecting !== null}
+                className="w-full p-4 rounded-2xl bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 hover:border-purple-300 hover:shadow-md transition-all flex items-center justify-between text-left group cursor-pointer"
+              >
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center text-sm font-bold shadow-sm">
+                    N
+                  </div>
+                  <div>
+                    <div className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                      <span>Midnight Lace Wallet</span>
+                      <span className="px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 text-[10px] font-bold">
+                        RECOMMENDED
                       </span>
                     </div>
+                    <div className="text-xs text-slate-500">
+                      {isLaceDetected ? 'Extension detected' : 'Native Midnight Preprod ZK Wallet'}
+                    </div>
                   </div>
                 </div>
+                <ArrowRight className="w-4 h-4 text-purple-600 group-hover:translate-x-1 transition-transform" />
+              </button>
 
-                {isLaceDetected ? (
-                  <button
-                    onClick={() => handleConnect('Midnight Lace')}
-                    disabled={!!connecting}
-                    className="w-full py-2.5 px-4 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-mono font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(56,189,248,0.3)]"
-                  >
-                    {connecting === 'Midnight Lace' ? (
-                      <>
-                        <RefreshCw className="w-4 h-4 animate-spin" />
-                        <span>Opening Lace Extension...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>Authorize with Lace Extension</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </>
-                    )}
-                  </button>
-                ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-                    <button
-                      onClick={() => handleConnect('Midnight Lace', true)}
-                      disabled={!!connecting}
-                      className="w-full py-2 px-3 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/50 text-sky-300 font-mono font-bold text-xs transition-all flex items-center justify-center gap-1.5"
-                    >
-                      <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-                      <span>Testnet Web Wallet (5k NIGHT)</span>
-                    </button>
-                    <a
-                      href="https://www.lace.io/"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="w-full py-2 px-3 rounded-xl bg-[#0E1424] hover:bg-[#141D30] border border-slate-700 hover:border-sky-500 text-slate-300 hover:text-white font-mono text-xs transition-all flex items-center justify-center gap-1.5"
-                    >
-                      <span>Install Lace Extension</span>
-                      <span>↗</span>
-                    </a>
-                  </div>
-                )}
-              </div>
-
-              {/* MetaMask */}
+              {/* MetaMask Option */}
               <button
                 onClick={() => handleConnect('MetaMask')}
-                disabled={!!connecting}
-                className="w-full p-4 rounded-xl bg-[#080D1A] hover:bg-[#0E1424] border border-slate-800 hover:border-slate-700 text-left transition-all flex items-center justify-between group"
+                disabled={connecting !== null}
+                className="w-full p-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-sky-300 hover:shadow-md transition-all flex items-center justify-between text-left group cursor-pointer"
               >
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center group-hover:scale-105 transition-transform">
-                    <svg className="w-5 h-5 text-amber-500" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M21.5 12l-3.5-8.5-6 4-6-4L2.5 12l9.5 8.5L21.5 12z" />
-                    </svg>
+                  <div className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm font-bold">
+                    🦊
                   </div>
                   <div>
-                    <span className="font-semibold text-white text-sm block">MetaMask</span>
-                    <span className="text-xs text-slate-400 block font-mono">EVM & Multi-Chain Wallet</span>
+                    <div className="font-bold text-slate-900 text-sm">MetaMask</div>
+                    <div className="text-xs text-slate-500">Connect EVM compatible wallet</div>
                   </div>
                 </div>
-                {connecting === 'MetaMask' ? (
-                  <RefreshCw className="w-4 h-4 text-amber-400 animate-spin" />
-                ) : (
-                  <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-white transition-colors" />
-                )}
+                <ArrowRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
               </button>
 
-              {/* Phantom */}
+              {/* Phantom Option */}
               <button
                 onClick={() => handleConnect('Phantom')}
-                disabled={!!connecting}
-                className="w-full p-4 rounded-xl bg-[#080D1A] hover:bg-[#0E1424] border border-slate-800 hover:border-slate-700 text-left transition-all flex items-center justify-between group"
+                disabled={connecting !== null}
+                className="w-full p-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-purple-300 hover:shadow-md transition-all flex items-center justify-between text-left group cursor-pointer"
               >
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center group-hover:scale-105 transition-transform">
-                    <Wallet className="w-5 h-5 text-purple-400" />
+                  <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-sm font-bold">
+                    👻
                   </div>
                   <div>
-                    <span className="font-semibold text-white text-sm block">Phantom Wallet</span>
-                    <span className="text-xs text-slate-400 block font-mono">Multi-Token Crypto Wallet</span>
+                    <div className="font-bold text-slate-900 text-sm">Phantom Wallet</div>
+                    <div className="text-xs text-slate-500">Multi-chain Web3 wallet</div>
                   </div>
                 </div>
-                {connecting === 'Phantom' ? (
-                  <RefreshCw className="w-4 h-4 text-purple-400 animate-spin" />
-                ) : (
-                  <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-white transition-colors" />
-                )}
-              </button>
-
-              {/* Coinbase Wallet */}
-              <button
-                onClick={() => handleConnect('Coinbase')}
-                disabled={!!connecting}
-                className="w-full p-4 rounded-xl bg-[#080D1A] hover:bg-[#0E1424] border border-slate-800 hover:border-slate-700 text-left transition-all flex items-center justify-between group"
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center group-hover:scale-105 transition-transform">
-                    <ShieldCheck className="w-5 h-5 text-blue-400" />
-                  </div>
-                  <div>
-                    <span className="font-semibold text-white text-sm block">Coinbase Wallet</span>
-                    <span className="text-xs text-slate-400 block font-mono">Self-Custody Web3 App</span>
-                  </div>
-                </div>
-                {connecting === 'Coinbase' ? (
-                  <RefreshCw className="w-4 h-4 text-blue-400 animate-spin" />
-                ) : (
-                  <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-white transition-colors" />
-                )}
+                <ArrowRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
           )}

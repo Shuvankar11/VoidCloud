@@ -47,106 +47,101 @@ export const TelegramSettingsModal: React.FC = () => {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-md">
         <motion.div
           initial={{ opacity: 0, scale: 0.94, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.94, y: 15 }}
-          className="cloud-card w-full max-w-lg rounded-2xl p-6 sm:p-8 border border-sky-500/40 shadow-2xl relative overflow-hidden"
+          className="w-full max-w-lg bg-white/95 backdrop-blur-2xl rounded-3xl p-6 sm:p-8 border border-white/80 shadow-2xl relative overflow-hidden text-slate-800"
         >
           {/* Close Button */}
           <button
             onClick={() => setIsTelegramModalOpen(false)}
-            className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
 
           {/* Header */}
-          <div className="text-center mb-6">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-500/20 via-blue-600/20 to-emerald-500/20 border border-sky-500/40 flex items-center justify-center mx-auto mb-3 shadow-[0_0_20px_rgba(56,189,248,0.25)]">
-              <Send className="w-6 h-6 text-sky-400" />
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="w-12 h-12 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center shadow-xs">
+              <Send className="w-6 h-6" />
             </div>
-            <h3 className="text-2xl font-display font-bold text-white tracking-tight">
-              Telegram Bot Storage Relay
-            </h3>
-            <p className="text-xs text-slate-400 mt-1">
-              Encrypted file shards are stored into your dedicated private Telegram Channel via Bot API.
-            </p>
+            <div>
+              <h3 className="text-xl font-display font-black text-slate-900">
+                Telegram Sharded Storage
+              </h3>
+              <p className="text-xs text-slate-500">
+                Connect your private Telegram channel as an infinite encrypted backend.
+              </p>
+            </div>
           </div>
 
-          {/* Status Pill */}
-          <div className="p-3 rounded-xl bg-[#080D1A] border border-slate-800 flex items-center justify-between text-xs font-mono mb-5">
-            <span className="text-slate-400">Current Storage Backend:</span>
-            <span className="text-emerald-400 font-bold flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              {telegramConfig.channelName}
-            </span>
-          </div>
-
-          <form onSubmit={handleSave} className="space-y-4">
-            <div>
-              <label className="block text-xs font-mono text-slate-300 mb-1">
-                TELEGRAM BOT TOKEN (FROM @BOTFATHER)
-              </label>
-              <input
-                type="text"
-                required
-                value={botToken}
-                onChange={(e) => setBotToken(e.target.value)}
-                placeholder="123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ"
-                className="w-full bg-[#080D1A] border border-slate-800 focus:border-sky-500/60 rounded-xl px-3 py-2.5 text-xs text-white placeholder-slate-600 font-mono focus:outline-none"
-              />
+          {savedSuccess && (
+            <div className="mb-4 p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center space-x-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              <span>Telegram Storage Credentials Verified & Saved!</span>
             </div>
+          )}
 
+          {/* Form */}
+          <form onSubmit={handleSave} className="space-y-4 text-xs font-mono">
             <div>
-              <label className="block text-xs font-mono text-slate-300 mb-1">
-                PRIVATE CHANNEL CHAT ID (e.g. -100xxxxxxxxxx)
-              </label>
-              <input
-                type="text"
-                required
-                value={chatId}
-                onChange={(e) => setChatId(e.target.value)}
-                placeholder="-1002384918231"
-                className="w-full bg-[#080D1A] border border-slate-800 focus:border-sky-500/60 rounded-xl px-3 py-2.5 text-xs text-white placeholder-slate-600 font-mono focus:outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-mono text-slate-300 mb-1">
-                CHANNEL NAME / ALIAS
+              <label className="block text-slate-700 font-bold font-sans mb-1">
+                Channel Name
               </label>
               <input
                 type="text"
                 value={channelName}
                 onChange={(e) => setChannelName(e.target.value)}
-                placeholder="My Encrypted Cloud Vault"
-                className="w-full bg-[#080D1A] border border-slate-800 focus:border-sky-500/60 rounded-xl px-3 py-2.5 text-xs text-white placeholder-slate-600 font-mono focus:outline-none"
+                placeholder="e.g. My Private Shard Vault"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-100 text-slate-800 outline-none text-xs"
               />
             </div>
 
-            <div className="flex gap-3 pt-2">
-              <button
-                type="submit"
-                className="flex-1 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-bold text-xs font-mono uppercase tracking-wider shadow-[0_0_15px_rgba(14,165,233,0.3)] transition-all hover:scale-105"
-              >
-                {savedSuccess ? 'Settings Saved & Verified!' : 'Save Telegram Storage'}
-              </button>
+            <div>
+              <label className="block text-slate-700 font-bold font-sans mb-1">
+                Bot Token (from @BotFather)
+              </label>
+              <input
+                type="text"
+                value={botToken}
+                onChange={(e) => setBotToken(e.target.value)}
+                placeholder="123456789:ABCdefGhIJKlmNoPQRstuVWXyz"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-100 text-slate-800 outline-none text-xs"
+              />
+            </div>
 
+            <div>
+              <label className="block text-slate-700 font-bold font-sans mb-1">
+                Channel / Chat ID (e.g. -100...)
+              </label>
+              <input
+                type="text"
+                value={chatId}
+                onChange={(e) => setChatId(e.target.value)}
+                placeholder="-1001234567890"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-100 text-slate-800 outline-none text-xs"
+              />
+            </div>
+
+            <div className="flex items-center justify-between pt-2">
               <button
                 type="button"
                 onClick={handleResetToDefault}
-                className="px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition-colors"
+                className="text-slate-400 hover:text-slate-600 font-sans text-xs underline cursor-pointer"
               >
-                Reset Default
+                Reset to Default Node
+              </button>
+
+              <button
+                type="submit"
+                className="px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs font-sans shadow-md transition-all cursor-pointer"
+              >
+                Save & Connect
               </button>
             </div>
           </form>
-
-          <p className="mt-5 text-[10px] text-center text-slate-500 font-mono">
-            Zero-Knowledge Envelope: Files are AES-256 encrypted before upload; Telegram servers only see opaque ciphertext shards.
-          </p>
         </motion.div>
       </div>
     </AnimatePresence>

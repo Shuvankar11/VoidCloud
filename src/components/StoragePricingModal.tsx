@@ -80,32 +80,32 @@ export const StoragePricingModal: React.FC = () => {
         onClick={(e) => {
           if (e.target === e.currentTarget) handleClose();
         }}
-        className="fixed inset-0 z-50 overflow-y-auto bg-black/90 backdrop-blur-md p-3 sm:p-6 flex items-center justify-center min-h-screen"
+        className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/75 backdrop-blur-md p-3 sm:p-6 flex items-center justify-center min-h-screen"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 10 }}
-          className="cloud-card w-full max-w-5xl rounded-3xl p-5 sm:p-7 border border-sky-500/40 shadow-2xl relative max-h-[92vh] flex flex-col my-auto"
+          className="w-full max-w-5xl rounded-3xl p-6 sm:p-8 bg-white/95 backdrop-blur-2xl border border-white/80 shadow-2xl relative max-h-[92vh] flex flex-col my-auto text-slate-800"
         >
           {/* Header Bar with Back & Close */}
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800/80 mb-4 flex-shrink-0">
+          <div className="flex items-center justify-between pb-4 border-b border-slate-200 mb-4 flex-shrink-0">
             <button
               onClick={handleClose}
-              className="flex items-center space-x-1.5 text-xs font-mono text-slate-400 hover:text-sky-300 transition-colors px-2.5 py-1.5 rounded-xl hover:bg-slate-800/60"
+              className="flex items-center space-x-1.5 text-xs font-bold text-slate-500 hover:text-sky-600 transition-colors px-3 py-1.5 rounded-xl hover:bg-slate-100 cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Back to Vault</span>
             </button>
 
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#0E1424] border border-sky-500/30 text-sky-300 text-xs font-mono">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-sky-50 border border-sky-100 text-sky-700 text-xs font-bold">
               <HardDrive className="w-3.5 h-3.5" />
               <span>STORAGE EXPANSION TIERS</span>
             </div>
 
             <button
               onClick={handleClose}
-              className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
               title="Close (Esc)"
             >
               <X className="w-5 h-5" />
@@ -116,49 +116,49 @@ export const StoragePricingModal: React.FC = () => {
           <div className="overflow-y-auto pr-1 space-y-5 flex-1">
             {/* Title & Quota Info */}
             <div className="text-center max-w-xl mx-auto">
-              <h3 className="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight">
+              <h3 className="text-2xl font-display font-black text-slate-900 tracking-tight">
                 Upgrade Cloud Storage Quota
               </h3>
-              <p className="text-xs text-slate-400 mt-1">
-                Current Storage: <span className="text-sky-400 font-bold font-mono">{session.quotaGB} GB</span> • Active Plan: <span className="text-slate-300 font-mono">{session.planName || '20GB Standard Tier'}</span>
+              <p className="text-xs text-slate-500 mt-1">
+                Current Storage: <span className="text-sky-600 font-bold font-mono">{session.quotaGB} GB</span> • Active Plan: <span className="text-slate-700 font-bold">{session.planName || '20GB Free Baseline'}</span>
               </p>
             </div>
 
             {/* Billing Cycle Selector */}
             <div className="flex justify-center">
-              <div className="bg-[#080D1A] p-1 rounded-2xl border border-slate-800 flex items-center gap-1 text-xs font-mono">
+              <div className="bg-slate-100 p-1 rounded-2xl border border-slate-200 flex items-center gap-1 text-xs">
                 <button
                   onClick={() => setBilling('monthly')}
-                  className={`px-3.5 py-1.5 rounded-xl transition-all ${
+                  className={`px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
                     billing === 'monthly'
-                      ? 'bg-sky-500/20 text-sky-300 border border-sky-500/40 font-bold'
-                      : 'text-slate-400 hover:text-slate-200'
+                      ? 'bg-white text-slate-900 font-bold shadow-xs'
+                      : 'text-slate-500 hover:text-slate-900'
                   }`}
                 >
                   Monthly
                 </button>
                 <button
                   onClick={() => setBilling('yearly')}
-                  className={`px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 ${
+                  className={`px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
                     billing === 'yearly'
-                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold'
-                      : 'text-slate-400 hover:text-slate-200'
+                      ? 'bg-emerald-500 text-white font-bold shadow-xs'
+                      : 'text-slate-500 hover:text-slate-900'
                   }`}
                 >
                   <span>Yearly</span>
-                  <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-500/30 font-bold">
+                  <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-emerald-700 text-white font-bold">
                     SAVE 20%
                   </span>
                 </button>
                 <button
                   onClick={() => setBilling('lifetime')}
-                  className={`px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1 ${
+                  className={`px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1 cursor-pointer ${
                     billing === 'lifetime'
-                      ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40 font-bold'
-                      : 'text-slate-400 hover:text-slate-200'
+                      ? 'bg-sky-500 text-white font-bold shadow-xs'
+                      : 'text-slate-500 hover:text-slate-900'
                   }`}
                 >
-                  <Sparkles className="w-3 h-3 text-amber-400" />
+                  <Sparkles className="w-3 h-3" />
                   <span>1-Time Lifetime</span>
                 </button>
               </div>
@@ -166,195 +166,181 @@ export const StoragePricingModal: React.FC = () => {
 
             {/* Success Message Banner */}
             {successTx ? (
-              <div className="p-6 rounded-2xl bg-emerald-950/40 border border-emerald-500/50 text-center space-y-3">
-                <div className="w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center mx-auto text-emerald-400">
+              <div className="p-6 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-3">
+                <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
                   <CheckCircle2 className="w-7 h-7" />
                 </div>
-                <h4 className="text-lg font-bold text-white font-display">Storage Expanded to {selectedPlan.capacityGB} GB!</h4>
-                <p className="text-xs text-slate-300 font-mono">
+                <h4 className="text-lg font-black text-slate-900 font-display">Storage Expanded to {selectedPlan.capacityGB} GB!</h4>
+                <p className="text-xs text-slate-600">
                   On-chain payment verified on Midnight Preprod. Transaction Hash:
                 </p>
-                <div className="p-2 rounded-xl bg-[#080D1A] border border-slate-800 text-[11px] font-mono text-emerald-400 break-all max-w-md mx-auto">
+                <div className="p-2 rounded-xl bg-white border border-slate-200 text-[11px] font-mono text-emerald-600 font-bold break-all max-w-md mx-auto">
                   {successTx}
                 </div>
                 <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
                   <button
-                    onClick={handleClose}
-                    className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs font-mono"
+                    onClick={() => {
+                      handleClose();
+                      setActiveView('dashboard');
+                    }}
+                    className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition-all cursor-pointer"
                   >
-                    Return to Cloud Vault
+                    Open Storage Vault
                   </button>
                   <button
                     onClick={() => {
                       handleClose();
                       setActiveView('payments');
                     }}
-                    className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-400 hover:to-emerald-400 text-white font-bold text-xs font-mono shadow-md"
+                    className="px-4 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-semibold text-xs transition-colors cursor-pointer"
                   >
-                    View in Payment History →
+                    View Ledger Receipt
                   </button>
                 </div>
               </div>
             ) : (
-              <>
-                {/* 4 Storage Plan Cards Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-                  {STORAGE_PLANS.map((plan) => {
-                    const isSelected = selectedPlan.id === plan.id;
-                    const price = plan.pricing[billing][paymentToken];
+              /* Plans Grid */
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                {STORAGE_PLANS.map((plan) => {
+                  const isSelected = selectedPlan.id === plan.id;
+                  const price = plan.pricing[billing][paymentToken];
 
-                    return (
-                      <div
-                        key={plan.id}
-                        onClick={() => setSelectedPlan(plan)}
-                        className={`rounded-2xl p-4 cursor-pointer transition-all border relative flex flex-col justify-between ${
+                  return (
+                    <div
+                      key={plan.id}
+                      onClick={() => setSelectedPlan(plan)}
+                      className={`relative rounded-2xl p-5 transition-all cursor-pointer flex flex-col justify-between border ${
+                        isSelected
+                          ? 'border-sky-500 bg-sky-50/70 shadow-lg ring-2 ring-sky-200'
+                          : 'border-slate-200 bg-white hover:border-sky-300 hover:shadow-md'
+                      }`}
+                    >
+                      {plan.badge && (
+                        <div className="absolute -top-2.5 right-4 px-2 py-0.5 rounded-full bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold text-[9px] shadow-sm uppercase">
+                          {plan.badge}
+                        </div>
+                      )}
+
+                      <div>
+                        <div className="text-xs font-bold text-slate-500 uppercase tracking-wide">
+                          {plan.name}
+                        </div>
+                        <div className="text-2xl font-black text-slate-900 font-mono mt-1">
+                          {plan.capacityGB} <span className="text-sm font-semibold text-slate-500">GB</span>
+                        </div>
+
+                        {/* Price */}
+                        <div className="my-3 p-3 rounded-xl bg-white border border-slate-200">
+                          <div className="text-lg font-black text-slate-900 font-mono">
+                            {price} <span className="text-xs font-bold text-sky-600">{paymentToken}</span>
+                          </div>
+                          <div className="text-[10px] text-slate-400">
+                            /{billing === 'lifetime' ? 'forever' : billing}
+                          </div>
+                        </div>
+
+                        {/* Features List */}
+                        <ul className="space-y-1.5 text-xs text-slate-600">
+                          {plan.features.map((f, idx) => (
+                            <li key={idx} className="flex items-center space-x-1.5">
+                              <Check className="w-3.5 h-3.5 text-sky-500 flex-shrink-0" />
+                              <span className="text-[11px]">{f}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Select Button */}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedPlan(plan);
+                        }}
+                        className={`w-full mt-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                           isSelected
-                            ? 'bg-gradient-to-b from-sky-950/50 to-[#080D1A] border-sky-400 shadow-[0_0_20px_rgba(56,189,248,0.25)] ring-1 ring-sky-400/50'
-                            : 'bg-[#080D1A]/80 border-slate-800 hover:border-slate-700'
+                            ? 'bg-sky-500 text-white shadow-sm'
+                            : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
                         }`}
                       >
-                        {plan.badge && (
-                          <span className="absolute -top-2.5 right-3 text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md">
-                            {plan.badge}
-                          </span>
-                        )}
-
-                        <div>
-                          <span className="text-[11px] font-mono text-slate-400 block">{plan.name}</span>
-                          <div className="flex items-baseline space-x-1 mt-0.5">
-                            <span className="text-2xl sm:text-3xl font-display font-extrabold text-white">
-                              {plan.capacityGB}
-                            </span>
-                            <span className="text-xs font-bold text-sky-400">GB</span>
-                          </div>
-                          <p className="text-[10px] text-slate-400 mt-1 leading-relaxed font-sans min-h-[28px]">
-                            {plan.description}
-                          </p>
-
-                          <div className="my-2.5 pt-2.5 border-t border-slate-800/80">
-                            <div className="flex items-baseline gap-1">
-                              <span className="text-lg font-bold font-mono text-white">
-                                {price}
-                              </span>
-                              <span className="text-xs font-mono text-sky-300 font-semibold">{paymentToken}</span>
-                              <span className="text-[9px] text-slate-500 font-mono">
-                                /{billing === 'monthly' ? 'mo' : billing === 'yearly' ? 'yr' : 'once'}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Feature Checklist */}
-                          <ul className="space-y-1 text-[10px] text-slate-300 font-sans">
-                            {plan.features.slice(0, 3).map((f, i) => (
-                              <li key={i} className="flex items-center space-x-1.5">
-                                <Check className="w-3 h-3 text-emerald-400 flex-shrink-0" />
-                                <span className="truncate">{f}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-
-                        <div className="mt-3 pt-2.5 border-t border-slate-800/60">
-                          <button
-                            type="button"
-                            className={`w-full py-1.5 rounded-xl text-[11px] font-mono font-semibold transition-all ${
-                              isSelected
-                                ? 'bg-sky-500 text-white shadow-md'
-                                : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-                            }`}
-                          >
-                            {isSelected ? '✓ Selected' : 'Select'}
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Payment Token Selector & Checkout Summary */}
-                <div className="p-4 rounded-2xl bg-[#080D1A] border border-slate-800 space-y-3.5">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                    <div>
-                      <span className="text-xs font-mono font-bold text-slate-300 flex items-center gap-1.5">
-                        <Coins className="w-4 h-4 text-amber-400" />
-                        SELECT PAYMENT TOKEN:
-                      </span>
-                      <span className="text-[10px] text-slate-500 font-mono">
-                        Pay with Midnight tokens (tNIGHT, tDUST), Cardano ADA, or stablecoins
-                      </span>
-                    </div>
-
-                    {/* Token Options */}
-                    <div className="flex flex-wrap gap-1.5">
-                      {(['NIGHT', 'tDUST', 'ADA', 'USDT', 'ETH'] as const).map((t) => (
-                        <button
-                          key={t}
-                          onClick={() => setPaymentToken(t)}
-                          className={`px-2.5 py-1 rounded-xl text-xs font-mono font-semibold transition-all ${
-                            paymentToken === t
-                              ? 'bg-sky-500 text-white shadow-md'
-                              : 'bg-[#0E1424] text-slate-400 hover:text-slate-200 border border-slate-700/80'
-                          }`}
-                        >
-                          {t}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Checkout Bar */}
-                  <div className="pt-3 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
-                    <div className="text-xs font-mono space-y-0.5 text-center sm:text-left">
-                      <div className="text-slate-400">
-                        Total Due: <span className="text-white font-bold">{currentPrice} {paymentToken}</span>
-                      </div>
-                      <div className="text-[11px] text-slate-500">
-                        Wallet Balance: <span className={isBalanceSufficient ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>{userBalance} {paymentToken}</span>
-                        {!wallet.isConnected && ' (Wallet Not Connected)'}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2.5 w-full sm:w-auto">
-                      <button
-                        onClick={handleClose}
-                        className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-mono text-xs"
-                      >
-                        Cancel
-                      </button>
-
-                      <button
-                        onClick={handlePurchase}
-                        disabled={isProcessing}
-                        className="flex-1 sm:flex-initial px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 via-blue-600 to-emerald-500 hover:from-sky-400 hover:to-emerald-400 text-white font-bold text-xs font-mono uppercase tracking-wider shadow-[0_0_20px_rgba(14,165,233,0.3)] transition-all hover:scale-105 flex items-center justify-center space-x-2"
-                      >
-                        {isProcessing ? (
-                          <>
-                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                            <span>Confirming On-Chain...</span>
-                          </>
-                        ) : !wallet.isConnected ? (
-                          <>
-                            <span>Connect Wallet to Pay</span>
-                            <ArrowRight className="w-3.5 h-3.5" />
-                          </>
-                        ) : (
-                          <>
-                            <span>Pay {currentPrice} {paymentToken} & Upgrade</span>
-                            <ArrowRight className="w-3.5 h-3.5" />
-                          </>
-                        )}
+                        {isSelected ? 'Selected' : 'Choose Tier'}
                       </button>
                     </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Payment Currency & Execution Box */}
+            {!successTx && (
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900">Select Payment Token</h4>
+                    <p className="text-xs text-slate-500">
+                      Settled trustlessly via Midnight Preprod Compact Smart Contracts.
+                    </p>
                   </div>
 
-                  {error && (
-                    <div className="p-2.5 rounded-xl bg-rose-950/60 border border-rose-500/40 text-rose-300 text-xs font-mono flex items-center space-x-2">
-                      <AlertCircle className="w-4 h-4 flex-shrink-0 text-rose-400" />
-                      <span>{error}</span>
-                    </div>
-                  )}
+                  {/* Token selector pills */}
+                  <div className="flex flex-wrap gap-1.5">
+                    {(['NIGHT', 'tDUST', 'ADA', 'USDT', 'ETH'] as const).map((token) => (
+                      <button
+                        key={token}
+                        onClick={() => setPaymentToken(token)}
+                        className={`px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                          paymentToken === token
+                            ? 'bg-sky-500 text-white shadow-xs'
+                            : 'bg-white text-slate-600 hover:bg-slate-200 border border-slate-200'
+                        }`}
+                      >
+                        {token}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </>
+
+                {/* Error Banner */}
+                {error && (
+                  <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-xs font-medium flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                    <span>{error}</span>
+                  </div>
+                )}
+
+                {/* Purchase Button */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+                  <div className="text-xs text-slate-500">
+                    <span>Balance: </span>
+                    <span className="font-bold text-slate-800 font-mono">
+                      {userBalance} {paymentToken}
+                    </span>
+                    {!isBalanceSufficient && (
+                      <span className="text-rose-500 ml-2 font-semibold">
+                        (Insufficient - use Faucet)
+                      </span>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={handlePurchase}
+                    disabled={isProcessing}
+                    className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50"
+                  >
+                    {isProcessing ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                        <span>Synthesizing ZK Transaction...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Upgrade to {selectedPlan.capacityGB}GB for {currentPrice} {paymentToken}</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         </motion.div>

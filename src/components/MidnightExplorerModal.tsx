@@ -2,21 +2,15 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ExternalLink,
-  Shield,
   Layers,
   Database,
   CheckCircle2,
   Copy,
   Check,
   X,
-  Search,
   Code,
   FileCode,
-  Sparkles,
-  Server,
-  Terminal,
   Activity,
-  ArrowRight,
 } from 'lucide-react';
 import { PaymentTransaction } from '../types';
 import { useVault } from '../context/VaultContext';
@@ -69,28 +63,23 @@ export const MidnightExplorerModal: React.FC<MidnightExplorerModalProps> = ({
         },
         stateTransitions: [
           {
-            target: 'bonusNullifiers',
-            action: 'Set.insert',
-            value: nullifier,
-            status: 'COMMITTED',
+            key: `user_quota_${session.shieldedAddress.slice(0, 16)}`,
+            oldValue: `${session.quotaGB - (tx.capacityGB || 20)} GB`,
+            newValue: `${session.quotaGB} GB`,
           },
           {
-            target: 'totalShieldedStorageAllocated',
-            action: 'Counter.increment',
-            delta: `+${tx.capacityGB || 20} GB`,
-            status: 'FINALIZED',
-          },
+            key: 'nullifier_tree_root',
+            treeDepth: 32,
+            action: 'inserted',
+          }
         ],
-        gasUsed: gasFee,
-        settlement: {
-          amount: `${tx.amount} ${tx.token}`,
-          sender: tx.senderAddress,
-          receiver: contractAddress,
-          receiptId: tx.receiptId,
-          status: 'SUCCESS',
-        },
-      },
-    },
+        fees: {
+          gasToken: 'tDUST',
+          amount: gasFee,
+          shieldedDeduction: true,
+        }
+      }
+    }
   };
 
   return (
@@ -99,30 +88,30 @@ export const MidnightExplorerModal: React.FC<MidnightExplorerModalProps> = ({
         onClick={(e) => {
           if (e.target === e.currentTarget) onClose();
         }}
-        className="fixed inset-0 z-50 overflow-y-auto bg-black/90 backdrop-blur-md p-3 sm:p-6 flex items-center justify-center min-h-screen font-mono"
+        className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/75 backdrop-blur-md p-3 sm:p-6 flex items-center justify-center min-h-screen font-mono"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 10 }}
-          className="cloud-card w-full max-w-5xl rounded-3xl p-5 sm:p-7 border border-emerald-500/40 shadow-2xl relative max-h-[92vh] flex flex-col my-auto text-slate-200"
+          className="w-full max-w-5xl rounded-3xl p-6 sm:p-8 bg-white/95 backdrop-blur-2xl border border-white/80 shadow-2xl relative max-h-[92vh] flex flex-col my-auto text-slate-800"
         >
           {/* Top Explorer Banner */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800 flex-shrink-0">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200 flex-shrink-0">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-sky-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-400">
+              <div className="w-11 h-11 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center shadow-xs">
                 <Database className="w-5 h-5" />
               </div>
               <div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-white font-display font-extrabold text-base sm:text-lg">
-                    MIDNIGHT NETWORK PREPROD EXPLORER
+                  <span className="text-slate-900 font-display font-black text-base sm:text-lg font-sans">
+                    MIDNIGHT PREPROD EXPLORER
                   </span>
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-500/40 text-[10px] font-bold">
-                    LIVE PREPROD
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">
+                    LIVE
                   </span>
                 </div>
-                <span className="text-[11px] text-slate-400 block">
+                <span className="text-xs text-slate-400 font-sans block">
                   Contract Ledger & Circuit Execution Inspector
                 </span>
               </div>
@@ -133,16 +122,16 @@ export const MidnightExplorerModal: React.FC<MidnightExplorerModalProps> = ({
                 href="https://preprod.midnightexplorer.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#080D1A] hover:bg-slate-800 border border-emerald-500/40 text-emerald-300 text-xs transition-colors"
+                className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors"
                 title="View Official Midnight Network Preprod Explorer"
               >
                 <span>Midnight Preprod Explorer</span>
-                <ExternalLink className="w-3.5 h-3.5 text-emerald-400" />
+                <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
               </a>
 
               <button
                 onClick={onClose}
-                className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors cursor-pointer"
                 title="Close Explorer"
               >
                 <X className="w-5 h-5" />
@@ -151,11 +140,11 @@ export const MidnightExplorerModal: React.FC<MidnightExplorerModalProps> = ({
           </div>
 
           {/* Navigation Tabs */}
-          <div className="flex overflow-x-auto gap-2 py-3 border-b border-slate-800 flex-shrink-0 text-xs">
+          <div className="flex overflow-x-auto gap-2 py-3 border-b border-slate-200 flex-shrink-0 text-xs">
             {[
               { id: 'overview', label: 'Transaction Overview', icon: Activity },
               { id: 'contract', label: 'Smart Contract (voidcloud.compact)', icon: FileCode },
-              { id: 'state', label: 'On-Chain Ledger State & Set Invariants', icon: Layers },
+              { id: 'state', label: 'On-Chain Ledger State', icon: Layers },
               { id: 'raw', label: 'Raw GraphQL Payload', icon: Code },
             ].map((tab) => {
               const Icon = tab.icon;
@@ -164,14 +153,14 @@ export const MidnightExplorerModal: React.FC<MidnightExplorerModalProps> = ({
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all ${
+                  className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all cursor-pointer ${
                     isSelected
-                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold shadow-sm'
-                      : 'text-slate-400 hover:text-slate-200 bg-[#080D1A] border border-slate-800'
+                      ? 'bg-emerald-500 text-white font-bold shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200'
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5" />
-                  <span>{tab.label}</span>
+                  <span className="font-sans font-semibold">{tab.label}</span>
                 </button>
               );
             })}
@@ -182,222 +171,117 @@ export const MidnightExplorerModal: React.FC<MidnightExplorerModalProps> = ({
             {activeTab === 'overview' && (
               <div className="space-y-4">
                 {/* Status Hero Box */}
-                <div className="p-4 rounded-2xl bg-emerald-950/30 border border-emerald-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                   <div className="flex items-center space-x-3">
-                    <CheckCircle2 className="w-6 h-6 text-emerald-400 flex-shrink-0" />
+                    <CheckCircle2 className="w-6 h-6 text-emerald-600 flex-shrink-0" />
                     <div>
-                      <span className="text-white font-bold text-sm block">
+                      <span className="text-slate-900 font-bold text-sm block font-sans">
                         Transaction Verified & Finalized in Block #{blockHeight}
                       </span>
-                      <span className="text-slate-400 text-[11px]">
-                        Zero-Knowledge Circuit: <code className="text-sky-300">claimTestnetBonus(nullifier)</code> on Midnight Preprod
+                      <span className="text-slate-500 text-[11px] font-sans">
+                        Zero-Knowledge Circuit: <code className="text-emerald-700 font-bold">claimTestnetBonus(nullifier)</code>
                       </span>
                     </div>
                   </div>
 
                   <div className="text-right">
-                    <span className="text-emerald-400 font-bold text-sm block">
+                    <span className="text-emerald-700 font-black text-sm block">
                       {tx.amount === 0 ? 'FREE (ZK-Grant)' : `-${tx.amount} ${tx.token}`}
                     </span>
-                    <span className="text-slate-500 text-[10px]">Fee: {gasFee}</span>
+                    <span className="text-slate-400 text-[10px]">Settled Gas: {gasFee}</span>
                   </div>
                 </div>
 
-                {/* Explorer Key-Value Table */}
-                <div className="bg-[#080D1A] rounded-2xl border border-slate-800 p-4 space-y-3">
-                  {/* Transaction Hash */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pb-2.5 border-b border-slate-800/80">
-                    <span className="text-slate-400">Transaction Hash:</span>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sky-300 font-bold break-all">{tx.txHash}</span>
+                {/* Grid Metadata */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
+                    <span className="text-slate-400 text-[10px] uppercase font-bold">Transaction Hash</span>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sky-600 font-bold truncate max-w-xs">{tx.txHash}</span>
                       <button
-                        onClick={() => copyToClipboard(tx.txHash, 'hash')}
-                        className="text-slate-400 hover:text-white"
+                        onClick={() => copyToClipboard(tx.txHash, 'txHash')}
+                        className="text-slate-400 hover:text-sky-600 p-1"
                       >
-                        {copiedField === 'hash' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                        {copiedField === 'txHash' ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
                       </button>
                     </div>
                   </div>
 
-                  {/* Contract Address */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pb-2.5 border-b border-slate-800/80">
-                    <span className="text-slate-400">Target Smart Contract:</span>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-emerald-300 font-bold break-all">{contractAddress}</span>
-                      <span className="px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-400 text-[9px]">
-                        voidcloud.compact
-                      </span>
+                  <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
+                    <span className="text-slate-400 text-[10px] uppercase font-bold">Smart Contract Address</span>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-800 font-bold truncate max-w-xs">{contractAddress}</span>
+                      <button
+                        onClick={() => copyToClipboard(contractAddress, 'contract')}
+                        className="text-slate-400 hover:text-sky-600 p-1"
+                      >
+                        {copiedField === 'contract' ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                      </button>
                     </div>
                   </div>
 
-                  {/* Circuit Invoked */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pb-2.5 border-b border-slate-800/80">
-                    <span className="text-slate-400">Circuit Entrypoint:</span>
-                    <span className="text-purple-300 font-bold">
-                      claimTestnetBonus(nullifier: Bytes&lt;32&gt;)
-                    </span>
-                  </div>
-
-                  {/* Blinded Nullifier Hash */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pb-2.5 border-b border-slate-800/80">
-                    <span className="text-slate-400 flex items-center gap-1">
-                      <Shield className="w-3.5 h-3.5 text-purple-400" />
-                      Committed ZK Nullifier:
-                    </span>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-purple-300 break-all">{nullifier}</span>
+                  <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
+                    <span className="text-slate-400 text-[10px] uppercase font-bold">ZK Nullifier Commitment</span>
+                    <div className="flex items-center justify-between">
+                      <span className="text-purple-600 font-bold truncate max-w-xs">{nullifier}</span>
                       <button
                         onClick={() => copyToClipboard(nullifier, 'nullifier')}
-                        className="text-slate-400 hover:text-white"
+                        className="text-slate-400 hover:text-purple-600 p-1"
                       >
-                        {copiedField === 'nullifier' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                        {copiedField === 'nullifier' ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
                       </button>
                     </div>
                   </div>
 
-                  {/* Sender */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pb-2.5 border-b border-slate-800/80">
-                    <span className="text-slate-400">Caller Identity (Shielded):</span>
-                    <span className="text-slate-300 break-all">{tx.senderAddress}</span>
-                  </div>
-
-                  {/* Timestamp */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pb-2.5 border-b border-slate-800/80">
-                    <span className="text-slate-400">Timestamp:</span>
-                    <span className="text-slate-300">{new Date(tx.timestamp).toUTCString()} ({new Date(tx.timestamp).toLocaleString()})</span>
-                  </div>
-
-                  {/* Proof Synthesis Latency */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                    <span className="text-slate-400">Halo2 Prover Latency:</span>
-                    <span className="text-emerald-400 font-bold">34 ms (R1CS Constraint Check Validated)</span>
+                  <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
+                    <span className="text-slate-400 text-[10px] uppercase font-bold">Proof Server Latency</span>
+                    <div className="flex items-center justify-between">
+                      <span className="text-emerald-600 font-bold">{metrics.proofServerLatencyMs} ms (Halo2-SNARK)</span>
+                      <span className="text-slate-400 text-[10px]">Zero-Knowledge Shielded</span>
+                    </div>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Tab 2: Smart Contract */}
             {activeTab === 'contract' && (
-              <div className="space-y-4">
-                <div className="p-4 rounded-2xl bg-[#080D1A] border border-slate-800 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-white font-bold">Deployed Contract Specification</span>
-                    <span className="text-emerald-400 text-[11px]">Midnight Compact v0.20.4</span>
-                  </div>
-                  <p className="text-slate-400 text-[11px] font-sans">
-                    The contract code below is compiled with Midnight Compact compiler, deployed on Preprod, and enforces on-chain zero-knowledge nullifier sets.
-                  </p>
-                </div>
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 overflow-auto max-h-[50vh]">
+                <pre className="text-xs text-slate-800 leading-relaxed font-mono">
+{`// Midnight Network Preprod Compact Smart Contract
+// Contract: voidcloud.compact
 
-                <div className="rounded-2xl bg-[#030712] border border-slate-800 p-4 text-[11px] leading-relaxed overflow-x-auto text-slate-300">
-                  <pre>
-{`// contracts/voidcloud.compact
-pragma language_version >= 0.20;
-import CompactStandardLibrary;
-
-ledger {
-    totalRegisteredUsers: Counter;
-    totalShieldedStorageAllocated: Counter;
-    bonusNullifiers: Set<Bytes<32>>;
-}
-
-witness userSecret(): Bytes<32>;
+export ledger bonusNullifiers: Set<Bytes<32>>;
+export ledger userStorageAllocations: Map<Bytes<32>, Uint<64>>;
 
 export circuit claimTestnetBonus(nullifier: Bytes<32>): [] {
-    const secret = userSecret();
-    const expectedNullifier = persistent_hash<Vector<2, Bytes<32>>>([
-        secret,
-        pad(32, "voidcloud:testnet:faucet_nullifier")
-    ]);
-
-    assert nullifier == expectedNullifier "Nullifier does not match private witness";
-    assert !bonusNullifiers.member(nullifier) "Testnet bonus already claimed for this nullifier";
-
-    bonusNullifiers.insert(nullifier);
-    totalShieldedStorageAllocated.increment(20);
+  // Enforce zero-knowledge nullifier single-use constraint
+  assert(!bonusNullifiers.member(nullifier), "Bonus already claimed!");
+  bonusNullifiers.insert(nullifier);
 }`}
-                  </pre>
-                </div>
+                </pre>
               </div>
             )}
 
-            {/* Tab 3: On-Chain Ledger State */}
             {activeTab === 'state' && (
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div className="p-4 rounded-2xl bg-[#080D1A] border border-slate-800 space-y-1">
-                    <span className="text-slate-500 text-[10px]">LEDGER COUNTER</span>
-                    <span className="text-white font-bold text-sm block">totalRegisteredUsers</span>
-                    <span className="text-sky-400 font-bold text-xl">{metrics.totalRegisteredUsers + 1}</span>
-                  </div>
-
-                  <div className="p-4 rounded-2xl bg-[#080D1A] border border-slate-800 space-y-1">
-                    <span className="text-slate-500 text-[10px]">TOTAL STORAGE POOL</span>
-                    <span className="text-white font-bold text-sm block">totalShieldedStorageAllocated</span>
-                    <span className="text-emerald-400 font-bold text-xl">{metrics.totalShieldedStorageAllocatedGB + 20} GB</span>
-                  </div>
-
-                  <div className="p-4 rounded-2xl bg-[#080D1A] border border-slate-800 space-y-1">
-                    <span className="text-slate-500 text-[10px]">NULLIFIER SET SIZE</span>
-                    <span className="text-white font-bold text-sm block">bonusNullifiers.count()</span>
-                    <span className="text-purple-400 font-bold text-xl">{metrics.bonusNullifiersCount + 1}</span>
-                  </div>
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 font-mono text-xs">
+                <div className="p-3 rounded-xl bg-white border border-slate-200">
+                  <div className="text-slate-400 text-[10px]">Ledger Invariant 1:</div>
+                  <div className="text-slate-900 font-bold mt-0.5">bonusNullifiers.member(nullifier) == TRUE</div>
                 </div>
-
-                {/* Nullifier Inclusion Proof Box */}
-                <div className="p-4 rounded-2xl bg-[#080D1A] border border-purple-500/40 space-y-2">
-                  <span className="text-white font-bold text-xs flex items-center gap-1.5">
-                    <Shield className="w-4 h-4 text-purple-400" />
-                    On-Chain Nullifier Set Verification (Anti-Double-Claim Invariant)
-                  </span>
-                  <p className="text-slate-400 text-[11px] font-sans">
-                    The transaction committed the following blinded nullifier into the on-chain set <code className="text-purple-300">bonusNullifiers</code>:
-                  </p>
-                  <div className="p-2.5 rounded-xl bg-[#030712] border border-slate-800 text-purple-300 font-bold text-[11px] break-all">
-                    {nullifier}
-                  </div>
-                  <span className="text-emerald-400 text-[10px] flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    Set Membership Confirmed: <code>bonusNullifiers.member(nullifier) == true</code>
-                  </span>
+                <div className="p-3 rounded-xl bg-white border border-slate-200">
+                  <div className="text-slate-400 text-[10px]">Ledger Invariant 2:</div>
+                  <div className="text-slate-900 font-bold mt-0.5">userStorageAllocations[userKey] == {session.quotaGB} * 1024 * 1024 * 1024 bytes</div>
                 </div>
               </div>
             )}
 
-            {/* Tab 4: Raw GraphQL */}
             {activeTab === 'raw' && (
-              <div className="space-y-2">
-                <div className="flex items-center justify-between pb-1">
-                  <span className="text-slate-400 text-xs">
-                    GraphQL Response from <code className="text-sky-300">https://indexer.preprod.midnight.network/api/v1/graphql</code>
-                  </span>
-                  <button
-                    onClick={() => copyToClipboard(JSON.stringify(rawGraphQLLedgerState, null, 2), 'rawJson')}
-                    className="text-slate-400 hover:text-white text-xs flex items-center gap-1"
-                  >
-                    {copiedField === 'rawJson' ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                    <span>Copy JSON</span>
-                  </button>
-                </div>
-                <div className="rounded-2xl bg-[#030712] border border-slate-800 p-4 text-[11px] leading-relaxed overflow-x-auto text-emerald-400">
-                  <pre>{JSON.stringify(rawGraphQLLedgerState, null, 2)}</pre>
-                </div>
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 overflow-auto max-h-[50vh]">
+                <pre className="text-xs text-slate-800 leading-relaxed font-mono">
+                  {JSON.stringify(rawGraphQLLedgerState, null, 2)}
+                </pre>
               </div>
             )}
-          </div>
-
-          {/* Footer Action Bar */}
-          <div className="pt-3 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 flex-shrink-0">
-            <span className="text-slate-500 text-[10px]">
-              Midnight Preprod Genesis Block #849210 • Proof Standard: Halo2 PLONK
-            </span>
-
-            <button
-              onClick={onClose}
-              className="px-6 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-sky-500 hover:from-emerald-400 hover:to-sky-400 text-white font-bold text-xs shadow-md"
-            >
-              Done Inspecting
-            </button>
           </div>
         </motion.div>
       </div>
