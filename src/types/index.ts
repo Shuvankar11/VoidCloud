@@ -11,6 +11,7 @@ export interface ShieldedFile {
   ownerId?: string;
   ownerEmail?: string;
   isStarred?: boolean;
+  previewDataUrl?: string;
   rawBlob?: Blob;
   decryptedBlobUrl?: string;
   rawKeyHex?: string;

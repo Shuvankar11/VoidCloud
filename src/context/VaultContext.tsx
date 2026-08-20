@@ -448,6 +448,21 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const cidRandom = Array.from(new Uint8Array(16)).map(b => b.toString(16).padStart(2, '0')).join('');
       const encryptedCid = `bafy2bzace${cidRandom}`;
 
+      // Generate lightweight thumbnail preview for images
+      let previewDataUrl: string | undefined = undefined;
+      if (file.type.startsWith('image/') || /\.(jpg|jpeg|png|gif|webp|svg|bmp|ico)$/i.test(file.name)) {
+        try {
+          previewDataUrl = await new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result as string);
+            reader.onerror = () => resolve(undefined as any);
+            reader.readAsDataURL(file);
+          });
+        } catch (e) {
+          console.warn('Could not generate preview data URL:', e);
+        }
+      }
+
       // Export raw key for in-browser decryption
       const rawKey = await window.crypto.subtle.exportKey('raw', key);
       const keyHex = Array.from(new Uint8Array(rawKey)).map(b => b.toString(16).padStart(2, '0')).join('');
@@ -469,6 +484,7 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         status: 'shielded',
         encryptionAlgo: 'AES-256-GCM + ZK Commitment',
         mimeType,
+        previewDataUrl,
         rawKeyHex: keyHex,
         ivHex: ivHex,
         ownerId: activeUserId,
@@ -480,35 +496,41 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
       onProgress?.(100, 'Shielded & Pinned to Decentralized Cloud Vault!', totalMB, totalMB);
 
-      setFiles((prev) => [newFile, ...prev]);
+      setFiles((prev) => {
+        const updated = [newFile, ...prev];
+        try {
+          localStorage.setItem(`voidcloud_v2_files_${activeUserId}`, JSON.stringify(updated));
+        } catch (e) {
+          console.error(e);
+        }
+        return updated;
+      });
 
       return newFile;
     },
     [activeUserId, activeUserEmail, telegramConfig]
   );
 
-  // Shred file / Revoke Key Commitment & Delete from Telegram Channel
+  // Shred file / Move to Trash (Revoke active status, keep data in local vault so it can be restored)
   const shredFile = useCallback(async (fileId: string) => {
-    const fileToShred = files.find(f => f.id === fileId);
-    if (fileToShred && fileToShred.telegramMessageId) {
-      await deleteFromTelegramChannel(fileToShred.telegramMessageId, telegramConfig);
-    }
-    await deleteFileBlob(fileId);
-
-    setFiles((prev) =>
-      prev.map((f) => {
+    setFiles((prev) => {
+      const updated = prev.map((f) => {
         if (f.id === fileId) {
           return {
             ...f,
-            status: 'shredded',
-            rawKeyHex: undefined,
-            ivHex: undefined,
+            status: 'shredded' as const,
           };
         }
         return f;
-      })
-    );
-  }, [files, telegramConfig]);
+      });
+      try {
+        localStorage.setItem(`voidcloud_v2_files_${activeUserId}`, JSON.stringify(updated));
+      } catch (e) {
+        console.error(e);
+      }
+      return updated;
+    });
+  }, [activeUserId]);
 
   // Restore file from Trash back to active shielded status
   const restoreFile = useCallback(async (fileId: string) => {

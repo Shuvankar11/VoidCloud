@@ -59,12 +59,16 @@ const MediaTile: React.FC<MediaTileProps> = ({
   onSave,
   onDelete,
 }) => {
-  const [blobUrl, setBlobUrl] = useState<string | null>(null);
+  const [blobUrl, setBlobUrl] = useState<string | null>(file.previewDataUrl || null);
   const isShredded = file.status === 'shredded';
   const sizeMB = (file.sizeBytes / (1024 * 1024)).toFixed(2);
   const ext = file.name.split('.').pop()?.toUpperCase() || 'FILE';
 
   useEffect(() => {
+    if (file.previewDataUrl) {
+      setBlobUrl(file.previewDataUrl);
+      return;
+    }
     let isMounted = true;
     async function load() {
       try {
@@ -80,9 +84,9 @@ const MediaTile: React.FC<MediaTileProps> = ({
     load();
     return () => {
       isMounted = false;
-      if (blobUrl) URL.revokeObjectURL(blobUrl);
+      if (blobUrl && !file.previewDataUrl) URL.revokeObjectURL(blobUrl);
     };
-  }, [file.id]);
+  }, [file.id, file.previewDataUrl]);
 
   const heightClass =
     gridDensity === 'small'
@@ -90,6 +94,8 @@ const MediaTile: React.FC<MediaTileProps> = ({
       : gridDensity === 'large'
       ? 'h-64 sm:h-72'
       : 'h-44 sm:h-52';
+
+  const activeImageUrl = file.previewDataUrl || blobUrl;
 
   return (
     <div
@@ -100,9 +106,9 @@ const MediaTile: React.FC<MediaTileProps> = ({
     >
       {/* Visual Content */}
       {category === 'image' ? (
-        blobUrl ? (
+        activeImageUrl ? (
           <img
-            src={blobUrl}
+            src={activeImageUrl}
             alt={file.name}
             className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300 select-none pointer-events-none"
           />

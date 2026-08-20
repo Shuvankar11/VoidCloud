@@ -98,6 +98,12 @@ export const FileViewerModal: React.FC<FileViewerModalProps> = ({
 
     async function loadContent() {
       try {
+        if (file?.previewDataUrl) {
+          setBlobUrl(file.previewDataUrl);
+          setLoading(false);
+          return;
+        }
+
         const cached = await getFileBlob(file!.id);
         if (isMounted && cached && cached.blob) {
           const url = URL.createObjectURL(cached.blob);
@@ -126,9 +132,9 @@ export const FileViewerModal: React.FC<FileViewerModalProps> = ({
 
     return () => {
       isMounted = false;
-      if (blobUrl) URL.revokeObjectURL(blobUrl);
+      if (blobUrl && !file?.previewDataUrl) URL.revokeObjectURL(blobUrl);
     };
-  }, [file?.id]);
+  }, [file?.id, file?.previewDataUrl]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
