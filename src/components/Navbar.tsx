@@ -12,7 +12,8 @@ import {
   Image as ImageIcon,
   HardDrive,
   History,
-  Cpu
+  Cpu,
+  MessageSquareHeart
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -116,9 +117,21 @@ export const Navbar: React.FC = () => {
           </button>
         </nav>
 
-        {/* Right Actions: Upgrade + Wallet + User Auth */}
+        {/* Right Actions: Feedback + Upgrade + Wallet + User Auth */}
         <div className="flex items-center space-x-2 flex-shrink-0">
           
+          {/* User Feedback Survey Link */}
+          <a
+            href="https://forms.gle/TqdtNQuHk8v6A3SR6"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 text-xs font-bold transition-all shadow-xs"
+            title="Give feedback on Google Forms"
+          >
+            <MessageSquareHeart className="w-3.5 h-3.5 text-indigo-500" />
+            <span className="hidden sm:inline">Feedback</span>
+          </a>
+
           {/* Upgrade Storage Plan Button */}
           <button
             onClick={() => setIsPricingModalOpen(true)}
@@ -215,6 +228,14 @@ export const Navbar: React.FC = () => {
           >
             Ledger History
           </button>
+          <a
+            href="https://forms.gle/TqdtNQuHk8v6A3SR6"
+            target="_blank"
+            rel="noreferrer"
+            className="w-full block text-left py-2 px-3 rounded-xl bg-indigo-50 text-indigo-700 font-bold"
+          >
+            Give Feedback (Google Form)
+          </a>
         </div>
       )}
     </header>

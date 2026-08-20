@@ -40,6 +40,7 @@ export const Footer: React.FC = () => {
               <li><button onClick={() => setActiveView('dashboard')} className="hover:text-sky-600 transition-colors block text-left">Vault Dashboard ({session.quotaGB} GB)</button></li>
               <li><button onClick={() => setActiveView('gallery')} className="hover:text-sky-600 transition-colors block text-left">Media Gallery</button></li>
               <li><button onClick={() => setActiveView('payments')} className="hover:text-emerald-600 transition-colors block text-left font-semibold">Payment & Ledger History</button></li>
+              <li><a href="https://forms.gle/TqdtNQuHk8v6A3SR6" target="_blank" rel="noreferrer" className="text-indigo-600 hover:text-indigo-700 transition-colors block text-left font-bold">User Feedback Form (Google Form) ↗</a></li>
             </ul>
           </div>
 
@@ -70,6 +71,9 @@ export const Footer: React.FC = () => {
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
           <div>© 2026 VoidCloud. Built for Midnight Network. All rights reserved.</div>
           <div className="flex items-center space-x-4">
+            <a href="https://forms.gle/TqdtNQuHk8v6A3SR6" target="_blank" rel="noreferrer" className="hover:text-indigo-600 transition-colors font-medium">
+              Feedback Survey
+            </a>
             <a href="https://x.com/Voidcloud18" target="_blank" rel="noreferrer" className="hover:text-sky-600 transition-colors flex items-center space-x-1 font-medium">
               <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
