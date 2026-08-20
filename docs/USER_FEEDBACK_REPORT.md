@@ -6,6 +6,7 @@
 
 ## 🔗 Official Feedback Channels
 * 📋 **Google Form Feedback Survey**: [https://forms.gle/TqdtNQuHk8v6A3SR6](https://forms.gle/TqdtNQuHk8v6A3SR6)
+* 📊 **Live User Feedback Responses (Google Sheets for Judges)**: [https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing](https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing)
 * 🐦 **Product X (Twitter) Community**: [https://x.com/Voidcloud18](https://x.com/Voidcloud18)
 * 💬 **GitHub Discussions & Issues**: [https://github.com/Shuvankar11/VoidCloud/issues](https://github.com/Shuvankar11/VoidCloud/issues)
 
@@ -74,4 +75,4 @@ flowchart TD
 ---
 
 ## 🔄 Ongoing Feedback Loop
-We continuously monitor incoming submissions on [https://forms.gle/TqdtNQuHk8v6A3SR6](https://forms.gle/TqdtNQuHk8v6A3SR6) to prioritize upcoming Level 6 Supermoon features including decentralized multi-user cryptographic sharing and multi-chain quota bridges.
+We continuously monitor incoming submissions on [https://forms.gle/TqdtNQuHk8v6A3SR6](https://forms.gle/TqdtNQuHk8v6A3SR6) and the live spreadsheet at [https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing](https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing) to prioritize upcoming Level 6 Supermoon features including decentralized multi-user cryptographic sharing and multi-chain quota bridges.

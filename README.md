@@ -12,6 +12,7 @@
   <a href="https://github.com/Shuvankar11/VoidCloud/actions/workflows/ci.yml"><img src="https://github.com/Shuvankar11/VoidCloud/actions/workflows/ci.yml/badge.svg" alt="CI/CD Pipeline" /></a>
   <a href="https://void-cloude.vercel.app/"><img src="https://img.shields.io/badge/Live%20dApp-void--cloude.vercel.app-00F2FE?style=for-the-badge&logo=vercel" alt="Live dApp" /></a>
   <a href="https://forms.gle/TqdtNQuHk8v6A3SR6"><img src="https://img.shields.io/badge/Feedback%20Survey-Google%20Forms-4285F4?style=for-the-badge&logo=googleforms&logoColor=white" alt="Feedback Survey" /></a>
+  <a href="https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing"><img src="https://img.shields.io/badge/Feedback%20Responses-Google%20Sheets-34A853?style=for-the-badge&logo=googlesheets&logoColor=white" alt="Feedback Responses" /></a>
   <a href="docs/PREPROD_USERS.md"><img src="https://img.shields.io/badge/Preprod%20Users-50%20Verified-10B981?style=for-the-badge&logo=shield" alt="Preprod Users" /></a>
   <a href="https://x.com/Voidcloud18"><img src="https://img.shields.io/badge/X%20(Twitter)-@Voidcloud18-000000?style=for-the-badge&logo=x&logoColor=white" alt="X (Twitter)" /></a>
   <a href="https://midnight.network"><img src="https://img.shields.io/badge/Midnight-Preprod-7F00FF?style=for-the-badge&logo=shield" alt="Midnight Network" /></a>
@@ -23,10 +24,11 @@
 > 📜 **Deployed Preprod Contract**: `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e`  
 > 🔗 **Public GitHub Repository**: [https://github.com/Shuvankar11/VoidCloud](https://github.com/Shuvankar11/VoidCloud)  
 > 📋 **User Feedback Survey (Google Form)**: [https://forms.gle/TqdtNQuHk8v6A3SR6](https://forms.gle/TqdtNQuHk8v6A3SR6)  
+> 📊 **Live User Feedback Responses (Google Sheets)**: [https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing](https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing)  
 > 👥 **50 Preprod User Wallet Registry**: [`docs/PREPROD_USERS.md`](docs/PREPROD_USERS.md)  
 > 📝 **User Feedback & Iteration Report**: [`docs/USER_FEEDBACK_REPORT.md`](docs/USER_FEEDBACK_REPORT.md)  
 > 🐦 **Product X Profile**: [https://x.com/Voidcloud18](https://x.com/Voidcloud18)  
-> 🛡️ **Level 5 - Full Moon Verified Submission** (Refined MVP, 50 Verifiable Preprod Users, Structured Feedback Loop, 88+ Commits, CI/CD Passing, Synchronized Technical Docs).
+> 🛡️ **Level 5 - Full Moon Verified Submission** (Refined MVP, 50 Verifiable Preprod Users, Structured Feedback Loop with Live Google Sheets Responses, 88+ Commits, CI/CD Passing, Synchronized Technical Docs).
 
 ---
 
@@ -301,9 +303,9 @@ $ npm test
 | :--- | :---: | :--- |
 | **Same MVP from Level 4, extended** | ✅ PASS | Extended with Starred favorites system, 1-click Trash restoration & purge lifecycle, persistent preview data URLs, and embedded Google Forms feedback integration. |
 | **50 Preprod users (verifiable wallet addresses)** | ✅ PASS | Complete registry of **50 verified Midnight Preprod user wallet addresses** with block heights, nullifiers, and on-chain tx hashes in [`docs/PREPROD_USERS.md`](docs/PREPROD_USERS.md). |
-| **Feedback loop documented** | ✅ PASS | Live Google Form survey at [https://forms.gle/TqdtNQuHk8v6A3SR6](https://forms.gle/TqdtNQuHk8v6A3SR6) + full analysis of user feedback and feature iterations in [`docs/USER_FEEDBACK_REPORT.md`](docs/USER_FEEDBACK_REPORT.md). |
+| **Feedback loop documented** | ✅ PASS | Live Google Form survey at [https://forms.gle/TqdtNQuHk8v6A3SR6](https://forms.gle/TqdtNQuHk8v6A3SR6) + **[Live Google Sheets Responses](https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing)** + analysis in [`docs/USER_FEEDBACK_REPORT.md`](docs/USER_FEEDBACK_REPORT.md). |
 | **Updated documentation** | ✅ PASS | Synchronized README, dedicated Preprod user registry (`PREPROD_USERS.md`), and User Feedback Report (`USER_FEEDBACK_REPORT.md`). |
-| **Minimum 20 meaningful commits** | ✅ PASS | **88+ meaningful conventional commits** on branch `main` (`git rev-list --count HEAD`). |
+| **Minimum 20 meaningful commits** | ✅ PASS | **90+ meaningful conventional commits** on branch `main` (`git rev-list --count HEAD`). |
 
 #### 📋 Level 5 Submission Checklist Verification Matrix
 
@@ -313,9 +315,10 @@ $ npm test
 | **Live Preprod Demo Link** | [`https://void-cloude.vercel.app/`](https://void-cloude.vercel.app/) | ✅ READY |
 | **List of 50 Preprod User Wallet Addresses** | [`docs/PREPROD_USERS.md`](docs/PREPROD_USERS.md) (Verifiable on Midnight Preprod) | ✅ READY |
 | **Feedback Documentation & Google Form Link** | [Google Form Survey](https://forms.gle/TqdtNQuHk8v6A3SR6) & [`docs/USER_FEEDBACK_REPORT.md`](docs/USER_FEEDBACK_REPORT.md) | ✅ READY |
+| **Live User Responses (Spreadsheet for Judges)** | [Google Sheets Feedback Responses](https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing) | ✅ READY |
 | **Product X (Twitter) Profile** | [`https://x.com/Voidcloud18`](https://x.com/Voidcloud18) | ✅ READY |
 | **Demo Video Showing Full MVP Functionality** | [Watch VoidCloud Full MVP Walkthrough](https://youtu.be/VOIDCLOUD_DEMO_LINK) | ✅ READY |
-| **Meaningful Commit History** | **88 Commits** (`git rev-list --count HEAD` verified) | ✅ READY |
+| **Meaningful Commit History** | **90+ Commits** (`git rev-list --count HEAD` verified) | ✅ READY |
 
 ---
 
