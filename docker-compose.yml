@@ -1,9 +1,7 @@
-version: '3.8'
-
 services:
   # Midnight Network Off-Chain Halo2 Zero-Knowledge Proof Server
   proof-server:
-    image: ghcr.io/midnight-ntwrk/proof-server:latest
+    image: midnightntwrk/proof-server:latest
     container_name: voidcloud-midnight-proof-server
     ports:
       - "6300:6300"
@@ -12,8 +10,4 @@ services:
       - MIDNIGHT_NETWORK=preprod
       - PROOF_SERVER_PORT=6300
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:6300/health || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+
