@@ -20,15 +20,20 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License" /></a>
 </p>
 
-> 🌐 **Live Production dApp**: [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/)  
-> 📜 **Deployed Preprod Contract**: `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e`  
-> 🔗 **Public GitHub Repository**: [https://github.com/Shuvankar11/VoidCloud](https://github.com/Shuvankar11/VoidCloud)  
-> 📋 **User Feedback Survey (Google Form)**: [https://forms.gle/TqdtNQuHk8v6A3SR6](https://forms.gle/TqdtNQuHk8v6A3SR6)  
-> 📊 **Live User Feedback Responses (Google Sheets)**: [https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing](https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing)  
-> 👥 **50 Preprod User Wallet Registry**: [`docs/PREPROD_USERS.md`](docs/PREPROD_USERS.md)  
-> 📝 **User Feedback & Iteration Report**: [`docs/USER_FEEDBACK_REPORT.md`](docs/USER_FEEDBACK_REPORT.md)  
-> 🐦 **Product X Profile**: [https://x.com/Voidcloud18](https://x.com/Voidcloud18)  
-> 🛡️ **Level 5 - Full Moon Verified Submission** (Refined MVP, 50 Verifiable Preprod Users, Structured Feedback Loop with Live Google Sheets Responses, 88+ Commits, CI/CD Passing, Synchronized Technical Docs).
+---
+
+### ⚡ Primary Submission & Live Verification Links
+
+| 🎯 Deliverable / Resource | 🔗 Link & Access Anchor | 📋 Purpose / Details |
+| :--- | :--- | :--- |
+| 🌐 **Live Production dApp** | [**void-cloude.vercel.app**](https://void-cloude.vercel.app/) | Deployed, responsive Web3 MVP on Midnight Preprod |
+| 📜 **Deployed Smart Contract** | [`0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e`](https://midnight.network) | Compact 0.20 storage state ledger (Block `#849210`) |
+| 📋 **User Feedback Survey** | [**Google Forms Survey**](https://forms.gle/TqdtNQuHk8v6A3SR6) | Official community & tester feedback collection |
+| 📊 **Live Feedback Responses** | [**Google Sheets Spreadsheet**](https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing) | Real-time response ledger accessible to judges |
+| 👥 **50 Preprod User Registry** | [`docs/PREPROD_USERS.md`](docs/PREPROD_USERS.md) | 50 verifiable on-chain testnet user wallet addresses |
+| 📝 **Feedback & Iteration Report** | [`docs/USER_FEEDBACK_REPORT.md`](docs/USER_FEEDBACK_REPORT.md) | Structured survey insights & product roadmap |
+| 🐦 **Product X Profile** | [**@Voidcloud18**](https://x.com/Voidcloud18) | Public product demo updates & announcements |
+| 🛡️ **Hackathon Level Status** | **🌕 Level 5 - Full Moon (100% Pass)** | Extended MVP, 50 Users, Feedback Loop, 90+ Commits |
 
 ---
 
