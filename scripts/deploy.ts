@@ -12,7 +12,7 @@ interface DeploymentConfig {
 
 const DEFAULT_CONFIG: DeploymentConfig = {
   network: 'preprod',
-  indexerUrl: 'https://indexer.preprod.midnight.network/api/v1/graphql',
+  indexerUrl: 'https://indexer.preprod.midnight.network/api/v4/graphql',
   proofServerUrl: 'http://127.0.0.1:6300',
   nodeRpcUrl: 'https://rpc.preprod.midnight.network',
 };
