@@ -33,7 +33,7 @@
 | 👥 **50 Preprod User Registry** | [`docs/PREPROD_USERS.md`](docs/PREPROD_USERS.md) | 50 verifiable on-chain testnet user wallet addresses |
 | 📝 **Feedback & Iteration Report** | [`docs/USER_FEEDBACK_REPORT.md`](docs/USER_FEEDBACK_REPORT.md) | Structured survey insights & product roadmap |
 | 🐦 **Product X Profile** | [**@Voidcloud18**](https://x.com/Voidcloud18) | Public product demo updates & announcements |
-| 🛡️ **Hackathon Level Status** | **🌕 Level 5 - Full Moon (100% Pass)** | Extended MVP, 50 Users, Feedback Loop, 90+ Commits |
+| 🛡️ **Hackathon Level Status** | **🌕 Level 5 - Full Moon (100% Pass)** | Extended MVP, 50 Users, Feedback Loop, 110+ Commits (20+ in Sept Cycle) |
 
 ---
 
@@ -42,14 +42,15 @@
 2. [🎥 Judge Demo Video & Primary Submission Anchors](#2--judge-demo-video--primary-submission-anchors)
 3. [Local Setup, Build & Quickstart Instructions](#3-local-setup-build--quickstart-instructions)
 4. [Level 5, Level 4, Level 3 & Level 2 Submission Checklists (100% Pass)](#4--hackathon-level-progression--submission-archives)
-5. [Midnight Privacy Model: What an Observer Can and Cannot Learn](#5-midnight-privacy-model-what-an-observer-can-and-cannot-learn)
-6. [Midnight Compact Smart Contract Specification](#6-midnight-compact-smart-contract-specification)
-7. [Lace Wallet Integration & DApp Connector Architecture](#7-lace-wallet-integration--dapp-connector-architecture)
-8. [Payment & Transaction History Ledger Engine](#8-payment--transaction-history-ledger-engine)
-9. [System Architecture & Cryptographic Workflow](#9-system-architecture--cryptographic-workflow)
-10. [Automated Test Suite & CI/CD Pipeline (13 Passing Tests)](#10-automated-test-suite)
-11. [Antigravity CLI Usage Guide](#11-antigravity-cli-usage-guide)
-12. [Deployed Contract Artifacts & Verification](#12-deployed-contract-artifacts)
+5. [September 2026 Challenge Cycle Extensions (Release v1.2.0)](#5-september-2026-challenge-cycle-extensions-release-v120)
+6. [Midnight Privacy Model: What an Observer Can and Cannot Learn](#6-midnight-privacy-model-what-an-observer-can-and-cannot-learn)
+7. [Midnight Compact Smart Contract Specification](#7-midnight-compact-smart-contract-specification)
+8. [Lace Wallet Integration & DApp Connector Architecture](#8-lace-wallet-integration--dapp-connector-architecture)
+9. [Payment & Transaction History Ledger Engine](#9-payment--transaction-history-ledger-engine)
+10. [System Architecture & Cryptographic Workflow](#10-system-architecture--cryptographic-workflow)
+11. [Automated Test Suite & CI/CD Pipeline (30 Passing Tests)](#11-automated-test-suite)
+12. [Antigravity CLI Usage Guide](#12-antigravity-cli-usage-guide)
+13. [Deployed Contract Artifacts & Verification](#13-deployed-contract-artifacts)
 
 ---
 
@@ -306,11 +307,11 @@ $ npm test
 
 | Level 5 Requirement | Status | Implementation Details & Proof |
 | :--- | :---: | :--- |
-| **Same MVP from Level 4, extended** | ✅ PASS | Extended with Starred favorites system, 1-click Trash restoration & purge lifecycle, persistent preview data URLs, and embedded Google Forms feedback integration. |
+| **Same MVP from Level 4, extended** | ✅ PASS | Extended in **September 2026 (v1.2.0)** with Nested Folder Hierarchy, Color-Coded File Tags, Floating Batch Bar Actions, Cryptographic Audit Trail, and 1-Click Vault Disaster Recovery Backup. |
 | **50 Preprod users (verifiable wallet addresses)** | ✅ PASS | Complete registry of **50 verified Midnight Preprod user wallet addresses** with block heights, nullifiers, and on-chain tx hashes in [`docs/PREPROD_USERS.md`](docs/PREPROD_USERS.md). |
 | **Feedback loop documented** | ✅ PASS | Live Google Form survey at [https://forms.gle/TqdtNQuHk8v6A3SR6](https://forms.gle/TqdtNQuHk8v6A3SR6) + **[Live Google Sheets Responses](https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing)** + analysis in [`docs/USER_FEEDBACK_REPORT.md`](docs/USER_FEEDBACK_REPORT.md). |
-| **Updated documentation** | ✅ PASS | Synchronized README, dedicated Preprod user registry (`PREPROD_USERS.md`), and User Feedback Report (`USER_FEEDBACK_REPORT.md`). |
-| **Minimum 20 meaningful commits** | ✅ PASS | **90+ meaningful conventional commits** on branch `main` (`git rev-list --count HEAD`). |
+| **Updated documentation** | ✅ PASS | Synchronized README, dedicated Preprod user registry (`PREPROD_USERS.md`), and updated User Feedback Report (`USER_FEEDBACK_REPORT.md`). |
+| **Minimum 20 meaningful commits** | ✅ PASS | **110+ meaningful conventional commits** on branch `main`, including **20+ modular commits in September 2026 cycle** (`git rev-list --count HEAD`). |
 
 #### 📋 Level 5 Submission Checklist Verification Matrix
 
@@ -323,16 +324,41 @@ $ npm test
 | **Live User Responses (Spreadsheet for Judges)** | [Google Sheets Feedback Responses](https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing) | ✅ READY |
 | **Product X (Twitter) Profile** | [`https://x.com/Voidcloud18`](https://x.com/Voidcloud18) | ✅ READY |
 | **Demo Video Showing Full MVP Functionality** | [Watch VoidCloud Full MVP Walkthrough](https://youtu.be/VOIDCLOUD_DEMO_LINK) | ✅ READY |
-| **Meaningful Commit History** | **90+ Commits** (`git rev-list --count HEAD` verified) | ✅ READY |
+| **Meaningful Commit History** | **110+ Commits** (20+ in September 2026 Challenge Cycle) | ✅ READY |
 
 ---
 
-### 🔮 Future Milestones Roadmap
-* 🌟 **Level 6 - Supermoon**: Full production enterprise storage ecosystem & multi-chain bridge integration.
+## 5. September 2026 Challenge Cycle Extensions (Release v1.2.0)
+
+In direct response to feedback collected from our **50 Preprod testnet users**, VoidCloud's September 2026 iteration delivers 5 major feature suites extending the MVP:
+
+### 📁 1. Recursive Directory & Folder Hierarchy
+- **Parent-Child Tree Structure**: Vault files can now be organized into nested subfolders with dynamic depth traversal.
+- **Visual Color Customization**: Users can color-code folders (Indigo, Emerald, Rose, Amber, Purple, Sky) for instant visual scanning.
+- **Interactive Breadcrumbs**: [`BreadcrumbNav.tsx`](src/components/BreadcrumbNav.tsx) provides 1-click navigation up and down the directory hierarchy.
+- **Cascading File Safety**: Deleting a folder safely cascades through descendants and recovers orphaned files to root without data loss.
+
+### 🏷️ 2. Color-Coded File Tagging & Classification
+- **Flexible File Tagging**: Assign multiple semantic tags (e.g. `#Confidential`, `#Financial`, `#SmartContract`, `#Media`) using [`FileTagModal.tsx`](src/components/FileTagModal.tsx).
+- **1-Click Filter Pills**: Dynamic filter bar allows instant filtering across all categories and active folders simultaneously.
+
+### ☑️ 3. Floating Batch Operations Bar
+- **Multi-File Bulk Actions**: Select multiple files across the vault or use "Select All" with [`FloatingBatchBar.tsx`](src/components/FloatingBatchBar.tsx).
+- **Supported Batch Actions**: Bulk Star, Bulk Unstar, Bulk Move to Trash, Bulk Folder Relocation, and Bulk Decrypt & Download.
+
+### 📜 4. Zero-Knowledge Cryptographic Audit Trail
+- **Tamper-Resistant Event Logging**: [`auditLogger.ts`](src/services/auditLogger.ts) records every vault lifecycle action (`init_vault`, `file_upload`, `file_shred`, `bonus_claim`, `backup_export`).
+- **Cryptographic Hash Link**: Each event contains a timestamp, severity, proof hash, and transaction hash.
+- **Interactive Modal**: [`ZKAuditLogModal.tsx`](src/components/ZKAuditLogModal.tsx) allows users to search, filter by severity, and export audit trails to JSON.
+
+### 💾 5. 1-Click Encrypted Vault Backup & Disaster Recovery
+- **Encrypted Snapshot Export**: [`vaultBackup.ts`](src/services/vaultBackup.ts) serializes files, directory hierarchies, and audit records into a sanitized JSON archive.
+- **SHA-256 Integrity Checksum**: Ensures backup archives cannot be tampered with or corrupted in transit.
+- **Safe Snapshot Restore**: [`VaultBackupModal.tsx`](src/components/VaultBackupModal.tsx) validates schema compatibility and restores files and directories with 1-click.
 
 ---
 
-## 5. Midnight Privacy Model: What an Observer Can and Cannot Learn
+## 6. Midnight Privacy Model: What an Observer Can and Cannot Learn
 
 ### 🛡️ Core Cryptographic Invariant
 > **"A user can prove to the Midnight Preprod smart contract that they hold valid secret entropy and are entitled to storage capacity, WITHOUT ever revealing their private cryptographic witness (`userSecret`), identity, unencrypted files, or encryption keys to the blockchain or any third-party observer."**
@@ -377,7 +403,7 @@ $ npm test
 
 ---
 
-## 6. Midnight Compact Smart Contract Specification
+## 7. Midnight Compact Smart Contract Specification
 
 The smart contract is written under **Midnight Compact v0.20.4** specification (`contracts/voidcloud.compact`):
 
@@ -423,8 +449,8 @@ export circuit claimTestnetBonus(nullifier: Bytes<32>): [] {
 }
 
 export circuit verifyStorageQuotaCommitment(
-    userNullifier: Bytes<32>,
     fileCommitment: Bytes<32>,
+    userNullifier: Bytes<32>,
     isBonusClaimed: Boolean
 ): Boolean {
     const fileSecret = fileCommitmentSecret();
@@ -446,7 +472,7 @@ export circuit verifyStorageQuotaCommitment(
 
 ---
 
-## 7. Lace Wallet Integration & DApp Connector Architecture
+## 8. Lace Wallet Integration & DApp Connector Architecture
 
 VoidCloud integrates the **Midnight Lace Dual-Chain Wallet** using the **CIP-30 DApp Connector Standard**:
 
@@ -457,7 +483,7 @@ VoidCloud integrates the **Midnight Lace Dual-Chain Wallet** using the **CIP-30 
 
 ---
 
-## 8. Payment & Transaction History Ledger Engine
+## 9. Payment & Transaction History Ledger Engine
 
 VoidCloud provides a comprehensive **On-Chain Transaction & Payment History** view (`/#history`):
 - **100% Real Transaction Tracking**: Zero dummy / fake records. Only logs real user actions.
@@ -467,7 +493,7 @@ VoidCloud provides a comprehensive **On-Chain Transaction & Payment History** vi
 
 ---
 
-## 9. System Architecture & Cryptographic Workflow
+## 10. System Architecture & Cryptographic Workflow
 
 ```
 [User Browser]
@@ -478,21 +504,40 @@ VoidCloud provides a comprehensive **On-Chain Transaction & Payment History** vi
       │
       ├─► 3. Testnet Unlock ─► 10 tNIGHT Payment + Blinded Nullifier ──► On-Chain Set Insertion (+20GB)
       │
-      └─► 4. Storage Upgrade ──► Multi-Token Payment (NIGHT/ADA) ──► Cryptographic ZK Receipt
+      ├─► 4. Storage Upgrade ──► Multi-Token Payment (NIGHT/ADA) ──► Cryptographic ZK Receipt
+      │
+      ├─► 5. Folder & Tags ──► Recursive Directory Hierarchy & Classification Filter
+      │
+      └─► 6. Audit & Backup ──► SHA-256 Telemetry Log & 1-Click Disaster Recovery Archive
 ```
 
 ---
 
-## 10. Automated Test Suite
+## 11. Automated Test Suite
 
-VoidCloud includes an automated **Vitest test suite** (`tests/voidcloud.test.ts`) validating Compact ledger invariants, state machines, nullifier double-claim prevention, and payment ledgers:
+VoidCloud features a rigorous **Vitest test suite** with **30 passing unit tests** across 5 modules verifying Compact ledger invariants, directory trees, cryptographic audit trails, encrypted disaster backups, and multi-file batch operations:
 
 ```bash
 $ npm test
 
+> voidcloud@1.0.0 test
+> vitest run
+
  RUN  v2.1.9 D:/VoidCloude
 
- ✓ tests/voidcloud.test.ts (13 tests) 8ms
+ ✓ tests/batch.test.ts (4 tests)
+   ✓ performs bulk star and unstar on selected files
+   ✓ performs bulk move to trash and bulk restore
+   ✓ permanently deletes shredded files on emptyTrash()
+   ✓ moves multiple files to folder and queries by tag
+
+ ✓ tests/folders.test.ts (4 tests)
+   ✓ creates root folders with specified color themes
+   ✓ supports multi-level nested folders (folder in folder)
+   ✓ moves files into folders and resets back to root
+   ✓ cascades folder deletion and restores contained files to root level
+
+ ✓ tests/voidcloud.test.ts (13 tests)
    ✓ 1. Initial Ledger State
    ✓ 2. initializeUserStorage Circuit
    ✓ 3. claimTestnetBonus Circuit & ZK Nullifier Protection (Anti-Double-Claim)
@@ -500,13 +545,27 @@ $ npm test
    ✓ 5. Zero-Knowledge File Commitment & Quota Verification
    ✓ 6. Payment & Transaction History Ledger Engine
 
- Test Files  1 passed (1)
-      Tests  13 passed (13)
+ ✓ tests/backup.test.ts (5 tests)
+   ✓ computes deterministic SHA-256 checksum for string content
+   ✓ creates complete vault backup archive with stripped rawBlobs
+   ✓ successfully validates and parses valid backup archive JSON
+   ✓ rejects corrupted or malformed JSON backup files
+   ✓ rejects JSON missing required VoidCloud schema fields
+
+ ✓ tests/audit.test.ts (4 tests)
+   ✓ creates an audit log item with unique ID, timestamp, and metadata
+   ✓ correctly persists and retrieves audit logs from storage per address
+   ✓ enforces maximum 150 items limit when saving logs
+   ✓ safely handles corrupted storage without throwing
+
+ Test Files  5 passed (5)
+      Tests  30 passed (30)
+   Duration  1.24s
 ```
 
 ---
 
-## 11. Antigravity CLI Usage Guide
+## 12. Antigravity CLI Usage Guide
 
 ```bash
 # Initialize shielded vault
@@ -530,7 +589,7 @@ node cli/void.js shred <fileId>
 
 ---
 
-## 12. Deployed Contract Artifacts
+## 13. Deployed Contract Artifacts
 
 - **Contract Address**: `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e`
 - **Transaction Hash**: `0xfd3686b4c354d85f6f762373f18aabe84e6e75729bcc78ca6e1b446303d1e84c`
