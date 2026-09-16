@@ -854,12 +854,12 @@ export const StorageVaultDashboard: React.FC = () => {
                 ))}
               </div>
             ) : (
-              /* List Table Layout (Clean, Beautiful Padding, Perfectly Centered 3 Dots) */
-              <div className="rounded-2xl border border-slate-200/90 bg-white shadow-xs overflow-visible">
-                <table className="w-full text-left text-xs border-collapse">
+              /* List Table Layout (Clean, Beautiful Padding, Perfectly Centered 3 Dots, No Overflow) */
+              <div className="rounded-2xl border border-slate-200/90 bg-white shadow-xs overflow-x-auto sm:overflow-visible">
+                <table className="w-full text-left text-xs border-collapse min-w-0">
                   <thead>
                     <tr className="border-b border-slate-100 text-slate-400 font-bold text-[11px] bg-slate-50/70">
-                      <th className="py-3.5 pl-4 pr-2 w-10 text-center">
+                      <th className="py-3 pl-3 pr-1 w-9 text-center">
                         <button
                           onClick={handleSelectAll}
                           className="p-1 rounded-md hover:bg-slate-200/60 transition-colors cursor-pointer"
@@ -872,12 +872,12 @@ export const StorageVaultDashboard: React.FC = () => {
                           )}
                         </button>
                       </th>
-                      <th className="py-3.5 pl-2 pr-4">NAME ↑</th>
-                      <th className="py-3.5 px-3">TAGS</th>
-                      <th className="py-3.5 px-4">MODIFIED</th>
-                      <th className="py-3.5 px-4">SIZE</th>
-                      <th className="py-3.5 px-4">ZK SHIELD</th>
-                      <th className="py-3.5 pl-4 pr-6 text-center w-24">ACTIONS</th>
+                      <th className="py-3 pl-2 pr-3">NAME ↑</th>
+                      <th className="hidden 2xl:table-cell py-3 px-3">TAGS</th>
+                      <th className="hidden sm:table-cell py-3 px-3">MODIFIED</th>
+                      <th className="py-3 px-3">SIZE</th>
+                      <th className="py-3 px-3 text-center">ZK SHIELD</th>
+                      <th className="py-3 pl-2 pr-4 text-center w-14">ACTIONS</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -890,7 +890,7 @@ export const StorageVaultDashboard: React.FC = () => {
                         onClick={() => setActivePreviewFile(file)}
                       >
                         {/* Checkbox */}
-                        <td className="py-3.5 pl-4 pr-2 text-center" onClick={(e) => e.stopPropagation()}>
+                        <td className="py-3 pl-3 pr-1 text-center" onClick={(e) => e.stopPropagation()}>
                           <button
                             onClick={() => toggleSelectFile(file.id)}
                             className="p-1 rounded-md hover:bg-slate-200/60 transition-colors cursor-pointer"
@@ -904,8 +904,8 @@ export const StorageVaultDashboard: React.FC = () => {
                         </td>
 
                         {/* File Name & Icon & Star */}
-                        <td className="py-3.5 pl-2 pr-4">
-                          <div className="flex items-center space-x-3">
+                        <td className="py-3 pl-2 pr-3 min-w-0">
+                          <div className="flex items-center space-x-2.5 min-w-0">
                             {file.status !== 'shredded' && (
                               <button
                                 onClick={(e) => {
@@ -915,25 +915,34 @@ export const StorageVaultDashboard: React.FC = () => {
                                 title={file.isStarred ? 'Remove from Starred' : 'Add to Starred'}
                                 className="p-1 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer flex-shrink-0"
                               >
-                                <Star className={`w-4 h-4 ${file.isStarred ? 'text-amber-400 fill-amber-400' : 'text-slate-300 hover:text-amber-400'}`} />
+                                <Star className={`w-3.5 h-3.5 ${file.isStarred ? 'text-amber-400 fill-amber-400' : 'text-slate-300 hover:text-amber-400'}`} />
                               </button>
                             )}
-                            <div className="p-2 rounded-xl bg-slate-50 border border-slate-100 flex-shrink-0">
+                            <div className="p-1.5 rounded-xl bg-slate-50 border border-slate-100 flex-shrink-0">
                               {renderFileIcon(file)}
                             </div>
-                            <div className="truncate max-w-[200px] sm:max-w-xs">
-                              <div className="font-bold text-slate-900 truncate" title={file.name}>
+                            <div className="truncate min-w-0 max-w-[150px] sm:max-w-[180px] md:max-w-[220px]">
+                              <div className="font-bold text-slate-900 truncate text-xs" title={file.name}>
                                 {file.name}
                               </div>
-                              <div className="text-[10px] text-slate-400 font-mono">
-                                {file.status === 'shredded' ? 'Shredded on Midnight • Recoverable' : 'AES-256-GCM • ZK Protected'}
+                              <div className="text-[10px] text-slate-400 font-mono flex items-center gap-1.5 truncate">
+                                <span className="truncate">{file.status === 'shredded' ? 'Shredded on Midnight' : 'AES-256-GCM • ZK Protected'}</span>
+                                {file.tags && file.tags.length > 0 && (
+                                  <span className="2xl:hidden flex items-center gap-1 flex-shrink-0">
+                                    {file.tags.map((tag) => (
+                                      <span key={tag} className="px-1 py-0.2 rounded bg-slate-100 text-slate-600 font-sans font-semibold text-[9px]">
+                                        #{tag}
+                                      </span>
+                                    ))}
+                                  </span>
+                                )}
                               </div>
                             </div>
                           </div>
                         </td>
 
-                        {/* Tags */}
-                        <td className="py-3.5 px-3" onClick={(e) => e.stopPropagation()}>
+                        {/* Tags (Visible on extra-wide screens) */}
+                        <td className="hidden 2xl:table-cell py-3 px-3" onClick={(e) => e.stopPropagation()}>
                           <div className="flex flex-wrap items-center gap-1 max-w-[140px]">
                             {file.tags && file.tags.length > 0 ? (
                               file.tags.map((tag) => (
@@ -960,7 +969,7 @@ export const StorageVaultDashboard: React.FC = () => {
                         </td>
 
                         {/* Modified Date */}
-                        <td className="py-3.5 px-4 text-slate-500 whitespace-nowrap text-[11px]">
+                        <td className="hidden sm:table-cell py-3 px-3 text-slate-500 whitespace-nowrap text-[11px]">
                           {new Date(file.uploadedAt).toLocaleDateString(undefined, {
                             month: 'short',
                             day: 'numeric',
@@ -969,32 +978,32 @@ export const StorageVaultDashboard: React.FC = () => {
                         </td>
 
                         {/* Size */}
-                        <td className="py-3.5 px-4 text-slate-700 font-mono font-semibold whitespace-nowrap">
+                        <td className="py-3 px-3 text-slate-700 font-mono font-semibold whitespace-nowrap text-xs">
                           {formatSizeDynamic(file.sizeBytes)}
                         </td>
 
                         {/* ZK Shield Status */}
-                        <td className="py-3.5 px-4 whitespace-nowrap">
+                        <td className="py-3 px-3 whitespace-nowrap text-center">
                           {file.status === 'shredded' ? (
-                            <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-rose-50 border border-rose-200 text-rose-700 text-[10px] font-bold">
-                              <Trash2 className="w-3 h-3 text-rose-500" />
+                            <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-rose-50 border border-rose-200 text-rose-700 text-[10px] font-bold whitespace-nowrap">
+                              <Trash2 className="w-3 h-3 text-rose-500 flex-shrink-0" />
                               <span>In Trash</span>
                             </span>
                           ) : (
-                            <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold">
-                              <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                            <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold whitespace-nowrap">
+                              <CheckCircle2 className="w-3 h-3 text-emerald-500 flex-shrink-0" />
                               <span>ZK Proven</span>
                             </span>
                           )}
                         </td>
 
-                        {/* Actions Menu (Centered & Well Padded) */}
-                        <td className="py-3.5 pl-4 pr-6 text-center w-24 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                        {/* Actions Menu (Centered & Well Padded, Safely Contained Inside Card) */}
+                        <td className="py-3 pl-2 pr-4 text-center w-14 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                           <div className="relative inline-flex items-center justify-center">
                             <button
                               onClick={() => setActiveMenuFileId(activeMenuFileId === file.id ? null : file.id)}
                               title="File actions"
-                              className={`p-2 rounded-xl transition-all cursor-pointer ${
+                              className={`p-1.5 rounded-xl transition-all cursor-pointer ${
                                 activeMenuFileId === file.id
                                   ? 'bg-slate-200 text-slate-900 shadow-xs'
                                   : 'hover:bg-slate-100 text-slate-400 hover:text-slate-700'
