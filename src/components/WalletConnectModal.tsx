@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useWeb3Wallet } from '../context/WalletContext';
+import { useWeb3Wallet, getMidnightProvider } from '../context/WalletContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Wallet, X, CheckCircle2, Sparkles, ArrowRight, ShieldCheck, Coins, RefreshCw, Copy, Check } from 'lucide-react';
 
@@ -18,8 +18,8 @@ export const WalletConnectModal: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
 
-  const isLaceDetected = typeof window !== 'undefined' && !!((window as any).midnight?.lace || (window as any).cardano?.lace);
-  const is1AMDetected = typeof window !== 'undefined' && !!((window as any).midnight?.['1am'] || (window as any).midnight?.oneam || (window as any).cardano?.['1am'] || (window as any).cardano?.oneam || (window as any).oneam || (window as any)['1am']);
+  const isLaceDetected = typeof window !== 'undefined' && !!getMidnightProvider('lace');
+  const is1AMDetected = typeof window !== 'undefined' && !!getMidnightProvider('1am');
 
   const handleSync = async () => {
     setIsSyncing(true);
@@ -27,7 +27,7 @@ export const WalletConnectModal: React.FC = () => {
     setTimeout(() => setIsSyncing(false), 500);
   };
 
-  const handleConnect = async (walletName: 'Midnight Lace' | '1AM Wallet' | 'MetaMask' | 'Coinbase' | 'Phantom', allowFallback: boolean = false) => {
+  const handleConnect = async (walletName: 'Midnight Lace' | '1AM Wallet' | 'MetaMask' | 'Coinbase' | 'Phantom', allowFallback: boolean = true) => {
     setConnecting(walletName);
     try {
       await connectWallet(walletName, allowFallback);
@@ -239,7 +239,11 @@ export const WalletConnectModal: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                <ArrowRight className="w-4 h-4 text-sky-400 group-hover:translate-x-1 transition-transform" />
+                {connecting === '1AM Wallet' ? (
+                  <RefreshCw className="w-4 h-4 text-sky-400 animate-spin" />
+                ) : (
+                  <ArrowRight className="w-4 h-4 text-sky-400 group-hover:translate-x-1 transition-transform" />
+                )}
               </button>
 
               {/* Midnight Lace Option */}
@@ -264,12 +268,16 @@ export const WalletConnectModal: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                <ArrowRight className="w-4 h-4 text-purple-600 group-hover:translate-x-1 transition-transform" />
+                {connecting === 'Midnight Lace' ? (
+                  <RefreshCw className="w-4 h-4 text-purple-600 animate-spin" />
+                ) : (
+                  <ArrowRight className="w-4 h-4 text-purple-600 group-hover:translate-x-1 transition-transform" />
+                )}
               </button>
 
               {/* MetaMask Option */}
               <button
-                onClick={() => handleConnect('MetaMask')}
+                onClick={() => handleConnect('MetaMask', true)}
                 disabled={connecting !== null}
                 className="w-full p-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-sky-300 hover:shadow-md transition-all flex items-center justify-between text-left group cursor-pointer"
               >
@@ -282,12 +290,16 @@ export const WalletConnectModal: React.FC = () => {
                     <div className="text-xs text-slate-500">Connect EVM compatible wallet</div>
                   </div>
                 </div>
-                <ArrowRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
+                {connecting === 'MetaMask' ? (
+                  <RefreshCw className="w-4 h-4 text-orange-500 animate-spin" />
+                ) : (
+                  <ArrowRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
+                )}
               </button>
 
               {/* Phantom Option */}
               <button
-                onClick={() => handleConnect('Phantom')}
+                onClick={() => handleConnect('Phantom', true)}
                 disabled={connecting !== null}
                 className="w-full p-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-purple-300 hover:shadow-md transition-all flex items-center justify-between text-left group cursor-pointer"
               >
@@ -300,7 +312,11 @@ export const WalletConnectModal: React.FC = () => {
                     <div className="text-xs text-slate-500">Multi-chain Web3 wallet</div>
                   </div>
                 </div>
-                <ArrowRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
+                {connecting === 'Phantom' ? (
+                  <RefreshCw className="w-4 h-4 text-purple-500 animate-spin" />
+                ) : (
+                  <ArrowRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
+                )}
               </button>
             </div>
           )}

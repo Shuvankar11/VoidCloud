@@ -63,8 +63,8 @@ export function formatRealLaceAddress(rawAddress: string): string {
   if (!rawAddress) return '';
   const clean = rawAddress.trim();
 
-  // If already Bech32 (e.g. addr_test1... or addr1... or mn_...)
-  if (clean.startsWith('addr_test1') || clean.startsWith('addr1') || clean.startsWith('mn_')) {
+  // If already Bech32 (e.g. addr_test1... or addr1... or mn_... or 1am_...)
+  if (clean.startsWith('addr_test1') || clean.startsWith('addr1') || clean.startsWith('mn_') || clean.startsWith('1am_')) {
     return clean;
   }
 
