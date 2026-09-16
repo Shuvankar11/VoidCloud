@@ -3,6 +3,14 @@ import { useVault } from '../context/VaultContext';
 import { useAuth } from '../context/AuthContext';
 import { useWeb3Wallet } from '../context/WalletContext';
 import { ShieldedFile } from '../types';
+import { BreadcrumbNav } from './BreadcrumbNav';
+import { FolderCard } from './FolderCard';
+import { CreateFolderModal } from './CreateFolderModal';
+import { MoveToFolderModal } from './MoveToFolderModal';
+import { FileTagModal } from './FileTagModal';
+import { FloatingBatchBar } from './FloatingBatchBar';
+import { ZKAuditLogModal } from './ZKAuditLogModal';
+import { VaultBackupModal } from './VaultBackupModal';
 import {
   Search,
   Plus,
@@ -31,6 +39,12 @@ import {
   RotateCcw,
   Undo2,
   Lock,
+  FolderPlus,
+  Activity,
+  DownloadCloud,
+  Tag as TagIcon,
+  CheckSquare,
+  Square,
 } from 'lucide-react';
 
 export const StorageVaultDashboard: React.FC = () => {
@@ -47,6 +61,21 @@ export const StorageVaultDashboard: React.FC = () => {
     decryptAndDownloadFile,
     toggleStarFile,
     uploadAndEncryptFile,
+    folders,
+    activeFolderId,
+    setActiveFolderId,
+    createFolder,
+    deleteFolder,
+    moveFileToFolder,
+    updateFileTags,
+    bulkStarFiles,
+    bulkMoveToTrash,
+    bulkMoveToFolder,
+    auditLogs,
+    addAuditLog,
+    clearAuditLogs,
+    exportVaultBackup,
+    importVaultBackup,
   } = useVault();
   const { user } = useAuth();
   const { setIsPricingModalOpen } = useWeb3Wallet();
@@ -60,6 +89,17 @@ export const StorageVaultDashboard: React.FC = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadStage, setUploadStage] = useState('');
+
+  // New states for Folder, Tag, Batch, Audit, and Backup
+  const [selectedFileIds, setSelectedFileIds] = useState<string[]>([]);
+  const [selectedTagFilter, setSelectedTagFilter] = useState<string | null>(null);
+  const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
+  const [isMoveModalOpen, setIsMoveModalOpen] = useState(false);
+  const [moveTargetFile, setMoveTargetFile] = useState<ShieldedFile | null>(null);
+  const [isTagModalOpen, setIsTagModalOpen] = useState(false);
+  const [tagTargetFile, setTagTargetFile] = useState<ShieldedFile | null>(null);
+  const [isAuditLogOpen, setIsAuditLogOpen] = useState(false);
+  const [isBackupModalOpen, setIsBackupModalOpen] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -112,6 +152,24 @@ export const StorageVaultDashboard: React.FC = () => {
   const docPct = Math.min((docBytes / totalQuotaBytes) * 100, 100);
   const otherPct = Math.min((otherBytes / totalQuotaBytes) * 100, 100);
 
+  // Subfolders & Available Tags
+  const currentFolders = useMemo(() => {
+    if (activeTab !== 'home' && activeTab !== 'files') return [];
+    return folders.filter((f) => (f.parentId || null) === activeFolderId);
+  }, [folders, activeTab, activeFolderId]);
+
+  const activeFolder = useMemo(() => {
+    return folders.find((f) => f.id === activeFolderId) || null;
+  }, [folders, activeFolderId]);
+
+  const availableTags = useMemo(() => {
+    const set = new Set<string>();
+    activeFiles.forEach((f) => {
+      if (f.tags) f.tags.forEach((t) => set.add(t));
+    });
+    return Array.from(set);
+  }, [activeFiles]);
+
   // Filtered files
   const filteredFiles = useMemo(() => {
     const list = activeTab === 'trash'
@@ -121,13 +179,66 @@ export const StorageVaultDashboard: React.FC = () => {
       : activeFiles;
 
     return list.filter((file) => {
+      // If in home or files tab and not searching, filter by activeFolderId
+      if ((activeTab === 'home' || activeTab === 'files') && !searchQuery) {
+        if (activeFolderId === null) {
+          if (file.folderId) return false;
+        } else {
+          if (file.folderId !== activeFolderId) return false;
+        }
+      }
+
+      // Tag filter
+      if (selectedTagFilter && (!file.tags || !file.tags.includes(selectedTagFilter))) {
+        return false;
+      }
+
       const matchesSearch = file.name.toLowerCase().includes(searchQuery.toLowerCase());
       if (!matchesSearch) return false;
 
       if (selectedCategory === 'all') return true;
       return getFileCategory(file) === selectedCategory;
     });
-  }, [activeFiles, trashFiles, starredFiles, activeTab, searchQuery, selectedCategory]);
+  }, [activeFiles, trashFiles, starredFiles, activeTab, searchQuery, selectedCategory, activeFolderId, selectedTagFilter]);
+
+  const toggleSelectFile = (fileId: string) => {
+    setSelectedFileIds((prev) =>
+      prev.includes(fileId) ? prev.filter((id) => id !== fileId) : [...prev, fileId]
+    );
+  };
+
+  const handleSelectAll = () => {
+    if (selectedFileIds.length === filteredFiles.length && filteredFiles.length > 0) {
+      setSelectedFileIds([]);
+    } else {
+      setSelectedFileIds(filteredFiles.map((f) => f.id));
+    }
+  };
+
+  const handleClearSelection = () => {
+    setSelectedFileIds([]);
+  };
+
+  const handleBulkStar = () => {
+    bulkStarFiles(selectedFileIds, true);
+    setSelectedFileIds([]);
+  };
+
+  const handleBulkTrash = () => {
+    bulkMoveToTrash(selectedFileIds);
+    setSelectedFileIds([]);
+  };
+
+  const handleBulkMoveToFolder = (targetFolderId: string | null) => {
+    bulkMoveToFolder(selectedFileIds, targetFolderId);
+    setSelectedFileIds([]);
+    setIsMoveModalOpen(false);
+  };
+
+  const handleBulkDownload = () => {
+    const targets = files.filter((f) => selectedFileIds.includes(f.id));
+    targets.forEach((f) => decryptAndDownloadFile(f));
+  };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -195,14 +306,24 @@ export const StorageVaultDashboard: React.FC = () => {
               </span>
             </div>
 
-            {/* "+ Add New File" CTA Button */}
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="w-full py-3 px-4 rounded-2xl bg-sky-500 hover:bg-sky-600 active:scale-[0.98] text-white font-bold text-xs shadow-md shadow-sky-500/25 transition-all flex items-center justify-center space-x-2 cursor-pointer"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Add New File</span>
-            </button>
+            {/* CTA Buttons */}
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="py-2.5 px-3 rounded-2xl bg-sky-500 hover:bg-sky-600 active:scale-[0.98] text-white font-bold text-xs shadow-md shadow-sky-500/25 transition-all flex items-center justify-center space-x-1.5 cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Upload</span>
+              </button>
+              <button
+                onClick={() => setIsCreateFolderOpen(true)}
+                className="py-2.5 px-3 rounded-2xl bg-white hover:bg-slate-100 active:scale-[0.98] text-slate-700 border border-slate-200/80 font-bold text-xs shadow-xs transition-all flex items-center justify-center space-x-1.5 cursor-pointer"
+                title="Create New Folder"
+              >
+                <FolderPlus className="w-4 h-4 text-sky-500" />
+                <span>+ Folder</span>
+              </button>
+            </div>
 
             {/* Navigation Menu Links */}
             <nav className="space-y-1 text-xs font-semibold">
@@ -210,9 +331,10 @@ export const StorageVaultDashboard: React.FC = () => {
                 onClick={() => {
                   setActiveTab('home');
                   setSelectedCategory('all');
+                  setActiveFolderId(null);
                 }}
                 className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-2xl transition-colors cursor-pointer ${
-                  activeTab === 'home'
+                  activeTab === 'home' && activeFolderId === null
                     ? 'bg-sky-50 text-sky-600 font-bold'
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
@@ -281,6 +403,33 @@ export const StorageVaultDashboard: React.FC = () => {
                     {trashFiles.length}
                   </span>
                 )}
+              </button>
+
+              <div className="pt-2 border-t border-slate-200/80 my-1"></div>
+
+              {/* ZK Audit Trail CTA */}
+              <button
+                onClick={() => setIsAuditLogOpen(true)}
+                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl transition-colors cursor-pointer text-slate-600 hover:bg-purple-50 hover:text-purple-700"
+              >
+                <div className="flex items-center space-x-3">
+                  <Activity className="w-4 h-4 text-purple-500" />
+                  <span>ZK Audit Trail</span>
+                </div>
+                <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-purple-100 text-purple-700 font-bold">
+                  {auditLogs.length}
+                </span>
+              </button>
+
+              {/* Vault Backup CTA */}
+              <button
+                onClick={() => setIsBackupModalOpen(true)}
+                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl transition-colors cursor-pointer text-slate-600 hover:bg-emerald-50 hover:text-emerald-700"
+              >
+                <div className="flex items-center space-x-3">
+                  <DownloadCloud className="w-4 h-4 text-emerald-500" />
+                  <span>Backup & Restore</span>
+                </div>
               </button>
             </nav>
           </div>
@@ -473,6 +622,81 @@ export const StorageVaultDashboard: React.FC = () => {
           </div>
 
           {/* ============================================================ */}
+          {/* FOLDER NAVIGATION & HIERARCHY (Home & Files tabs)            */}
+          {/* ============================================================ */}
+          {(activeTab === 'home' || activeTab === 'files') && (
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/70 p-3 rounded-2xl border border-slate-200/80">
+              <BreadcrumbNav
+                folders={folders}
+                activeFolderId={activeFolderId}
+                onSelectFolder={(id) => setActiveFolderId(id)}
+              />
+              <button
+                onClick={() => setIsCreateFolderOpen(true)}
+                className="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold transition-colors flex items-center space-x-1.5 shadow-2xs self-start sm:self-auto cursor-pointer"
+              >
+                <FolderPlus className="w-3.5 h-3.5 text-sky-500" />
+                <span>New Folder</span>
+              </button>
+            </div>
+          )}
+
+          {/* Subfolders in current view */}
+          {(activeTab === 'home' || activeTab === 'files') && currentFolders.length > 0 && !searchQuery && (
+            <div>
+              <div className="flex items-center justify-between mb-2.5">
+                <h3 className="font-display font-bold text-xs text-slate-700 tracking-tight">
+                  Folders ({currentFolders.length})
+                </h3>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                {currentFolders.map((folder) => (
+                  <FolderCard
+                    key={folder.id}
+                    folder={folder}
+                    fileCount={files.filter((f) => f.folderId === folder.id && f.status === 'shielded').length}
+                    onOpen={(folderId) => setActiveFolderId(folderId)}
+                    onDelete={(folderId) => deleteFolder(folderId)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Tag Filter Pills */}
+          {availableTags.length > 0 && (
+            <div className="flex items-center space-x-2 overflow-x-auto pb-1">
+              <span className="text-[11px] font-bold text-slate-400 flex items-center space-x-1 flex-shrink-0">
+                <TagIcon className="w-3.5 h-3.5" />
+                <span>Filter by Tag:</span>
+              </span>
+              <button
+                onClick={() => setSelectedTagFilter(null)}
+                className={`px-2.5 py-1 rounded-xl text-xs font-semibold transition-colors cursor-pointer flex-shrink-0 ${
+                  selectedTagFilter === null
+                    ? 'bg-sky-500 text-white'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                All
+              </button>
+              {availableTags.map((tag) => (
+                <button
+                  key={tag}
+                  onClick={() => setSelectedTagFilter(selectedTagFilter === tag ? null : tag)}
+                  className={`px-2.5 py-1 rounded-xl text-xs font-semibold transition-colors cursor-pointer flex-shrink-0 ${
+                    selectedTagFilter === tag
+                      ? 'bg-sky-500 text-white shadow-xs'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  #{tag}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* ============================================================ */}
           {/* RECENTS FILE TABLE / GRID                                    */}
           {/* ============================================================ */}
           <div>
@@ -484,8 +708,8 @@ export const StorageVaultDashboard: React.FC = () => {
                     : activeTab === 'starred'
                     ? 'Starred Files'
                     : activeTab === 'files'
-                    ? 'All Files'
-                    : 'Recent Files'}
+                    ? (activeFolder ? activeFolder.name : 'All Files')
+                    : (activeFolder ? activeFolder.name : 'Recent Files')}
                 </h2>
                 {activeTab === 'trash' && trashFiles.length > 0 && (
                   <div className="flex items-center space-x-2">
@@ -531,7 +755,7 @@ export const StorageVaultDashboard: React.FC = () => {
                     ? 'Trash is empty'
                     : activeTab === 'starred'
                     ? 'No starred files yet'
-                    : 'No files uploaded yet'}
+                    : 'No files in this view'}
                 </div>
                 <p className="text-[11px] text-slate-400 max-w-sm mx-auto">
                   {activeTab === 'trash'
@@ -548,11 +772,33 @@ export const StorageVaultDashboard: React.FC = () => {
                   <div
                     key={file.id}
                     onClick={() => setActivePreviewFile(file)}
-                    className="p-4 rounded-2xl bg-white border border-slate-200 hover:border-sky-300 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between space-y-3 group relative"
+                    className={`p-4 rounded-2xl bg-white border transition-all cursor-pointer flex flex-col justify-between space-y-3 group relative ${
+                      selectedFileIds.includes(file.id)
+                        ? 'border-sky-500 ring-2 ring-sky-200 shadow-sm'
+                        : 'border-slate-200 hover:border-sky-300 hover:shadow-md'
+                    }`}
                   >
                     <div className="flex items-start justify-between">
-                      <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 group-hover:scale-105 transition-transform">
-                        {renderFileIcon(file)}
+                      <div className="flex items-center space-x-2">
+                        {file.status !== 'shredded' && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleSelectFile(file.id);
+                            }}
+                            className="p-1 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+                            title="Select file"
+                          >
+                            {selectedFileIds.includes(file.id) ? (
+                              <CheckSquare className="w-4 h-4 text-sky-600" />
+                            ) : (
+                              <Square className="w-4 h-4 text-slate-300 group-hover:text-slate-400" />
+                            )}
+                          </button>
+                        )}
+                        <div className="p-2 rounded-xl bg-slate-50 border border-slate-100 group-hover:scale-105 transition-transform">
+                          {renderFileIcon(file)}
+                        </div>
                       </div>
                       <div className="flex items-center space-x-1.5">
                         {file.status !== 'shredded' ? (
@@ -594,6 +840,15 @@ export const StorageVaultDashboard: React.FC = () => {
                       <div className="text-[10px] text-slate-400 mt-0.5">
                         {formatSizeDynamic(file.sizeBytes)} • {new Date(file.uploadedAt).toLocaleDateString()}
                       </div>
+                      {file.tags && file.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {file.tags.map((tag) => (
+                            <span key={tag} className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-semibold text-slate-600">
+                              #{tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -604,7 +859,21 @@ export const StorageVaultDashboard: React.FC = () => {
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
                     <tr className="border-b border-slate-100 text-slate-400 font-bold text-[11px] bg-slate-50/70">
-                      <th className="py-3.5 pl-6 pr-4">NAME ↑</th>
+                      <th className="py-3.5 pl-4 pr-2 w-10 text-center">
+                        <button
+                          onClick={handleSelectAll}
+                          className="p-1 rounded-md hover:bg-slate-200/60 transition-colors cursor-pointer"
+                          title={selectedFileIds.length === filteredFiles.length && filteredFiles.length > 0 ? 'Deselect All' : 'Select All'}
+                        >
+                          {filteredFiles.length > 0 && selectedFileIds.length === filteredFiles.length ? (
+                            <CheckSquare className="w-4 h-4 text-sky-600" />
+                          ) : (
+                            <Square className="w-4 h-4 text-slate-400" />
+                          )}
+                        </button>
+                      </th>
+                      <th className="py-3.5 pl-2 pr-4">NAME ↑</th>
+                      <th className="py-3.5 px-3">TAGS</th>
                       <th className="py-3.5 px-4">MODIFIED</th>
                       <th className="py-3.5 px-4">SIZE</th>
                       <th className="py-3.5 px-4">ZK SHIELD</th>
@@ -615,11 +884,27 @@ export const StorageVaultDashboard: React.FC = () => {
                     {filteredFiles.map((file) => (
                       <tr
                         key={file.id}
-                        className="hover:bg-sky-50/40 transition-colors group cursor-pointer"
+                        className={`transition-colors group cursor-pointer ${
+                          selectedFileIds.includes(file.id) ? 'bg-sky-50/70' : 'hover:bg-sky-50/40'
+                        }`}
                         onClick={() => setActivePreviewFile(file)}
                       >
+                        {/* Checkbox */}
+                        <td className="py-3.5 pl-4 pr-2 text-center" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            onClick={() => toggleSelectFile(file.id)}
+                            className="p-1 rounded-md hover:bg-slate-200/60 transition-colors cursor-pointer"
+                          >
+                            {selectedFileIds.includes(file.id) ? (
+                              <CheckSquare className="w-4 h-4 text-sky-600" />
+                            ) : (
+                              <Square className="w-4 h-4 text-slate-300 group-hover:text-slate-500" />
+                            )}
+                          </button>
+                        </td>
+
                         {/* File Name & Icon & Star */}
-                        <td className="py-3.5 pl-6 pr-4">
+                        <td className="py-3.5 pl-2 pr-4">
                           <div className="flex items-center space-x-3">
                             {file.status !== 'shredded' && (
                               <button
@@ -636,7 +921,7 @@ export const StorageVaultDashboard: React.FC = () => {
                             <div className="p-2 rounded-xl bg-slate-50 border border-slate-100 flex-shrink-0">
                               {renderFileIcon(file)}
                             </div>
-                            <div className="truncate max-w-[220px] sm:max-w-xs">
+                            <div className="truncate max-w-[200px] sm:max-w-xs">
                               <div className="font-bold text-slate-900 truncate" title={file.name}>
                                 {file.name}
                               </div>
@@ -644,6 +929,33 @@ export const StorageVaultDashboard: React.FC = () => {
                                 {file.status === 'shredded' ? 'Shredded on Midnight • Recoverable' : 'AES-256-GCM • ZK Protected'}
                               </div>
                             </div>
+                          </div>
+                        </td>
+
+                        {/* Tags */}
+                        <td className="py-3.5 px-3" onClick={(e) => e.stopPropagation()}>
+                          <div className="flex flex-wrap items-center gap-1 max-w-[140px]">
+                            {file.tags && file.tags.length > 0 ? (
+                              file.tags.map((tag) => (
+                                <span
+                                  key={tag}
+                                  className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-semibold text-slate-600"
+                                >
+                                  #{tag}
+                                </span>
+                              ))
+                            ) : (
+                              <button
+                                onClick={() => {
+                                  setTagTargetFile(file);
+                                  setIsTagModalOpen(true);
+                                }}
+                                className="text-[10px] text-slate-400 hover:text-sky-600 opacity-0 group-hover:opacity-100 transition-opacity flex items-center space-x-1 cursor-pointer"
+                              >
+                                <TagIcon className="w-3 h-3" />
+                                <span>Tag</span>
+                              </button>
+                            )}
                           </div>
                         </td>
 
@@ -760,6 +1072,32 @@ export const StorageVaultDashboard: React.FC = () => {
                                       >
                                         <Download className="w-4 h-4 text-emerald-500" />
                                         <span>Download</span>
+                                      </button>
+
+                                      <div className="border-t border-slate-100 my-1" />
+
+                                      <button
+                                        onClick={() => {
+                                          setMoveTargetFile(file);
+                                          setIsMoveModalOpen(true);
+                                          setActiveMenuFileId(null);
+                                        }}
+                                        className="w-full px-3 py-2 rounded-xl hover:bg-sky-50 text-slate-700 flex items-center space-x-2.5 transition-colors cursor-pointer text-left"
+                                      >
+                                        <Folder className="w-4 h-4 text-sky-500" />
+                                        <span>Move to Folder</span>
+                                      </button>
+
+                                      <button
+                                        onClick={() => {
+                                          setTagTargetFile(file);
+                                          setIsTagModalOpen(true);
+                                          setActiveMenuFileId(null);
+                                        }}
+                                        className="w-full px-3 py-2 rounded-xl hover:bg-amber-50 text-slate-700 flex items-center space-x-2.5 transition-colors cursor-pointer text-left"
+                                      >
+                                        <TagIcon className="w-4 h-4 text-amber-500" />
+                                        <span>Manage Tags</span>
                                       </button>
 
                                       <div className="border-t border-slate-100 my-1" />
@@ -958,6 +1296,81 @@ export const StorageVaultDashboard: React.FC = () => {
           </div>
         </aside>
       </div>
+
+      {/* Floating Batch Operations Bar */}
+      <FloatingBatchBar
+        selectedCount={selectedFileIds.length}
+        totalCount={filteredFiles.length}
+        onSelectAll={handleSelectAll}
+        onClearSelection={handleClearSelection}
+        onBulkStar={handleBulkStar}
+        onBulkMoveToFolder={() => setIsMoveModalOpen(true)}
+        onBulkDownload={handleBulkDownload}
+        onBulkTrash={handleBulkTrash}
+      />
+
+      {/* Create Folder Modal */}
+      <CreateFolderModal
+        isOpen={isCreateFolderOpen}
+        onClose={() => setIsCreateFolderOpen(false)}
+        onCreateFolder={(name, color) => createFolder(name, color, activeFolderId || undefined)}
+        parentFolderName={activeFolder?.name}
+      />
+
+      {/* Move To Folder Modal (supports single target file or batch selection) */}
+      <MoveToFolderModal
+        isOpen={isMoveModalOpen}
+        onClose={() => {
+          setIsMoveModalOpen(false);
+          setMoveTargetFile(null);
+        }}
+        folders={folders}
+        targetFile={moveTargetFile}
+        bulkCount={selectedFileIds.length}
+        onConfirmMove={(targetFolderId: string | null) => {
+          if (moveTargetFile) {
+            moveFileToFolder(moveTargetFile.id, targetFolderId);
+            setMoveTargetFile(null);
+            setIsMoveModalOpen(false);
+          } else {
+            handleBulkMoveToFolder(targetFolderId);
+          }
+        }}
+      />
+
+      {/* File Tag Modal */}
+      <FileTagModal
+        isOpen={isTagModalOpen}
+        onClose={() => {
+          setIsTagModalOpen(false);
+          setTagTargetFile(null);
+        }}
+        file={tagTargetFile}
+        onSaveTags={(fileId: string, tags: string[]) => {
+          updateFileTags(fileId, tags);
+          setTagTargetFile(null);
+          setIsTagModalOpen(false);
+        }}
+      />
+
+      {/* ZK Cryptographic Audit Log Modal */}
+      <ZKAuditLogModal
+        isOpen={isAuditLogOpen}
+        onClose={() => setIsAuditLogOpen(false)}
+        logs={auditLogs}
+        onClearLogs={clearAuditLogs}
+      />
+
+      {/* Vault Backup & Disaster Recovery Modal */}
+      <VaultBackupModal
+        isOpen={isBackupModalOpen}
+        onClose={() => setIsBackupModalOpen(false)}
+        session={session}
+        files={files}
+        folders={folders}
+        onExport={exportVaultBackup}
+        onImport={importVaultBackup}
+      />
     </section>
   );
 };
