@@ -1,6 +1,15 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import confetti from 'canvas-confetti';
-import { ShieldedFile, UserSession, MidnightNetworkMetrics, ZKProofStep, TelegramConfig } from '../types';
+import {
+  ShieldedFile,
+  UserSession,
+  MidnightNetworkMetrics,
+  ZKProofStep,
+  TelegramConfig,
+  VaultFolder,
+  AuditLogItem,
+  AuditActionType,
+} from '../types';
 import { useAuth } from './AuthContext';
 import {
   getStoredTelegramConfig,
@@ -15,6 +24,16 @@ import {
   deleteFileBlob,
   clearAllFileBlobs,
 } from '../services/vaultIndexedDB';
+import {
+  getStoredAuditLogs,
+  saveStoredAuditLogs,
+  createAuditLog,
+} from '../services/auditLogger';
+import {
+  createVaultBackupArchive,
+  downloadBackupFile,
+  validateAndParseBackup,
+} from '../services/vaultBackup';
 
 export type UploadProgressCallback = (
   percent: number,
@@ -39,6 +58,30 @@ interface VaultContextType {
   setTelegramConfig: (config: TelegramConfig) => void;
   isTelegramModalOpen: boolean;
   setIsTelegramModalOpen: (open: boolean) => void;
+  folders: VaultFolder[];
+  activeFolderId: string | null;
+  setActiveFolderId: (id: string | null) => void;
+  createFolder: (name: string, parentId?: string | null, color?: string) => VaultFolder;
+  deleteFolder: (folderId: string) => Promise<void>;
+  moveFileToFolder: (fileId: string, targetFolderId: string | null) => void;
+  updateFileTags: (fileId: string, tags: string[]) => void;
+  bulkStarFiles: (fileIds: string[], star: boolean) => void;
+  bulkMoveToTrash: (fileIds: string[]) => Promise<void>;
+  bulkMoveToFolder: (fileIds: string[], folderId: string | null) => void;
+  auditLogs: AuditLogItem[];
+  addAuditLog: (
+    action: AuditActionType,
+    details: string,
+    options?: {
+      targetName?: string;
+      proofHash?: string;
+      txHash?: string;
+      severity?: 'info' | 'success' | 'warning' | 'security';
+    }
+  ) => void;
+  clearAuditLogs: () => void;
+  exportVaultBackup: () => Promise<void>;
+  importVaultBackup: (jsonString: string) => Promise<{ success: boolean; message: string }>;
   initializeSession: () => void;
   claimBonusWithZKProof: () => Promise<{ success: boolean; error?: string }>;
   uploadAndEncryptFile: (file: File, onProgress?: UploadProgressCallback) => Promise<ShieldedFile>;
@@ -188,6 +231,23 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return [];
   });
 
+  const [folders, setFolders] = useState<VaultFolder[]>(() => {
+    try {
+      const saved = localStorage.getItem(`voidcloud_v2_folders_${activeUserId}`);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {}
+    return [];
+  });
+
+  const [activeFolderId, setActiveFolderId] = useState<string | null>(null);
+
+  const [auditLogs, setAuditLogs] = useState<AuditLogItem[]>(() => {
+    return getStoredAuditLogs(activeUserId);
+  });
+
   // When active user switches, reload isolated user partition
   useEffect(() => {
     try {
@@ -222,6 +282,21 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     } else {
       setFiles([]);
     }
+
+    const savedFolders = localStorage.getItem(`voidcloud_v2_folders_${activeUserId}`);
+    if (savedFolders) {
+      try {
+        const parsed = JSON.parse(savedFolders);
+        setFolders(Array.isArray(parsed) ? parsed : []);
+      } catch {
+        setFolders([]);
+      }
+    } else {
+      setFolders([]);
+    }
+
+    setActiveFolderId(null);
+    setAuditLogs(getStoredAuditLogs(activeUserId));
   }, [activeUserId, activeUserEmail]);
 
   const [metrics, setMetrics] = useState<MidnightNetworkMetrics>(DEFAULT_METRICS);
@@ -273,6 +348,184 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       usedBytes: totalActiveBytes,
     }));
   }, [files, activeUserId]);
+
+  useEffect(() => {
+    localStorage.setItem(`voidcloud_v2_folders_${activeUserId}`, JSON.stringify(folders));
+  }, [folders, activeUserId]);
+
+  const addAuditLog = useCallback(
+    (
+      action: AuditActionType,
+      details: string,
+      options?: {
+        targetName?: string;
+        proofHash?: string;
+        txHash?: string;
+        severity?: 'info' | 'success' | 'warning' | 'security';
+      }
+    ) => {
+      const item = createAuditLog(action, details, options);
+      setAuditLogs((prev) => {
+        const updated = [item, ...prev].slice(0, 150);
+        saveStoredAuditLogs(activeUserId, updated);
+        return updated;
+      });
+    },
+    [activeUserId]
+  );
+
+  const clearAuditLogs = useCallback(() => {
+    setAuditLogs([]);
+    saveStoredAuditLogs(activeUserId, []);
+  }, [activeUserId]);
+
+  const createFolder = useCallback(
+    (name: string, parentId: string | null = null, color = 'indigo') => {
+      const newFolder: VaultFolder = {
+        id: 'folder_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+        name: name.trim() || 'Untitled Folder',
+        parentId,
+        color,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      setFolders((prev) => [...prev, newFolder]);
+      addAuditLog('FOLDER_CREATED', `Created directory "${newFolder.name}"`, {
+        targetName: newFolder.name,
+        severity: 'success',
+      });
+      return newFolder;
+    },
+    [addAuditLog]
+  );
+
+  const deleteFolder = useCallback(
+    async (folderId: string) => {
+      const target = folders.find((f) => f.id === folderId);
+      const targetName = target ? target.name : 'Folder';
+      setFiles((prev) =>
+        prev.map((f) => (f.folderId === folderId ? { ...f, folderId: null } : f))
+      );
+      setFolders((prev) => prev.filter((f) => f.id !== folderId && f.parentId !== folderId));
+      if (activeFolderId === folderId) {
+        setActiveFolderId(null);
+      }
+      addAuditLog('FOLDER_DELETED', `Deleted directory "${targetName}" and reset child files to root`, {
+        targetName,
+        severity: 'warning',
+      });
+    },
+    [folders, activeFolderId, addAuditLog]
+  );
+
+  const moveFileToFolder = useCallback(
+    (fileId: string, targetFolderId: string | null) => {
+      const targetFolder = targetFolderId ? folders.find((f) => f.id === targetFolderId) : null;
+      const folderName = targetFolder ? targetFolder.name : 'Root Vault';
+      setFiles((prev) =>
+        prev.map((f) => (f.id === fileId ? { ...f, folderId: targetFolderId } : f))
+      );
+      const targetFile = files.find((f) => f.id === fileId);
+      addAuditLog('FILE_MOVE_FOLDER', `Moved "${targetFile?.name || fileId}" to ${folderName}`, {
+        targetName: targetFile?.name,
+        severity: 'info',
+      });
+    },
+    [folders, files, addAuditLog]
+  );
+
+  const updateFileTags = useCallback(
+    (fileId: string, tags: string[]) => {
+      setFiles((prev) =>
+        prev.map((f) => (f.id === fileId ? { ...f, tags } : f))
+      );
+      const targetFile = files.find((f) => f.id === fileId);
+      addAuditLog('FILE_TAGS_UPDATED', `Updated tags for "${targetFile?.name || fileId}" [${tags.join(', ')}]`, {
+        targetName: targetFile?.name,
+        severity: 'info',
+      });
+    },
+    [files, addAuditLog]
+  );
+
+  const bulkStarFiles = useCallback(
+    (fileIds: string[], star: boolean) => {
+      setFiles((prev) =>
+        prev.map((f) => (fileIds.includes(f.id) ? { ...f, isStarred: star } : f))
+      );
+      addAuditLog(
+        'FILE_STAR_TOGGLED',
+        `${star ? 'Starred' : 'Unstarred'} ${fileIds.length} files in bulk operation`,
+        { severity: 'info' }
+      );
+    },
+    [addAuditLog]
+  );
+
+  const bulkMoveToTrash = useCallback(
+    async (fileIds: string[]) => {
+      setFiles((prev) =>
+        prev.map((f) => (fileIds.includes(f.id) ? { ...f, status: 'shredded' as const } : f))
+      );
+      addAuditLog('FILE_TRASHED', `Moved ${fileIds.length} files to trash in bulk operation`, {
+        severity: 'warning',
+      });
+    },
+    [addAuditLog]
+  );
+
+  const bulkMoveToFolder = useCallback(
+    (fileIds: string[], folderId: string | null) => {
+      const targetFolder = folderId ? folders.find((f) => f.id === folderId) : null;
+      const folderName = targetFolder ? targetFolder.name : 'Root Vault';
+      setFiles((prev) =>
+        prev.map((f) => (fileIds.includes(f.id) ? { ...f, folderId } : f))
+      );
+      addAuditLog('FILE_MOVE_FOLDER', `Bulk moved ${fileIds.length} files to ${folderName}`, {
+        severity: 'info',
+      });
+    },
+    [folders, addAuditLog]
+  );
+
+  const exportVaultBackup = useCallback(async () => {
+    const archive = await createVaultBackupArchive(session, files, folders, auditLogs);
+    downloadBackupFile(archive);
+    addAuditLog(
+      'VAULT_BACKUP_EXPORTED',
+      `Exported vault snapshot (${archive.totalFiles} files, ${archive.totalFolders} folders)`,
+      {
+        proofHash: archive.checksum,
+        severity: 'success',
+      }
+    );
+  }, [session, files, folders, auditLogs, addAuditLog]);
+
+  const importVaultBackup = useCallback(
+    async (jsonString: string): Promise<{ success: boolean; message: string }> => {
+      const result = await validateAndParseBackup(jsonString);
+      if (!result.valid || !result.archive) {
+        return { success: false, message: result.error || 'Failed to parse backup archive' };
+      }
+      const { files: importedFiles, folders: importedFolders, auditLogs: importedLogs } = result.archive;
+      setFiles(importedFiles as ShieldedFile[]);
+      setFolders(importedFolders || []);
+      if (Array.isArray(importedLogs) && importedLogs.length > 0) {
+        setAuditLogs(importedLogs);
+        saveStoredAuditLogs(activeUserId, importedLogs);
+      }
+      addAuditLog(
+        'VAULT_BACKUP_RESTORED',
+        `Restored vault snapshot containing ${importedFiles.length} files and ${(importedFolders || []).length} folders`,
+        { severity: 'success' }
+      );
+      return {
+        success: true,
+        message: `Successfully restored ${importedFiles.length} files and ${(importedFolders || []).length} folders.`,
+      };
+    },
+    [activeUserId, addAuditLog]
+  );
 
   const initializeSession = useCallback(() => {
     const freshSession = createInitialSessionForUser(activeUserId, activeUserEmail);
@@ -492,6 +745,8 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         telegramFileId: tgResult.fileId,
         telegramMessageId: tgResult.messageId,
         storageBackend: 'telegram_channel',
+        folderId: activeFolderId,
+        tags: [],
       };
 
       onProgress?.(100, 'Shielded & Pinned to Decentralized Cloud Vault!', totalMB, totalMB);
@@ -506,13 +761,20 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         return updated;
       });
 
+      addAuditLog('FILE_ENCRYPT_UPLOAD', `Shielded & encrypted file "${newFile.name}" with AES-256-GCM`, {
+        targetName: newFile.name,
+        proofHash: newFile.zkCommitment,
+        severity: 'success',
+      });
+
       return newFile;
     },
-    [activeUserId, activeUserEmail, telegramConfig]
+    [activeUserId, activeUserEmail, telegramConfig, activeFolderId, addAuditLog]
   );
 
   // Shred file / Move to Trash (Revoke active status, keep data in local vault so it can be restored)
   const shredFile = useCallback(async (fileId: string) => {
+    const target = files.find((f) => f.id === fileId);
     setFiles((prev) => {
       const updated = prev.map((f) => {
         if (f.id === fileId) {
@@ -530,10 +792,15 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
       return updated;
     });
-  }, [activeUserId]);
+    addAuditLog('FILE_TRASHED', `Moved "${target?.name || fileId}" to trash`, {
+      targetName: target?.name,
+      severity: 'warning',
+    });
+  }, [files, activeUserId, addAuditLog]);
 
   // Restore file from Trash back to active shielded status
   const restoreFile = useCallback(async (fileId: string) => {
+    const target = files.find((f) => f.id === fileId);
     setFiles((prev) => {
       const updated = prev.map((f) => {
         if (f.id === fileId) {
@@ -551,7 +818,11 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
       return updated;
     });
-  }, [activeUserId]);
+    addAuditLog('FILE_RESTORED', `Restored "${target?.name || fileId}" to active vault`, {
+      targetName: target?.name,
+      severity: 'info',
+    });
+  }, [files, activeUserId, addAuditLog]);
 
   // Permanently Empty Trash
   const emptyTrash = useCallback(async () => {
@@ -569,7 +840,10 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       } catch (e) {}
       return remaining;
     });
-  }, [files, telegramConfig, activeUserId]);
+    addAuditLog('FILE_PERMANENTLY_DELETED', `Emptied trash: permanently purged ${trash.length} files`, {
+      severity: 'warning',
+    });
+  }, [files, telegramConfig, activeUserId, addAuditLog]);
 
   // Restore All files from Trash
   const restoreAllTrash = useCallback(async () => {
@@ -580,7 +854,10 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       } catch (e) {}
       return updated;
     });
-  }, [activeUserId]);
+    addAuditLog('FILE_RESTORED', 'Restored all files from trash back to active vault', {
+      severity: 'info',
+    });
+  }, [activeUserId, addAuditLog]);
 
   // Permanently Delete file from storage and remove from list
   const deleteFilePermanently = useCallback(async (fileId: string) => {
@@ -597,7 +874,15 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       } catch (e) {}
       return remaining;
     });
-  }, [files, telegramConfig, activeUserId]);
+    addAuditLog(
+      'FILE_PERMANENTLY_DELETED',
+      `Permanently purged file "${fileToDelete?.name || fileId}" and destroyed encryption key`,
+      {
+        targetName: fileToDelete?.name,
+        severity: 'warning',
+      }
+    );
+  }, [files, telegramConfig, activeUserId, addAuditLog]);
 
   // Decrypt and Download File Client-Side
   const decryptAndDownloadFile = useCallback(async (file: ShieldedFile) => {
@@ -625,12 +910,18 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       a.click();
       document.body.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(url), 2000);
+
+      addAuditLog('FILE_DECRYPT_DOWNLOAD', `Decrypted and downloaded "${file.name}" with client ZK witness`, {
+        targetName: file.name,
+        severity: 'success',
+      });
     } catch (err) {
       console.error('Decryption failed:', err);
     }
-  }, []);
+  }, [addAuditLog]);
 
   const toggleStarFile = useCallback((fileId: string) => {
+    const target = files.find((f) => f.id === fileId);
     setFiles((prev) => {
       const updated = prev.map((f) =>
         f.id === fileId ? { ...f, isStarred: !f.isStarred } : f
@@ -642,12 +933,17 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
       return updated;
     });
-  }, [activeUserId]);
+    addAuditLog('FILE_STAR_TOGGLED', `Toggled star bookmark for "${target?.name || fileId}"`, {
+      targetName: target?.name,
+      severity: 'info',
+    });
+  }, [files, activeUserId, addAuditLog]);
 
   const resetToInitial = useCallback(() => {
     const freshSession = createInitialSessionForUser(activeUserId, activeUserEmail);
     setSession(freshSession);
     setFiles([]);
+    setFolders([]);
   }, [activeUserId, activeUserEmail]);
 
   return (
@@ -668,6 +964,21 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setTelegramConfig,
         isTelegramModalOpen,
         setIsTelegramModalOpen,
+        folders,
+        activeFolderId,
+        setActiveFolderId,
+        createFolder,
+        deleteFolder,
+        moveFileToFolder,
+        updateFileTags,
+        bulkStarFiles,
+        bulkMoveToTrash,
+        bulkMoveToFolder,
+        auditLogs,
+        addAuditLog,
+        clearAuditLogs,
+        exportVaultBackup,
+        importVaultBackup,
         initializeSession,
         claimBonusWithZKProof,
         uploadAndEncryptFile,
