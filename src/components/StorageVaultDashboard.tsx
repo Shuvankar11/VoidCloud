@@ -859,7 +859,7 @@ export const StorageVaultDashboard: React.FC = () => {
                 <table className="w-full text-left text-xs border-collapse min-w-0">
                   <thead>
                     <tr className="border-b border-slate-100 text-slate-400 font-bold text-[11px] bg-slate-50/70">
-                      <th className="py-3.5 pl-4 pr-1 w-10 text-center">
+                      <th className="py-3.5 pl-5 pr-2 w-12 text-center">
                         <button
                           onClick={handleSelectAll}
                           className="p-1 rounded-md hover:bg-slate-200/60 transition-colors cursor-pointer"
@@ -872,11 +872,11 @@ export const StorageVaultDashboard: React.FC = () => {
                           )}
                         </button>
                       </th>
-                      <th className="py-3.5 pl-2 pr-3">NAME ↑</th>
-                      <th className="hidden sm:table-cell py-3.5 px-3">MODIFIED</th>
-                      <th className="py-3.5 px-3">SIZE</th>
-                      <th className="py-3.5 px-3 text-center">ZK SHIELD</th>
-                      <th className="py-3.5 pl-2 pr-6 text-right w-24">ACTIONS</th>
+                      <th className="py-3.5 pl-2 pr-4">NAME ↑</th>
+                      <th className="hidden sm:table-cell py-3.5 px-4">MODIFIED</th>
+                      <th className="py-3.5 px-4">SIZE</th>
+                      <th className="py-3.5 px-4 text-center">ZK SHIELD</th>
+                      <th className="py-3.5 pl-2 pr-10 text-center w-28">ACTIONS</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -889,7 +889,7 @@ export const StorageVaultDashboard: React.FC = () => {
                         onClick={() => setActivePreviewFile(file)}
                       >
                         {/* Checkbox */}
-                        <td className="py-3.5 pl-4 pr-1 text-center" onClick={(e) => e.stopPropagation()}>
+                        <td className="py-3.5 pl-5 pr-2 text-center" onClick={(e) => e.stopPropagation()}>
                           <button
                             onClick={() => toggleSelectFile(file.id)}
                             className="p-1 rounded-md hover:bg-slate-200/60 transition-colors cursor-pointer"
@@ -903,7 +903,7 @@ export const StorageVaultDashboard: React.FC = () => {
                         </td>
 
                         {/* File Name & Icon & Star */}
-                        <td className="py-3.5 pl-2 pr-3 min-w-0">
+                        <td className="py-3.5 pl-2 pr-4 min-w-0">
                           <div className="flex items-center space-x-2.5 min-w-0">
                             {file.status !== 'shredded' && (
                               <button
@@ -941,7 +941,7 @@ export const StorageVaultDashboard: React.FC = () => {
                         </td>
 
                         {/* Modified Date */}
-                        <td className="hidden sm:table-cell py-3.5 px-3 text-slate-500 whitespace-nowrap text-[11px]">
+                        <td className="hidden sm:table-cell py-3.5 px-4 text-slate-500 whitespace-nowrap text-[11px]">
                           {new Date(file.uploadedAt).toLocaleDateString(undefined, {
                             month: 'short',
                             day: 'numeric',
@@ -950,12 +950,12 @@ export const StorageVaultDashboard: React.FC = () => {
                         </td>
 
                         {/* Size */}
-                        <td className="py-3.5 px-3 text-slate-700 font-mono font-semibold whitespace-nowrap text-xs">
+                        <td className="py-3.5 px-4 text-slate-700 font-mono font-semibold whitespace-nowrap text-xs">
                           {formatSizeDynamic(file.sizeBytes)}
                         </td>
 
                         {/* ZK Shield Status */}
-                        <td className="py-3.5 px-3 whitespace-nowrap text-center">
+                        <td className="py-3.5 px-4 whitespace-nowrap text-center">
                           {file.status === 'shredded' ? (
                             <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-rose-50 border border-rose-200 text-rose-700 text-[10px] font-bold whitespace-nowrap">
                               <Trash2 className="w-3 h-3 text-rose-500 flex-shrink-0" />
@@ -970,8 +970,8 @@ export const StorageVaultDashboard: React.FC = () => {
                         </td>
 
                         {/* Actions Menu (Clean, Spacious, Perfectly Inset from Right Edge) */}
-                        <td className="py-3.5 pl-2 pr-6 text-right w-24 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
-                          <div className="relative inline-flex items-center justify-end">
+                        <td className="py-3.5 pl-2 pr-10 text-center w-28 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                          <div className="relative inline-flex items-center justify-center">
                             <button
                               onClick={() => setActiveMenuFileId(activeMenuFileId === file.id ? null : file.id)}
                               title="File actions"
