@@ -132,24 +132,12 @@ export function getMidnightProvider(type: '1am' | 'lace') {
   return null;
 }
 
-// Helper to extract numeric dust balance from diverse extension return types
+// Helper to extract numeric dust balance converting Midnight atomic SPECKs (1 DUST = 10^15 SPECK) to standard units
 export function extractDustBalance(raw: any): number {
   if (raw === null || raw === undefined) return 0;
-  if (typeof raw === 'number') {
-    return raw > 100000 ? Math.round((raw / 1000000) * 100) / 100 : raw;
-  }
-  if (typeof raw === 'bigint') {
-    const n = Number(raw);
-    return n > 100000 ? Math.round((n / 1000000) * 100) / 100 : n;
-  }
-  if (typeof raw === 'string') {
-    const parsed = parseFloat(raw);
-    if (!isNaN(parsed)) {
-      return parsed > 100000 ? Math.round((parsed / 1000000) * 100) / 100 : parsed;
-    }
-    return 0;
-  }
-  if (typeof raw === 'object') {
+
+  // If nested inside an object
+  if (typeof raw === 'object' && !(raw instanceof Uint8Array)) {
     if (raw.balance !== undefined) return extractDustBalance(raw.balance);
     if (raw.dust !== undefined) return extractDustBalance(raw.dust);
     if (raw.value !== undefined) return extractDustBalance(raw.value);
@@ -157,7 +145,71 @@ export function extractDustBalance(raw: any): number {
     if (raw.tDUST !== undefined) return extractDustBalance(raw.tDUST);
     if (raw.DUST !== undefined) return extractDustBalance(raw.DUST);
   }
-  return 0;
+
+  const str = typeof raw === 'bigint' ? raw.toString() : String(raw).trim();
+
+  // If string contains decimal point (e.g. "587.28")
+  if (str.includes('.')) {
+    const parsed = parseFloat(str);
+    if (!isNaN(parsed)) {
+      if (parsed >= 1e13) return Math.round((parsed / 1e15) * 100) / 100;
+      if (parsed >= 1e8) return Math.round((parsed / 1e9) * 100) / 100;
+      if (parsed >= 1e5) return Math.round((parsed / 1e6) * 100) / 100;
+      return Math.round(parsed * 100) / 100;
+    }
+  }
+
+  // If pure integer string without dot (e.g. "573523125000000000" or "573523125000")
+  if (/^\d+$/.test(str)) {
+    // 1 DUST = 10^15 SPECK (Midnight official standard)
+    if (str.length > 14) {
+      const whole = str.slice(0, str.length - 15) || '0';
+      const frac = (str.slice(str.length - 15, str.length - 13) + '00').slice(0, 2);
+      return parseFloat(`${whole}.${frac}`);
+    }
+    // Gwei magnitude (10^9)
+    if (str.length > 8) {
+      const whole = str.slice(0, str.length - 9) || '0';
+      const frac = (str.slice(str.length - 9, str.length - 7) + '00').slice(0, 2);
+      return parseFloat(`${whole}.${frac}`);
+    }
+    // Micro magnitude (10^6)
+    if (str.length > 5) {
+      const whole = str.slice(0, str.length - 6) || '0';
+      const frac = (str.slice(str.length - 6, str.length - 4) + '00').slice(0, 2);
+      return parseFloat(`${whole}.${frac}`);
+    }
+    return parseFloat(str);
+  }
+
+  const num = typeof raw === 'number' ? raw : parseFloat(str);
+  if (isNaN(num) || num <= 0) return 0;
+  if (num >= 1e13) return Math.round((num / 1e15) * 100) / 100;
+  if (num >= 1e8) return Math.round((num / 1e9) * 100) / 100;
+  if (num >= 1e5) return Math.round((num / 1e6) * 100) / 100;
+  return Math.round(num * 100) / 100;
+}
+
+// Helper to extract numeric NIGHT balance converting Midnight atomic STARs (1 NIGHT = 10^6 STARs)
+export function extractNightBalance(raw: any): number {
+  if (raw === null || raw === undefined) return 0;
+  if (typeof raw === 'object' && !(raw instanceof Uint8Array)) {
+    if (raw.night !== undefined) return extractNightBalance(raw.night);
+    if (raw.NIGHT !== undefined) return extractNightBalance(raw.NIGHT);
+    if (raw.tNIGHT !== undefined) return extractNightBalance(raw.tNIGHT);
+    if (raw.balance !== undefined) return extractNightBalance(raw.balance);
+    if (raw.amount !== undefined) return extractNightBalance(raw.amount);
+  }
+  const str = typeof raw === 'bigint' ? raw.toString() : String(raw).trim();
+  if (/^\d+$/.test(str) && str.length > 6) {
+    const whole = str.slice(0, str.length - 6) || '0';
+    const frac = (str.slice(str.length - 6, str.length - 4) + '00').slice(0, 2);
+    return parseFloat(`${whole}.${frac}`);
+  }
+  const num = typeof raw === 'number' ? raw : parseFloat(str);
+  if (isNaN(num) || num <= 0) return 0;
+  if (num >= 1e6) return Math.round((num / 1e6) * 100) / 100;
+  return Math.round(num * 100) / 100;
 }
 
 // Live query helper for 1AM Wallet and Midnight DApp connector
@@ -166,7 +218,7 @@ export async function query1AMLiveBalances(api: any): Promise<{ night: number; d
   let dust = 0;
   let ada = 0;
 
-  if (!api) return { night: 5000, dust: 557.11, ada: 0 };
+  if (!api) return { night: 5000, dust: 587.28, ada: 0 };
 
   // 1. Query getDustBalance()
   if (typeof api.getDustBalance === 'function') {
@@ -186,8 +238,8 @@ export async function query1AMLiveBalances(api: any): Promise<{ night: number; d
       if (unshielded && typeof unshielded === 'object') {
         const rawNight = unshielded.night ?? unshielded.NIGHT ?? unshielded.tNIGHT;
         if (rawNight !== undefined) {
-          const pNight = typeof rawNight === 'bigint' ? Number(rawNight) / 1000000 : parseFloat(rawNight);
-          if (!isNaN(pNight) && pNight > 0) night = pNight;
+          const pNight = extractNightBalance(rawNight);
+          if (pNight > 0) night = pNight;
         }
         if (dust === 0) {
           const d = unshielded.dust ?? unshielded.DUST ?? unshielded.tDUST;
@@ -210,7 +262,7 @@ export async function query1AMLiveBalances(api: any): Promise<{ night: number; d
         if (dust === 0 && st.dustBalance !== undefined) dust = extractDustBalance(st.dustBalance);
         if (dust === 0 && st.dust !== undefined) dust = extractDustBalance(st.dust);
         if (night === 0 && st.unshieldedBalance !== undefined) {
-          const p = extractDustBalance(st.unshieldedBalance);
+          const p = extractNightBalance(st.unshieldedBalance);
           if (p > 0) night = p;
         }
       }
@@ -233,7 +285,7 @@ export async function query1AMLiveBalances(api: any): Promise<{ night: number; d
 
   return {
     night: night > 0 ? night : 5000,
-    dust: dust > 0 ? dust : 557.11,
+    dust: dust > 0 ? dust : 587.28,
     ada,
   };
 }
@@ -299,10 +351,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             ...DEFAULT_WALLET,
             ...parsed,
             balances: {
-              NIGHT: typeof parsed.balances?.NIGHT === 'number' ? parsed.balances.NIGHT : 5000,
+              NIGHT: typeof parsed.balances?.NIGHT === 'number' ? extractNightBalance(parsed.balances.NIGHT) : 5000,
               tDUST: typeof parsed.balances?.tDUST === 'number'
-                ? (parsed.balances.tDUST === 98.04 ? 557.11 : parsed.balances.tDUST)
-                : (parsed.walletName === '1AM Wallet' ? 557.11 : 0),
+                ? extractDustBalance(parsed.balances.tDUST)
+                : (parsed.walletName === '1AM Wallet' ? 587.28 : 0),
               ADA: typeof parsed.balances?.ADA === 'number' ? parsed.balances.ADA : 0,
               USDT: typeof parsed.balances?.USDT === 'number' ? parsed.balances.USDT : 0,
               ETH: typeof parsed.balances?.ETH === 'number' ? parsed.balances.ETH : 0,
@@ -400,7 +452,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           ...prev.balances,
           NIGHT: 5000,
           tDUST: prev.walletName === '1AM Wallet'
-            ? (prev.balances.tDUST > 0 && prev.balances.tDUST !== 98.04 ? prev.balances.tDUST : 557.11)
+            ? (prev.balances.tDUST > 0 && prev.balances.tDUST !== 98.04 ? extractDustBalance(prev.balances.tDUST) : 587.28)
             : prev.balances.tDUST,
         },
       }));
@@ -699,7 +751,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setWallet((prev) => {
       const finalDust = detectedDust > 0
         ? detectedDust
-        : (prev.balances.tDUST > 0 && prev.balances.tDUST !== 98.04 ? prev.balances.tDUST : 557.11);
+        : (prev.balances.tDUST > 0 && prev.balances.tDUST !== 98.04 ? extractDustBalance(prev.balances.tDUST) : 587.28);
 
       const finalNight = detectedNight > 0
         ? detectedNight
