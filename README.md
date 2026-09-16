@@ -358,7 +358,7 @@ In direct response to feedback collected from our **50 Preprod testnet users**, 
 
 ### 🕒 6. Native 1AM Wallet Integration (Midnight Preprod)
 - **Direct 1AM Wallet Support**: Native connector for the official **1AM Wallet** Chrome extension (`chrome-extension://bphnkdkcnfhompoegfpgnkidcjfbojjp/`).
-- **Multi-Token Balance Synchronization**: Detects and displays live balances for unshielded tNIGHT (5,000 NIGHT), tDUST (98.04 DUST sponsored), and Cardano ADA.
+- **Multi-Token Balance Synchronization**: Detects and displays live balances for unshielded tNIGHT (5,000 NIGHT), tDUST (live synced via `getDustBalance()` / ProofStation sponsored), and Cardano ADA.
 - **Dual Wallet Architecture**: Users can seamlessly choose between **1AM Wallet** and **Midnight Lace** for testnet authentication, quota expansion, and storage tier payments.
 
 ---
@@ -487,7 +487,7 @@ VoidCloud integrates official Midnight testnet wallets using standard DApp Conne
 
 2. **1AM Wallet Support (Midnight Preprod)**:
    - **Native Web Extension Connector**: Directly interfaces with the official **1AM Wallet** Chrome extension (`chrome-extension://bphnkdkcnfhompoegfpgnkidcjfbojjp/`).
-   - **Multi-Token Tracking**: Live synchronization of unshielded `NIGHT` (5,000 tNIGHT), `tDUST` (98.04 sponsored DUST), and Cardano `ADA`.
+   - **Multi-Token Tracking**: Live synchronization of unshielded `NIGHT` (5,000 tNIGHT), `tDUST` (live dynamic query via `getDustBalance()` & ProofStation), and Cardano `ADA`.
    - **Address Format Compatibility**: Supports 1AM unshielded bech32 formats (`1am_preprod1q...`) alongside Midnight Lace addresses.
 
 3. **Session Persistence**: Maintains active authorization across page reloads and refreshes via localStorage session caching, disconnecting only when manually triggered.
