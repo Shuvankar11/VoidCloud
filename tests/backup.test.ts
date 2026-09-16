@@ -8,11 +8,13 @@ import { ShieldedFile, VaultFolder, AuditLogItem, UserSession } from '../src/typ
 
 describe('VoidCloud Vault Backup & Disaster Recovery Unit Tests', () => {
   const dummySession: UserSession = {
-    userSecret: '0x1234567890abcdef',
+    userSecretHex: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
     shieldedAddress: '0xmidnight1preprod998877665544332211',
     quotaGB: 40,
-    registered: true,
+    usedBytes: 1024 * 362,
     bonusClaimed: true,
+    nullifierHex: '0xnullifier123',
+    registeredAt: '2026-09-01T00:00:00.000Z',
   };
 
   const dummyFiles: ShieldedFile[] = [
@@ -20,8 +22,10 @@ describe('VoidCloud Vault Backup & Disaster Recovery Unit Tests', () => {
       id: 'f-1',
       name: 'preprod-contract.compact',
       sizeBytes: 1024 * 12,
-      uploadedAt: 1726480000000,
-      commitment: '0xcommit1',
+      encryptedCid: 'cid-compact-1',
+      zkCommitment: '0xcommit1',
+      uploadedAt: '2026-09-16T12:00:00.000Z',
+      encryptionAlgo: 'AES-256-GCM',
       status: 'shielded',
       isStarred: true,
       tags: ['Midnight', 'SmartContract'],
@@ -30,8 +34,10 @@ describe('VoidCloud Vault Backup & Disaster Recovery Unit Tests', () => {
       id: 'f-2',
       name: 'financial-report.pdf',
       sizeBytes: 1024 * 350,
-      uploadedAt: 1726485000000,
-      commitment: '0xcommit2',
+      encryptedCid: 'cid-report-2',
+      zkCommitment: '0xcommit2',
+      uploadedAt: '2026-09-16T12:05:00.000Z',
+      encryptionAlgo: 'AES-256-GCM',
       status: 'shielded',
       isStarred: false,
       folderId: 'folder-finance',
@@ -44,7 +50,8 @@ describe('VoidCloud Vault Backup & Disaster Recovery Unit Tests', () => {
       id: 'folder-finance',
       name: 'Finance & Compliance',
       color: 'emerald',
-      createdAt: 1726470000000,
+      createdAt: '2026-09-16T11:00:00.000Z',
+      updatedAt: '2026-09-16T11:00:00.000Z',
     },
   ];
 
@@ -52,7 +59,7 @@ describe('VoidCloud Vault Backup & Disaster Recovery Unit Tests', () => {
     {
       id: 'audit-1',
       timestamp: '2026-09-16T12:00:00.000Z',
-      action: 'init_vault',
+      action: 'ZK_PROOF_GENERATED',
       details: 'Vault initialized with 20GB zero-knowledge quota',
       severity: 'info',
     },
@@ -82,7 +89,7 @@ describe('VoidCloud Vault Backup & Disaster Recovery Unit Tests', () => {
     expect(archive.totalFolders).toBe(1);
     expect(archive.files.length).toBe(2);
     expect(archive.folders.length).toBe(1);
-    expect(archive.auditLogs.length).toBe(1);
+    expect(archive.auditLogs?.length).toBe(1);
     expect(archive.checksum).toMatch(/^[0-9a-f]{64}$/);
 
     // Verify rawBlob is omitted for serializability

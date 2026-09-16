@@ -27,7 +27,7 @@ describe('VoidCloud Cryptographic Audit Trail Unit Tests', () => {
 
   it('creates an audit log item with unique ID, timestamp, and metadata', () => {
     const log = createAuditLog(
-      'file_upload',
+      'FILE_ENCRYPT_UPLOAD',
       'Encrypted and committed file to Midnight Preprod',
       {
         targetName: 'confidential-deck.pdf',
@@ -39,7 +39,7 @@ describe('VoidCloud Cryptographic Audit Trail Unit Tests', () => {
 
     expect(log).toBeDefined();
     expect(log.id).toContain('audit_');
-    expect(log.action).toBe('file_upload');
+    expect(log.action).toBe('FILE_ENCRYPT_UPLOAD');
     expect(log.severity).toBe('success');
     expect(log.targetName).toBe('confidential-deck.pdf');
     expect(log.proofHash).toBe('0x1234567890abcdef1234567890abcdef');
@@ -48,10 +48,10 @@ describe('VoidCloud Cryptographic Audit Trail Unit Tests', () => {
   });
 
   it('correctly persists and retrieves audit logs from storage per address', () => {
-    const item1 = createAuditLog('init_vault', 'Vault initialized with 20GB zero-knowledge quota', {
+    const item1 = createAuditLog('ZK_PROOF_GENERATED', 'Vault initialized with 20GB zero-knowledge quota', {
       severity: 'info',
     });
-    const item2 = createAuditLog('bonus_claim', 'Claimed +20GB ZK Preprod Bonus faucet allocation', {
+    const item2 = createAuditLog('ZK_FAUCET_CLAIMED', 'Claimed +20GB ZK Preprod Bonus faucet allocation', {
       severity: 'success',
     });
 
@@ -59,8 +59,8 @@ describe('VoidCloud Cryptographic Audit Trail Unit Tests', () => {
 
     const retrieved = getStoredAuditLogs('user-alice');
     expect(retrieved.length).toBe(2);
-    expect(retrieved[0].action).toBe('bonus_claim');
-    expect(retrieved[1].action).toBe('init_vault');
+    expect(retrieved[0].action).toBe('ZK_FAUCET_CLAIMED');
+    expect(retrieved[1].action).toBe('ZK_PROOF_GENERATED');
 
     // Separate address should be empty
     const bobLogs = getStoredAuditLogs('user-bob');
@@ -69,7 +69,7 @@ describe('VoidCloud Cryptographic Audit Trail Unit Tests', () => {
 
   it('enforces maximum 150 items limit when saving logs to prevent overflow', () => {
     const manyLogs: AuditLogItem[] = Array.from({ length: 200 }, (_, i) =>
-      createAuditLog('file_upload', `Uploaded file #${i}`)
+      createAuditLog('FILE_ENCRYPT_UPLOAD', `Uploaded file #${i}`)
     );
 
     saveStoredAuditLogs('user-test', manyLogs);

@@ -1,6 +1,6 @@
 {
   "name": "voidcloud",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Privacy-First Decentralized Cloud Storage on the Midnight Network",
   "main": "cli/void.js",
   "bin": {
