@@ -19,6 +19,57 @@ export interface ShieldedFile {
   telegramFileId?: string;
   telegramMessageId?: number;
   storageBackend?: 'telegram_channel' | 'local_vault' | 'midnight_ipfs';
+  folderId?: string | null;
+  tags?: string[];
+}
+
+export interface VaultFolder {
+  id: string;
+  name: string;
+  parentId?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  color?: string;
+  description?: string;
+}
+
+export type AuditActionType =
+  | 'FILE_ENCRYPT_UPLOAD'
+  | 'FILE_DECRYPT_DOWNLOAD'
+  | 'FILE_STAR_TOGGLED'
+  | 'FILE_MOVE_FOLDER'
+  | 'FILE_TAGS_UPDATED'
+  | 'FILE_TRASHED'
+  | 'FILE_RESTORED'
+  | 'FILE_PERMANENTLY_DELETED'
+  | 'FOLDER_CREATED'
+  | 'FOLDER_DELETED'
+  | 'ZK_PROOF_GENERATED'
+  | 'ZK_FAUCET_CLAIMED'
+  | 'VAULT_BACKUP_EXPORTED'
+  | 'VAULT_BACKUP_RESTORED';
+
+export interface AuditLogItem {
+  id: string;
+  timestamp: string;
+  action: AuditActionType;
+  details: string;
+  targetName?: string;
+  proofHash?: string;
+  txHash?: string;
+  severity: 'info' | 'success' | 'warning' | 'security';
+}
+
+export interface VaultBackupArchive {
+  version: string;
+  exportedAt: string;
+  shieldedAddress: string;
+  totalFiles: number;
+  totalFolders: number;
+  files: Omit<ShieldedFile, 'rawBlob'>[];
+  folders: VaultFolder[];
+  auditLogs?: AuditLogItem[];
+  checksum: string;
 }
 
 export interface UserSession {
