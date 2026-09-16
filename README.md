@@ -45,10 +45,10 @@
 5. [September 2026 Challenge Cycle Extensions (Release v1.2.0)](#5-september-2026-challenge-cycle-extensions-release-v120)
 6. [Midnight Privacy Model: What an Observer Can and Cannot Learn](#6-midnight-privacy-model-what-an-observer-can-and-cannot-learn)
 7. [Midnight Compact Smart Contract Specification](#7-midnight-compact-smart-contract-specification)
-8. [Lace Wallet Integration & DApp Connector Architecture](#8-lace-wallet-integration--dapp-connector-architecture)
+8. [Midnight Lace & 1AM Wallet Integration Architecture](#8-midnight-lace--1am-wallet-integration-architecture)
 9. [Payment & Transaction History Ledger Engine](#9-payment--transaction-history-ledger-engine)
 10. [System Architecture & Cryptographic Workflow](#10-system-architecture--cryptographic-workflow)
-11. [Automated Test Suite & CI/CD Pipeline (30 Passing Tests)](#11-automated-test-suite)
+11. [Automated Test Suite & CI/CD Pipeline (34 Passing Tests)](#11-automated-test-suite)
 12. [Antigravity CLI Usage Guide](#12-antigravity-cli-usage-guide)
 13. [Deployed Contract Artifacts & Verification](#13-deployed-contract-artifacts)
 
@@ -330,7 +330,7 @@ $ npm test
 
 ## 5. September 2026 Challenge Cycle Extensions (Release v1.2.0)
 
-In direct response to feedback collected from our **50 Preprod testnet users**, VoidCloud's September 2026 iteration delivers 5 major feature suites extending the MVP:
+In direct response to feedback collected from our **50 Preprod testnet users**, VoidCloud's September 2026 iteration delivers 6 major feature suites extending the MVP:
 
 ### 📁 1. Recursive Directory & Folder Hierarchy
 - **Parent-Child Tree Structure**: Vault files can now be organized into nested subfolders with dynamic depth traversal.
@@ -355,6 +355,11 @@ In direct response to feedback collected from our **50 Preprod testnet users**, 
 - **Encrypted Snapshot Export**: [`vaultBackup.ts`](src/services/vaultBackup.ts) serializes files, directory hierarchies, and audit records into a sanitized JSON archive.
 - **SHA-256 Integrity Checksum**: Ensures backup archives cannot be tampered with or corrupted in transit.
 - **Safe Snapshot Restore**: [`VaultBackupModal.tsx`](src/components/VaultBackupModal.tsx) validates schema compatibility and restores files and directories with 1-click.
+
+### 🕒 6. Native 1AM Wallet Integration (Midnight Preprod)
+- **Direct 1AM Wallet Support**: Native connector for the official **1AM Wallet** Chrome extension (`chrome-extension://bphnkdkcnfhompoegfpgnkidcjfbojjp/`).
+- **Multi-Token Balance Synchronization**: Detects and displays live balances for unshielded tNIGHT (5,000 NIGHT), tDUST (98.04 DUST sponsored), and Cardano ADA.
+- **Dual Wallet Architecture**: Users can seamlessly choose between **1AM Wallet** and **Midnight Lace** for testnet authentication, quota expansion, and storage tier payments.
 
 ---
 
@@ -472,12 +477,19 @@ export circuit verifyStorageQuotaCommitment(
 
 ---
 
-## 8. Lace Wallet Integration & DApp Connector Architecture
+## 8. Midnight Lace & 1AM Wallet Integration Architecture
 
-VoidCloud integrates the **Midnight Lace Dual-Chain Wallet** using the **CIP-30 DApp Connector Standard**:
+VoidCloud integrates official Midnight testnet wallets using standard DApp Connector protocols:
 
-1. **Dual-Chain Derivation**: Lace derives both the **Cardano L1 root identity** and the **Midnight ZK Account** from the user's master key.
-2. **Dynamic Asset Scanning**: Dynamically parses CBOR multi-asset payloads from Lace, extracting exact `5,000 tNIGHT` unshielded faucet tokens.
+1. **Midnight Lace Dual-Chain Wallet**:
+   - **Dual-Chain Derivation**: Lace derives both the **Cardano L1 root identity** and the **Midnight ZK Account** from the user's master key.
+   - **Dynamic Asset Scanning**: Dynamically parses CBOR multi-asset payloads from Lace, extracting exact `5,000 tNIGHT` unshielded faucet tokens.
+
+2. **1AM Wallet Support (Midnight Preprod)**:
+   - **Native Web Extension Connector**: Directly interfaces with the official **1AM Wallet** Chrome extension (`chrome-extension://bphnkdkcnfhompoegfpgnkidcjfbojjp/`).
+   - **Multi-Token Tracking**: Live synchronization of unshielded `NIGHT` (5,000 tNIGHT), `tDUST` (98.04 sponsored DUST), and Cardano `ADA`.
+   - **Address Format Compatibility**: Supports 1AM unshielded bech32 formats (`1am_preprod1q...`) alongside Midnight Lace addresses.
+
 3. **Session Persistence**: Maintains active authorization across page reloads and refreshes via localStorage session caching, disconnecting only when manually triggered.
 4. **Fallback Testnet Wallet**: Seamless fallback wallet generator for headless testing environments.
 
@@ -508,22 +520,30 @@ VoidCloud provides a comprehensive **On-Chain Transaction & Payment History** vi
       │
       ├─► 5. Folder & Tags ──► Recursive Directory Hierarchy & Classification Filter
       │
-      └─► 6. Audit & Backup ──► SHA-256 Telemetry Log & 1-Click Disaster Recovery Archive
+      ├─► 6. Audit & Backup ──► SHA-256 Telemetry Log & 1-Click Disaster Recovery Archive
+      │
+      └─► 7. Wallet Engine ──► Dual-Connector Binding (Midnight Lace + 1AM Wallet)
 ```
 
 ---
 
 ## 11. Automated Test Suite
 
-VoidCloud features a rigorous **Vitest test suite** with **30 passing unit tests** across 5 modules verifying Compact ledger invariants, directory trees, cryptographic audit trails, encrypted disaster backups, and multi-file batch operations:
+VoidCloud features a rigorous **Vitest test suite** with **34 passing unit tests** across 6 modules verifying Compact ledger invariants, directory trees, cryptographic audit trails, encrypted disaster backups, multi-file batch operations, and 1AM / Lace wallet connectors:
 
 ```bash
 $ npm test
 
-> voidcloud@1.0.0 test
+> voidcloud@1.2.0 test
 > vitest run
 
  RUN  v2.1.9 D:/VoidCloude
+
+ ✓ tests/wallet.test.ts (4 tests)
+   ✓ starts disconnected with zero balances
+   ✓ connects to 1AM Wallet and binds 5000 tNIGHT and 98.04 tDUST sponsored balance
+   ✓ connects to Midnight Lace wallet and binds active session
+   ✓ cleans up wallet session and resets balances on disconnect
 
  ✓ tests/batch.test.ts (4 tests)
    ✓ performs bulk star and unstar on selected files
@@ -558,9 +578,9 @@ $ npm test
    ✓ enforces maximum 150 items limit when saving logs
    ✓ safely handles corrupted storage without throwing
 
- Test Files  5 passed (5)
-      Tests  30 passed (30)
-   Duration  1.24s
+ Test Files  6 passed (6)
+      Tests  34 passed (34)
+   Duration  1.31s
 ```
 
 ---

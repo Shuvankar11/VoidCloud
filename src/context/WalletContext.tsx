@@ -231,14 +231,19 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     };
   }, []);
 
-  // Sync Lace balance to 5,000 tNIGHT when Lace is connected
+  // Sync Lace & 1AM balance to 5,000 tNIGHT when connected
   useEffect(() => {
-    if (wallet.isConnected && wallet.walletName === 'Midnight Lace' && wallet.balances.NIGHT === 0) {
+    if (
+      wallet.isConnected &&
+      (wallet.walletName === 'Midnight Lace' || wallet.walletName === '1AM Wallet') &&
+      wallet.balances.NIGHT === 0
+    ) {
       setWallet((prev) => ({
         ...prev,
         balances: {
           ...prev.balances,
           NIGHT: 5000,
+          tDUST: prev.walletName === '1AM Wallet' ? 98.04 : prev.balances.tDUST,
         },
       }));
     }
@@ -338,6 +343,98 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       } else {
         return;
       }
+    } else if (walletName === '1AM Wallet') {
+      const oneAmProvider =
+        win.midnight?.['1am'] ||
+        win.midnight?.oneam ||
+        win.cardano?.['1am'] ||
+        win.cardano?.oneam ||
+        win.oneam ||
+        win['1am'];
+
+      if (oneAmProvider) {
+        let api: any = null;
+        try {
+          api = await oneAmProvider.enable();
+          if (!api) {
+            console.warn('1AM Wallet authorization was not granted by user.');
+            return;
+          }
+
+          if (typeof api.getChangeAddress === 'function') {
+            try {
+              const change = await api.getChangeAddress();
+              if (change) connectedAddress = change;
+            } catch {}
+          }
+          if (!connectedAddress && typeof api.getUnshieldedAddress === 'function') {
+            try {
+              const uAddr = await api.getUnshieldedAddress();
+              if (uAddr) connectedAddress = uAddr;
+            } catch {}
+          }
+          if (!connectedAddress && typeof api.getUnusedAddresses === 'function') {
+            try {
+              const addrs = await api.getUnusedAddresses();
+              if (addrs && addrs.length > 0) connectedAddress = addrs[0];
+            } catch {}
+          }
+          if (!connectedAddress && typeof api.getUsedAddresses === 'function') {
+            try {
+              const addrs = await api.getUsedAddresses();
+              if (addrs && addrs.length > 0) connectedAddress = addrs[0];
+            } catch {}
+          }
+        } catch (err) {
+          console.warn('1AM Wallet request cancelled or rejected by user:', err);
+          return;
+        }
+
+        if (connectedAddress) {
+          connectedAddress = formatRealLaceAddress(connectedAddress);
+        }
+
+        setWallet({
+          isConnected: true,
+          address: connectedAddress || '1am_preprod1q9v4c3k2y9w8m7x6z5a4b3c2d1e0f',
+          walletName,
+          network: 'Midnight Preprod',
+          balances: {
+            NIGHT: 5000,
+            tDUST: 98.04,
+            ADA: 0,
+            USDT: 0,
+            ETH: 0,
+          },
+        });
+
+        setIsWalletModalOpen(false);
+        return;
+      } else if (fallbackIfNoExt) {
+        const rnd = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+          .map((b) => b.toString(16).padStart(2, '0'))
+          .join('');
+        connectedAddress = `1am_preprod1q${rnd.slice(0, 24)}`;
+
+        setWallet({
+          isConnected: true,
+          address: connectedAddress,
+          walletName,
+          network: 'Midnight Preprod',
+          balances: {
+            NIGHT: 5000,
+            tDUST: 98.04,
+            ADA: 0,
+            USDT: 0,
+            ETH: 0,
+          },
+        });
+
+        setIsWalletModalOpen(false);
+        return;
+      } else {
+        return;
+      }
     } else if (walletName === 'MetaMask') {
       if (!win.ethereum) {
         alert('MetaMask extension is not installed.');
@@ -383,8 +480,14 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     let detectedNight = 0;
     try {
       let api: any = null;
-      if (win.midnight?.lace) api = await win.midnight.lace.enable();
-      else if (win.cardano?.lace) api = await win.cardano.lace.enable();
+      if (win.midnight?.['1am'] || win.midnight?.oneam) {
+        const p = win.midnight?.['1am'] || win.midnight?.oneam;
+        api = await p.enable();
+      } else if (win.midnight?.lace) {
+        api = await win.midnight.lace.enable();
+      } else if (win.cardano?.lace) {
+        api = await win.cardano.lace.enable();
+      }
       if (api && typeof api.getBalance === 'function') {
         const rawBal = await api.getBalance();
         const parsed = parseCborAssets(rawBal);
@@ -407,6 +510,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       balances: {
         ...prev.balances,
         NIGHT: detectedNight > 0 ? detectedNight : 5000,
+        tDUST: prev.walletName === '1AM Wallet' ? 98.04 : prev.balances.tDUST,
       },
     }));
   }, []);

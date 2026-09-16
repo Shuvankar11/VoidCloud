@@ -19,6 +19,7 @@ export const WalletConnectModal: React.FC = () => {
   const [isSyncing, setIsSyncing] = useState(false);
 
   const isLaceDetected = typeof window !== 'undefined' && !!((window as any).midnight?.lace || (window as any).cardano?.lace);
+  const is1AMDetected = typeof window !== 'undefined' && !!((window as any).midnight?.['1am'] || (window as any).midnight?.oneam || (window as any).cardano?.['1am'] || (window as any).cardano?.oneam || (window as any).oneam || (window as any)['1am']);
 
   const handleSync = async () => {
     setIsSyncing(true);
@@ -26,7 +27,7 @@ export const WalletConnectModal: React.FC = () => {
     setTimeout(() => setIsSyncing(false), 500);
   };
 
-  const handleConnect = async (walletName: 'Midnight Lace' | 'MetaMask' | 'Coinbase' | 'Phantom', allowFallback: boolean = false) => {
+  const handleConnect = async (walletName: 'Midnight Lace' | '1AM Wallet' | 'MetaMask' | 'Coinbase' | 'Phantom', allowFallback: boolean = false) => {
     setConnecting(walletName);
     try {
       await connectWallet(walletName, allowFallback);
@@ -216,6 +217,31 @@ export const WalletConnectModal: React.FC = () => {
           ) : (
             /* Wallet Provider Selection List */
             <div className="space-y-3">
+              {/* 1AM Wallet Option (Official Midnight Network Preprod Wallet) */}
+              <button
+                onClick={() => handleConnect('1AM Wallet', true)}
+                disabled={connecting !== null}
+                className="w-full p-4 rounded-2xl bg-gradient-to-r from-slate-900 to-zinc-900 text-white border border-slate-700 hover:border-sky-400 hover:shadow-lg transition-all flex items-center justify-between text-left group cursor-pointer"
+              >
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-xl bg-white text-slate-950 flex items-center justify-center font-black font-display text-xs shadow-sm">
+                    1AM
+                  </div>
+                  <div>
+                    <div className="font-bold text-white text-sm flex items-center gap-1.5">
+                      <span>1AM Wallet</span>
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold">
+                        PREPROD SYNCED
+                      </span>
+                    </div>
+                    <div className="text-xs text-slate-300">
+                      {is1AMDetected ? 'Extension detected' : 'Native Midnight ZK Wallet (Dust & Shielded)'}
+                    </div>
+                  </div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-sky-400 group-hover:translate-x-1 transition-transform" />
+              </button>
+
               {/* Midnight Lace Option */}
               <button
                 onClick={() => handleConnect('Midnight Lace', true)}

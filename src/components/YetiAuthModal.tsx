@@ -98,17 +98,17 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
     }
   };
 
-  const handleWalletSignIn = async () => {
+  const handleWalletSignIn = async (walletName: 'Midnight Lace' | '1AM Wallet' = 'Midnight Lace') => {
     setError(null);
     setLoading(true);
     try {
-      await connectWallet('Midnight Lace', true);
-      const activeAddress = wallet.address || 'mn_preprod1qzn6...98k2';
-      await signInWithWallet('Midnight Lace', activeAddress);
+      await connectWallet(walletName, true);
+      const activeAddress = wallet.address || (walletName === '1AM Wallet' ? '1am_preprod1q9v4c3k2y9w8m7x6z5a4b3c2' : 'mn_preprod1qzn6...98k2');
+      await signInWithWallet(walletName, activeAddress);
       setActiveView('dashboard');
       onClose();
     } catch (err: any) {
-      setError(err.message || 'Lace wallet connection failed.');
+      setError(err.message || `${walletName} connection failed.`);
     } finally {
       setLoading(false);
     }
@@ -284,17 +284,31 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
                   <span>Continue with Google</span>
                 </button>
 
-                <button
-                  type="button"
-                  onClick={handleWalletSignIn}
-                  disabled={loading}
-                  className="w-full py-2.5 px-4 rounded-xl bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-900 font-semibold text-xs transition-colors flex items-center justify-center space-x-2 shadow-2xs cursor-pointer"
-                >
-                  <span className="w-4 h-4 rounded-full bg-purple-600 text-white font-bold flex items-center justify-center text-[9px]">
-                    N
-                  </span>
-                  <span>Connect Midnight Lace Wallet</span>
-                </button>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleWalletSignIn('1AM Wallet')}
+                    disabled={loading}
+                    className="py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition-colors flex items-center justify-center space-x-1.5 shadow-2xs cursor-pointer"
+                  >
+                    <span className="w-4 h-4 rounded bg-white text-slate-950 font-black flex items-center justify-center text-[8px] font-mono">
+                      1AM
+                    </span>
+                    <span>1AM Wallet</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleWalletSignIn('Midnight Lace')}
+                    disabled={loading}
+                    className="py-2.5 px-3 rounded-xl bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-900 font-semibold text-xs transition-colors flex items-center justify-center space-x-1.5 shadow-2xs cursor-pointer"
+                  >
+                    <span className="w-4 h-4 rounded-full bg-purple-600 text-white font-bold flex items-center justify-center text-[9px]">
+                      N
+                    </span>
+                    <span>Lace Wallet</span>
+                  </button>
+                </div>
               </div>
             )}
           </div>

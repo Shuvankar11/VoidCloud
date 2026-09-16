@@ -115,7 +115,7 @@ export interface TerminalOutputItem {
 export interface WalletState {
   isConnected: boolean;
   address: string | null;
-  walletName: 'Midnight Lace' | 'MetaMask' | 'Coinbase' | 'Phantom' | null;
+  walletName: 'Midnight Lace' | '1AM Wallet' | 'MetaMask' | 'Coinbase' | 'Phantom' | null;
   network: 'Midnight Preprod' | 'Midnight Preview' | 'Ethereum' | 'Cardano';
   balances: {
     NIGHT: number;
