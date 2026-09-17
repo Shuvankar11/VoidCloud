@@ -124,7 +124,7 @@ export circuit verifyStorageQuotaCommitment(
       log('🛡️ Synthesizing Halo2 ZK-SNARK Proof via Midnight Proof Server (Port 6300)...');
       log('   → Off-chain R1CS constraint verification completed in 34ms');
       await new Promise((r) => setTimeout(r, 700));
-      log('🚀 Submitting Proof Transaction to Midnight Preprod Contract: 0x9f8c...6d7e');
+      log('🚀 Submitting Proof Transaction to Midnight Preprod Contract: 0x89e2...dcf0');
       
       const res = await claimBonusWithZKProof();
       if (res.success) {
@@ -225,7 +225,7 @@ export circuit verifyStorageQuotaCommitment(
                 <span className="px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500/40 text-[10px] font-mono font-bold uppercase">
                   LEVEL 2 WAXING CRESCENT COMPLIANT
                 </span>
-                <span className="text-slate-400 text-xs font-mono">Contract: 0x9f8c...6d7e</span>
+                <span className="text-slate-400 text-xs font-mono">Contract: 0x89e2...dcf0</span>
               </div>
               <h3 className="text-lg sm:text-xl font-bold font-display text-white mt-1">
                 Observable Privacy Circuit Execution & Verifier
