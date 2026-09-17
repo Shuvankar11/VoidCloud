@@ -92,7 +92,7 @@ async function deployVoidCloud() {
       folderHierarchy: 'SHIELDED_PERSISTENT_HASH',
       auditAnchor: 'SHA256_MERKLE_ROOT_ON_CHAIN',
     },
-    explorerUrl: `https://midnightexplorer.com/contract/${rawContractAddress}`,
+    explorerUrl: `https://preprod.midnightexplorer.com/contracts/${rawContractAddress}`,
   };
 
   const receiptPath = path.resolve(process.cwd(), 'deployed-contract.json');
@@ -105,7 +105,7 @@ async function deployVoidCloud() {
   console.log(`🔍 Raw Hex (Explorer) : ${rawContractAddress}`);
   console.log(`📜 Transaction Hash   : ${txHash}`);
   console.log(`🧱 Block Height       : #${blockHeight}`);
-  console.log(`🌐 Explorer Link      : https://midnightexplorer.com/contract/${rawContractAddress}`);
+  console.log(`🌐 Explorer Link      : https://preprod.midnightexplorer.com/contracts/${rawContractAddress}`);
   console.log(`💾 Receipt Saved To   : ${receiptPath}`);
   console.log('======================================================\n');
 }

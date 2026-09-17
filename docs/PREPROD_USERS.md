@@ -7,7 +7,7 @@
 ## 📊 Overview Telemetry
 * **Target Network**: Midnight Network Preprod (Testnet)
 * **Smart Contract Address**: `0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`
-* **Midnight Explorer**: [`89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0)
+* **Midnight Explorer**: [`89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0)
 * **Total Registered On-Chain Users**: **50 Users (100% Faucet Bonus Claimed)**
 * **Total Shielded Storage Allocated**: **2,000 GB**
 * **Deployment Block**: `#2589085` | **Deployment Tx**: `0x2758f932e69ecc334a7baefbb356f7355afbc079673b8e206511f6c8bd5f42e7`

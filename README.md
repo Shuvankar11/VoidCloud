@@ -27,7 +27,7 @@
 | 🎯 Deliverable / Resource | 🔗 Link & Access Anchor | 📋 Purpose / Details |
 | :--- | :--- | :--- |
 | 🌐 **Live Production dApp** | [**void-cloude.vercel.app**](https://void-cloude.vercel.app/) | Deployed, responsive Web3 MVP on Midnight Preprod |
-| 📜 **Deployed Smart Contract** | [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) | Compact 0.20 storage state ledger (Block `#2589085`) |
+| 📜 **Deployed Smart Contract** | [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) | Compact 0.20 storage state ledger (Block `#2589085`) |
 | 📋 **User Feedback Survey** | [**Google Forms Survey**](https://forms.gle/TqdtNQuHk8v6A3SR6) | Official community & tester feedback collection |
 | 📊 **Live Feedback Responses** | [**Google Sheets Spreadsheet**](https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing) | Real-time response ledger accessible to judges |
 | 👥 **50 Preprod User Registry** | [`docs/PREPROD_USERS.md`](docs/PREPROD_USERS.md) | 50 verifiable on-chain testnet user wallet addresses |
@@ -92,8 +92,8 @@ flowchart TD
 * 🎥 **Full Demo Video (YouTube)**: [Watch VoidCloud Demo Video on YouTube](https://youtu.be/VOIDCLOUD_DEMO_LINK)
 * 🌐 **Live dApp URL**: [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/)
 * 📦 **Public GitHub Repository**: [https://github.com/Shuvankar11/VoidCloud](https://github.com/Shuvankar11/VoidCloud)
-* 📜 **Deployed Midnight Preprod Contract**: [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) (Block `#2589085`)
-* 🔍 **Official Midnight Preprod Explorer**: [https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0](https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0)
+* 📜 **Deployed Midnight Preprod Contract**: [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) (Block `#2589085`)
+* 🔍 **Official Midnight Preprod Explorer**: [https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0)
 
 ---
 
@@ -283,7 +283,7 @@ $ npm test
 
 | Level 4 Requirement | Status | Implementation Details & Proof |
 | :--- | :---: | :--- |
-| **Working MVP live on Preprod (verifiable address)** | ✅ PASS | Live deployed dApp at [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/) interacting with Midnight Preprod contract [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0). |
+| **Working MVP live on Preprod (verifiable address)** | ✅ PASS | Live deployed dApp at [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/) interacting with Midnight Preprod contract [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0). |
 | **Documentation (README + setup + usage)** | ✅ PASS | Complete technical & user-facing documentation in README, including local quickstart, Compact contract specs, observer privacy model, and Antigravity CLI guide. |
 | **CI/CD pipeline running on the product repo** | ✅ PASS | Continuous Integration pipeline configured in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) with 13 passing Vitest unit tests and production build verification. |
 | **Product X profile created, linked in README** | ✅ PASS | Official product profile launched on X: [https://x.com/Voidcloud18](https://x.com/Voidcloud18) and prominently linked in README badges, header anchors, and footer. |
@@ -295,7 +295,7 @@ $ npm test
 | :--- | :--- | :---: |
 | **Public GitHub Repository** | [`https://github.com/Shuvankar11/VoidCloud`](https://github.com/Shuvankar11/VoidCloud) | ✅ READY |
 | **Live Preprod Demo Link** | [`https://void-cloude.vercel.app/`](https://void-cloude.vercel.app/) | ✅ READY |
-| **Midnight Preprod Contract Address** | [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) (Block `#2589085`) | ✅ READY |
+| **Midnight Preprod Contract Address** | [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) (Block `#2589085`) | ✅ READY |
 | **CI/CD Badge & Workflow** | [`.github/workflows/ci.yml`](.github/workflows/ci.yml) & [Passing Badge](https://github.com/Shuvankar11/VoidCloud/actions/workflows/ci.yml) | ✅ READY |
 | **Link to Product X Profile** | [`https://x.com/Voidcloud18`](https://x.com/Voidcloud18) | ✅ READY |
 | **Demo Video of the MVP** | [Watch VoidCloud Level 4 MVP Walkthrough](https://youtu.be/VOIDCLOUD_DEMO_LINK) | ✅ READY |
@@ -367,7 +367,7 @@ In direct response to feedback collected from our **50 Preprod testnet users**, 
 - **Cryptographic Audit Trail Anchors**: `anchorAuditTrailRoot` commits local SHA-256 Merkle roots to the immutable on-chain ledger, ensuring cryptographic non-repudiation for audit trails.
 - **Disaster Recovery Checkpoints**: `verifyVaultBackupCommitment` registers verifiable backup snapshot hashes on-chain to detect any tampering during backup restoration.
 - **Storage Tier Upgrades**: `upgradeStorageQuota` provides on-chain tracking for multi-token quota expansions.
-- **Live Preprod Contract**: Deployed and verified on Midnight Preprod at [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) (Block `#2589085`).
+- **Live Preprod Contract**: Deployed and verified on Midnight Preprod at [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) (Block `#2589085`).
 
 ---
 
@@ -691,12 +691,12 @@ node cli/void.js shred <fileId>
 
 ## 13. Deployed Contract Artifacts
 
-- **Contract Address**: [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0)
+- **Contract Address**: [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0)
 - **Raw Hex Address**: `89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`
 - **Transaction Hash**: `0x2758f932e69ecc334a7baefbb356f7355afbc079673b8e206511f6c8bd5f42e7`
 - **Block Height**: `#2589085`
 - **Network**: Midnight Preprod
-- **Explorer**: [https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0](https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0)
+- **Explorer**: [https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0)
 - **Verification Hash**: `0x3a79d2ec9b1c73f4e8b82093da4c1e8273619fa10b981258d4a9f0e1c2d3e4f5`
 - **Compiler Version**: Compact 0.20.4 (Release v1.2.0)
 
