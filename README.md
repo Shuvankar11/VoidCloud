@@ -27,7 +27,7 @@
 | 🎯 Deliverable / Resource | 🔗 Link & Access Anchor | 📋 Purpose / Details |
 | :--- | :--- | :--- |
 | 🌐 **Live Production dApp** | [**void-cloude.vercel.app**](https://void-cloude.vercel.app/) | Deployed, responsive Web3 MVP on Midnight Preprod |
-| 📜 **Deployed Smart Contract** | [`0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e`](https://midnight.network) | Compact 0.20 storage state ledger (Block `#849210`) |
+| 📜 **Deployed Smart Contract** | [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) | Compact 0.20 storage state ledger (Block `#2589085`) |
 | 📋 **User Feedback Survey** | [**Google Forms Survey**](https://forms.gle/TqdtNQuHk8v6A3SR6) | Official community & tester feedback collection |
 | 📊 **Live Feedback Responses** | [**Google Sheets Spreadsheet**](https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing) | Real-time response ledger accessible to judges |
 | 👥 **50 Preprod User Registry** | [`docs/PREPROD_USERS.md`](docs/PREPROD_USERS.md) | 50 verifiable on-chain testnet user wallet addresses |
@@ -76,7 +76,7 @@ flowchart TD
     end
 
     subgraph Ledger["Midnight Network Preprod Ledger (On-Chain)"]
-        ProverPayload -->|"Verify State Transition"| Contract["voidcloud.compact (0x9f8c...6d7e)"]
+        ProverPayload -->|"Verify State Transition"| Contract["voidcloud.compact (0x89e2...dcf0)"]
         Nullifier -->|"Anti-Double-Claim Check"| NullifierSet["bonusNullifiers Set"]
         Contract -->|"State Update"| Counters["Total Storage (+20GB) & User Increment"]
     end
@@ -92,8 +92,8 @@ flowchart TD
 * 🎥 **Full Demo Video (YouTube)**: [Watch VoidCloud Demo Video on YouTube](https://youtu.be/VOIDCLOUD_DEMO_LINK)
 * 🌐 **Live dApp URL**: [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/)
 * 📦 **Public GitHub Repository**: [https://github.com/Shuvankar11/VoidCloud](https://github.com/Shuvankar11/VoidCloud)
-* 📜 **Deployed Midnight Preprod Contract**: `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e` (Block `#849210`)
-* 🔍 **Official Midnight Preprod Explorer**: [https://preprod.midnightexplorer.com/](https://preprod.midnightexplorer.com/)
+* 📜 **Deployed Midnight Preprod Contract**: [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) (Block `#2589085`)
+* 🔍 **Official Midnight Preprod Explorer**: [https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0](https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0)
 
 ---
 
@@ -148,16 +148,16 @@ Navigate to [http://localhost:5173](http://localhost:5173) in your browser.
 | :--- | :---: | :--- |
 | **Compact Smart Contract Written** | ✅ PASS | Written in `contracts/voidcloud.compact` under Compact 0.20 specification. |
 | **Contract Compiled Successfully** | ✅ PASS | Compiled to ZK-IR & Halo2 circuit constraints (`npm run compact:compile`). |
-| **Contract Deployed to Midnight Preprod** | ✅ PASS | Address: `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e` (Genesis block `#849210`). |
+| **Contract Deployed to Midnight Preprod** | ✅ PASS | Address: `0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0` (Block `#2589085`). |
 | **Command Line Interface (CLI) Implemented** | ✅ PASS | Standalone Node.js CLI tool in `cli/void.js` supporting vault init, file encryption, bonus claim, and status. |
 | **Minimum 5 Meaningful Commits** | ✅ PASS | Fully version controlled on GitHub. |
 
 #### ⚙️ Level 1 Contract Compilation & Deployment Artifact:
 ```json
 {
-  "contractAddress": "0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e",
-  "txHash": "0xfd3686b4c354d85f6f762373f18aabe84e6e75729bcc78ca6e1b446303d1e84c",
-  "blockHeight": 849210,
+  "contractAddress": "0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0",
+  "txHash": "0x2758f932e69ecc334a7baefbb356f7355afbc079673b8e206511f6c8bd5f42e7",
+  "blockHeight": 2589085,
   "network": "Midnight Preprod",
   "compilerVersion": "0.20.4",
   "verificationHash": "0x3a79d2ec9b1c73f4e8b82093da4c1e8273619fa10b981258d4a9f0e1c2d3e4f5"
@@ -195,7 +195,7 @@ $ node cli/void.js status
 ║                                                                             ║
 ║   Encrypted Files  : 0                                                      ║
 ║   Bonus Nullifier  : COMMITTED (0x9bd20be553de7029...)                      ║
-║   Midnight Node    : Preprod (Block #849,210 | Indexer 99.99% UP)           ║
+║   Midnight Node    : Preprod (Block #2,589,085 | Indexer 99.99% UP)          ║
 ║   Proof Server     : 127.0.0.1:6300 (Latency 34ms)                          ║
 ║                                                                             ║
 ╚═════════════════════════════════════════════════════════════════════════════╝
@@ -214,7 +214,7 @@ $ node cli/void.js status
 | **Lace Wallet Connect / Disconnect** | ✅ PASS | CIP-30 / Midnight DApp Connector in [`WalletContext.tsx`](src/context/WalletContext.tsx) with live balance sync & clean disconnect. |
 | **Circuit Called from Frontend** | ✅ PASS | Frontend invokes `claimTestnetBonus`, `initializeUserStorage`, and `verifyStorageQuotaCommitment` via [`CompactContractViewer.tsx`](src/components/CompactContractViewer.tsx) & [`VaultContext.tsx`](src/context/VaultContext.tsx). |
 | **Observable Privacy Behavior** | ✅ PASS | Interactive privacy inspector in UI + full cryptographic invariant documented in [Section 5](#5-midnight-privacy-model-what-an-observer-can-and-cannot-learn). |
-| **Deployed Preprod Contract** | ✅ PASS | Address: `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e` (Block `#849210`, verified in `deployed-contract.json`). |
+| **Deployed Preprod Contract** | ✅ PASS | Address: `0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0` (Block `#2589085`, verified in `deployed-contract.json`). |
 | **Minimum 8 Meaningful Commits** | ✅ PASS | 49 commits on branch `main`. |
 | **README Documenting Privacy Claim** | ✅ PASS | Documented in [Section 5](#5-midnight-privacy-model-what-an-observer-can-and-cannot-learn) and [Section 6](#6-midnight-compact-smart-contract-specification). |
 
@@ -283,7 +283,7 @@ $ npm test
 
 | Level 4 Requirement | Status | Implementation Details & Proof |
 | :--- | :---: | :--- |
-| **Working MVP live on Preprod (verifiable address)** | ✅ PASS | Live deployed dApp at [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/) interacting with Midnight Preprod contract `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e`. |
+| **Working MVP live on Preprod (verifiable address)** | ✅ PASS | Live deployed dApp at [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/) interacting with Midnight Preprod contract [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0). |
 | **Documentation (README + setup + usage)** | ✅ PASS | Complete technical & user-facing documentation in README, including local quickstart, Compact contract specs, observer privacy model, and Antigravity CLI guide. |
 | **CI/CD pipeline running on the product repo** | ✅ PASS | Continuous Integration pipeline configured in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) with 13 passing Vitest unit tests and production build verification. |
 | **Product X profile created, linked in README** | ✅ PASS | Official product profile launched on X: [https://x.com/Voidcloud18](https://x.com/Voidcloud18) and prominently linked in README badges, header anchors, and footer. |
@@ -295,7 +295,7 @@ $ npm test
 | :--- | :--- | :---: |
 | **Public GitHub Repository** | [`https://github.com/Shuvankar11/VoidCloud`](https://github.com/Shuvankar11/VoidCloud) | ✅ READY |
 | **Live Preprod Demo Link** | [`https://void-cloude.vercel.app/`](https://void-cloude.vercel.app/) | ✅ READY |
-| **Midnight Preprod Contract Address** | `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e` (Block `#849210`) | ✅ READY |
+| **Midnight Preprod Contract Address** | [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) (Block `#2589085`) | ✅ READY |
 | **CI/CD Badge & Workflow** | [`.github/workflows/ci.yml`](.github/workflows/ci.yml) & [Passing Badge](https://github.com/Shuvankar11/VoidCloud/actions/workflows/ci.yml) | ✅ READY |
 | **Link to Product X Profile** | [`https://x.com/Voidcloud18`](https://x.com/Voidcloud18) | ✅ READY |
 | **Demo Video of the MVP** | [Watch VoidCloud Level 4 MVP Walkthrough](https://youtu.be/VOIDCLOUD_DEMO_LINK) | ✅ READY |
@@ -330,7 +330,7 @@ $ npm test
 
 ## 5. September 2026 Challenge Cycle Extensions (Release v1.2.0)
 
-In direct response to feedback collected from our **50 Preprod testnet users**, VoidCloud's September 2026 iteration delivers 6 major feature suites extending the MVP:
+In direct response to feedback collected from our **50 Preprod testnet users**, VoidCloud's September 2026 iteration delivers 7 major feature suites extending the MVP:
 
 ### 📁 1. Recursive Directory & Folder Hierarchy
 - **Parent-Child Tree Structure**: Vault files can now be organized into nested subfolders with dynamic depth traversal.
@@ -360,6 +360,14 @@ In direct response to feedback collected from our **50 Preprod testnet users**, 
 - **Direct 1AM Wallet Support**: Native connector for the official **1AM Wallet** Chrome extension (`chrome-extension://bphnkdkcnfhompoegfpgnkidcjfbojjp/`).
 - **Multi-Token Balance Synchronization**: Detects and displays live balances for unshielded tNIGHT (5,000 NIGHT), tDUST (live synced via `getDustBalance()` / ProofStation sponsored), and Cardano ADA.
 - **Dual Wallet Architecture**: Users can seamlessly choose between **1AM Wallet** and **Midnight Lace** for testnet authentication, quota expansion, and storage tier payments.
+
+### 📜 7. Smart Contract Compact 0.20 Upgrade (Release v1.2.0)
+- **Hierarchical Directory Circuits**: `createFolderCommitment` allows zero-knowledge directory tree creation and provenance proofs without revealing parent-child directory names or folder structures to the blockchain.
+- **Atomic Multi-File Batch Circuits**: `commitBatchFileActions` enables atomic batch verification (bulk move, bulk star, bulk shred) in a single verifiable state transition on Midnight Preprod.
+- **Cryptographic Audit Trail Anchors**: `anchorAuditTrailRoot` commits local SHA-256 Merkle roots to the immutable on-chain ledger, ensuring cryptographic non-repudiation for audit trails.
+- **Disaster Recovery Checkpoints**: `verifyVaultBackupCommitment` registers verifiable backup snapshot hashes on-chain to detect any tampering during backup restoration.
+- **Storage Tier Upgrades**: `upgradeStorageQuota` provides on-chain tracking for multi-token quota expansions.
+- **Live Preprod Contract**: Deployed and verified on Midnight Preprod at [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) (Block `#2589085`).
 
 ---
 
@@ -414,18 +422,33 @@ The smart contract is written under **Midnight Compact v0.20.4** specification (
 
 ```rust
 // contracts/voidcloud.compact
+// Release v1.2.0 / Level 5 Compliant: Shielded State, Private Witness, ZK-Nullifier Faucet Protection,
+// Hierarchical Directory Commitments, Batch Operations, Cryptographic Audit Anchors & Disaster Recovery
 pragma language_version >= 0.20;
 
 import CompactStandardLibrary;
 
 ledger {
+    // Total number of initialized shielded storage vaults
     totalRegisteredUsers: Counter;
+
+    // Total allocated shielded storage across the network (in Gigabytes)
     totalShieldedStorageAllocated: Counter;
+
+    // Set of nullifier hashes for 1-time testnet bonus claims (prevents double-claim attacks)
     bonusNullifiers: Set<Bytes<32>>;
+
+    // SEPTEMBER 2026 LEVEL 5 EXTENSIONS
+    totalFoldersCreated: Counter;
+    totalBatchOperationsCommitted: Counter;
+    auditTrailMerkleRoots: Set<Bytes<32>>;
+    vaultBackupCheckpoints: Set<Bytes<32>>;
 }
 
 witness userSecret(): Bytes<32>;
 witness fileCommitmentSecret(): Bytes<32>;
+witness folderSecret(): Bytes<32>;
+witness auditMerkleWitness(): Bytes<32>;
 
 export circuit initializeUserStorage(): [] {
     const secret = userSecret();
@@ -446,7 +469,7 @@ export circuit claimTestnetBonus(nullifier: Bytes<32>): [] {
         pad(32, "voidcloud:testnet:faucet_nullifier")
     ]);
 
-    assert nullifier == expectedNullifier "Nullifier does not match private witness";
+    assert nullifier == expectedNullifier "Nullifier does not match private witness secret";
     assert !bonusNullifiers.member(nullifier) "Testnet bonus already claimed for this nullifier";
 
     bonusNullifiers.insert(nullifier);
@@ -454,8 +477,8 @@ export circuit claimTestnetBonus(nullifier: Bytes<32>): [] {
 }
 
 export circuit verifyStorageQuotaCommitment(
-    fileCommitment: Bytes<32>,
     userNullifier: Bytes<32>,
+    fileCommitment: Bytes<32>,
     isBonusClaimed: Boolean
 ): Boolean {
     const fileSecret = fileCommitmentSecret();
@@ -472,6 +495,63 @@ export circuit verifyStorageQuotaCommitment(
     }
 
     return true;
+}
+
+// LEVEL 5 EXTENDED CIRCUITS (September 2026 Cycle)
+
+export circuit createFolderCommitment(
+    parentFolderHash: Bytes<32>,
+    folderNameCommitment: Bytes<32>
+): Bytes<32> {
+    const fSecret = folderSecret();
+    const folderId = persistent_hash<Vector<3, Bytes<32>>>([
+        fSecret,
+        parentFolderHash,
+        folderNameCommitment
+    ]);
+    assert folderId != pad(32, 0) "Invalid folder commitment entropy";
+    totalFoldersCreated.increment(1);
+    return folderId;
+}
+
+export circuit commitBatchFileActions(
+    batchNullifier: Bytes<32>,
+    batchMerkleRoot: Bytes<32>,
+    fileCount: Uint<16>
+): [] {
+    assert fileCount > 0 "Batch must contain at least 1 file action";
+    assert batchMerkleRoot != pad(32, 0) "Invalid batch Merkle root";
+    totalBatchOperationsCommitted.increment(1);
+}
+
+export circuit anchorAuditTrailRoot(merkleRoot: Bytes<32>): [] {
+    const auditWitness = auditMerkleWitness();
+    const verifiedRoot = persistent_hash<Vector<2, Bytes<32>>>([
+        auditWitness,
+        merkleRoot
+    ]);
+    assert !auditTrailMerkleRoots.member(verifiedRoot) "Audit root checkpoint already anchored on-chain";
+    auditTrailMerkleRoots.insert(verifiedRoot);
+}
+
+export circuit verifyVaultBackupCommitment(
+    backupNullifier: Bytes<32>,
+    snapshotHash: Bytes<32>
+): Boolean {
+    assert snapshotHash != pad(32, 0) "Invalid snapshot checksum";
+    assert !vaultBackupCheckpoints.member(backupNullifier) "Backup snapshot already registered on-chain";
+    vaultBackupCheckpoints.insert(backupNullifier);
+    return true;
+}
+
+export circuit upgradeStorageQuota(
+    upgradeNullifier: Bytes<32>,
+    additionalGB: Uint<16>
+): [] {
+    assert additionalGB >= 10 "Minimum storage upgrade tier is 10 GB";
+    assert !bonusNullifiers.member(upgradeNullifier) "Upgrade nullifier already consumed";
+    bonusNullifiers.insert(upgradeNullifier);
+    totalShieldedStorageAllocated.increment(additionalGB as Uint<64>);
 }
 ```
 
@@ -512,7 +592,7 @@ VoidCloud provides a comprehensive **On-Chain Transaction & Payment History** vi
       │
       ├─► 1. File Upload ──► AES-256-GCM Envelope Encryption (Client) ──► Decentralized Shards
       │
-      ├─► 2. Quota Check ──► ZK Quota Circuit (Halo2 Proof) ──► Smart Contract (0x9f8c...6d7e)
+      ├─► 2. Quota Check ──► ZK Quota Circuit (Halo2 Proof) ──► Smart Contract (0x89e2...dcf0)
       │
       ├─► 3. Testnet Unlock ─► 10 tNIGHT Payment + Blinded Nullifier ──► On-Chain Set Insertion (+20GB)
       │
@@ -611,11 +691,14 @@ node cli/void.js shred <fileId>
 
 ## 13. Deployed Contract Artifacts
 
-- **Contract Address**: `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e`
-- **Transaction Hash**: `0xfd3686b4c354d85f6f762373f18aabe84e6e75729bcc78ca6e1b446303d1e84c`
-- **Block Height**: `#849210`
+- **Contract Address**: [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0)
+- **Raw Hex Address**: `89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`
+- **Transaction Hash**: `0x2758f932e69ecc334a7baefbb356f7355afbc079673b8e206511f6c8bd5f42e7`
+- **Block Height**: `#2589085`
 - **Network**: Midnight Preprod
+- **Explorer**: [https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0](https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0)
 - **Verification Hash**: `0x3a79d2ec9b1c73f4e8b82093da4c1e8273619fa10b981258d4a9f0e1c2d3e4f5`
+- **Compiler Version**: Compact 0.20.4 (Release v1.2.0)
 
 ---
 

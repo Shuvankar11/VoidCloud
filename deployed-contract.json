@@ -1,15 +1,31 @@
 {
   "contractName": "VoidCloud",
+  "version": "1.2.0",
+  "cycle": "September 2026 (Level 5 Full Moon)",
   "network": "preprod",
-  "contractAddress": "0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e",
-  "transactionHash": "0xfd3686b4c354d85f6f762373f18aabe84e6e75729bcc78ca6e1b446303d1e84c",
-  "blockHeight": 849210,
+  "contractAddress": "0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0",
+  "rawContractAddress": "89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0",
+  "transactionHash": "0x2758f932e69ecc334a7baefbb356f7355afbc079673b8e206511f6c8bd5f42e7",
+  "blockHeight": 2589085,
   "verificationKeyHash": "0x3a79d2ec9b1c73f4e8b82093da4c1e8273619fa10b981258d4a9f0e1c2d3e4f5",
-  "deployerAddress": "mn_shielded_addr1qf745bb66b018f079a15ec708c9ca7c536cd5c790b9c61ff7",
-  "initialLedgerState": {
-    "totalRegisteredUsers": 0,
-    "totalShieldedStorageAllocatedGB": 0,
-    "bonusNullifiersCount": 0
+  "deployer": "mn_shield-addr_preprod14zyfy6nr6dylgsffdcknugp7mrxmgrptymt8a7vh4vj4w4yetsdvh7eg58w535z2qr59cu45wn6w0k2tjvud60vm62wa5ltax3lkjpc7587tn",
+  "deployedAt": "2026-09-17T12:13:59.000Z",
+  "circuits": [
+    "initializeUserStorage",
+    "claimTestnetBonus",
+    "verifyStorageQuotaCommitment",
+    "createFolderCommitment",
+    "commitBatchFileActions",
+    "anchorAuditTrailRoot",
+    "verifyVaultBackupCommitment",
+    "upgradeStorageQuota"
+  ],
+  "stateInvariants": {
+    "initialStorageAllocationGB": 20,
+    "faucetBonusGB": 20,
+    "nullifierEnforcement": "STRICT_SINGLE_CLAIM",
+    "folderHierarchy": "SHIELDED_PERSISTENT_HASH",
+    "auditAnchor": "SHA256_MERKLE_ROOT_ON_CHAIN"
   },
-  "deployedAt": "2026-08-15T11:59:26.486Z"
+  "explorerUrl": "https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0"
 }

@@ -38,8 +38,8 @@ export const MidnightExplorerModal: React.FC<MidnightExplorerModalProps> = ({
     setTimeout(() => setCopiedField(null), 2000);
   };
 
-  const contractAddress = '0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e';
-  const blockHeight = tx.blockHeight || 849231;
+  const contractAddress = '0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0';
+  const blockHeight = tx.blockHeight || 2589085;
   const gasFee = tx.gasFee || '0.0025 tDUST';
   const nullifier = tx.zkProofNullifier || session.nullifierHex;
 

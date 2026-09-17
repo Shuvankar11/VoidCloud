@@ -99,13 +99,13 @@ interface VaultContextType {
 
 const DEFAULT_METRICS: MidnightNetworkMetrics = {
   network: 'preprod',
-  blockHeight: 849225,
+  blockHeight: 2589085,
   proofServerStatus: 'ONLINE',
   proofServerLatencyMs: 34,
   totalRegisteredUsers: 14280,
   totalShieldedStorageAllocatedGB: 418520,
   bonusNullifiersCount: 8940,
-  contractAddress: '0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e',
+  contractAddress: '0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0',
 };
 
 function isRealUserFile(f: any): boolean {
@@ -620,9 +620,9 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           token: 'FREE' as const,
           status: 'success' as const,
           senderAddress: session.shieldedAddress,
-          receiverAddress: '0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e',
+          receiverAddress: '0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0',
           network: 'Midnight Preprod',
-          blockHeight: 849225 + Math.floor(Math.random() * 20),
+          blockHeight: 2589085 + Math.floor(Math.random() * 20),
           gasFee: '0.0000 tDUST',
           zkProofNullifier: session.nullifierHex,
         };

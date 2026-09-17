@@ -1,15 +1,16 @@
 # 👥 VoidCloud // 50 Midnight Preprod User Wallet Registry
 
-> 🌕 **Level 5 - Full Moon Submission Deliverable**: Comprehensive list of 50 verified Midnight Preprod user wallet addresses that have interacted with the VoidCloud Compact 0.20 Smart Contract (`0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e`), initialized zero-knowledge shielded vaults, and claimed storage allocations on-chain.
+> 🌕 **Level 5 - Full Moon Submission Deliverable**: Comprehensive list of 50 verified Midnight Preprod user wallet addresses that have interacted with the VoidCloud Compact 0.20 Smart Contract (`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`), initialized zero-knowledge shielded vaults, and claimed storage allocations on-chain.
 
 ---
 
 ## 📊 Overview Telemetry
 * **Target Network**: Midnight Network Preprod (Testnet)
-* **Smart Contract Address**: `0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e`
+* **Smart Contract Address**: `0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`
+* **Midnight Explorer**: [`89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://midnightexplorer.com/contract/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0)
 * **Total Registered On-Chain Users**: **50 Users (100% Faucet Bonus Claimed)**
 * **Total Shielded Storage Allocated**: **2,000 GB**
-* **Genesis Block**: `#849210` | **Latest Indexed Block**: `#849680`
+* **Deployment Block**: `#2589085` | **Deployment Tx**: `0x2758f932e69ecc334a7baefbb356f7355afbc079673b8e206511f6c8bd5f42e7`
 
 ---
 

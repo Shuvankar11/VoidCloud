@@ -32,7 +32,7 @@ export const TREASURY_CONFIG = {
   // 5. EVM Fallback Receiver
   evmTreasuryAddress:
     import.meta.env.VITE_TREASURY_EVM_ADDRESS ||
-    '0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e',
+    '0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0',
 
   // Convenience Aliases
   midnightTreasuryAddress:

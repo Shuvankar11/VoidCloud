@@ -8,7 +8,7 @@ export const TopMarquee: React.FC = () => {
   const tickerItems = [
     {
       icon: <ShieldCheck className="w-3.5 h-3.5 text-sky-600 inline mr-1" />,
-      text: `ZK-SNARK VERIFIED: 0x9f8...a1 in 1.28s`,
+      text: `ZK-SNARK VERIFIED: 0x89e...f0 in 1.28s`,
       highlight: 'text-sky-700 font-semibold',
     },
     {

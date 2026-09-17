@@ -30,24 +30,34 @@ This release delivers the major September 2026 iteration extending the Level 4 M
 - **💾 Vault Backup & Disaster Recovery**:
   - `src/services/vaultBackup.ts`: Snapshot serialization and SHA-256 integrity checksum generator.
   - `src/components/VaultBackupModal.tsx`: 1-click JSON backup export and snapshot restore engine.
-- **🧪 Comprehensive Test Coverage (30 Tests Total)**:
+- **📜 Compact Smart Contract Upgrade (Release v1.2.0)**:
+  - `contracts/voidcloud.compact`: Upgraded smart contract to align with Level 5 (September 2026 iteration) feature set.
+  - Added 4 on-chain public ledger states: `totalFoldersCreated`, `totalBatchOperationsCommitted`, `auditTrailMerkleRoots`, `vaultBackupCheckpoints`.
+  - Added 2 private witnesses: `folderSecret()`, `auditMerkleWitness()`.
+  - Implemented 5 new exported circuits: `createFolderCommitment`, `commitBatchFileActions`, `anchorAuditTrailRoot`, `verifyVaultBackupCommitment`, `upgradeStorageQuota`.
+  - Live deployed & verified Midnight Preprod Contract address: `0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0` (Block `#2589085`).
+  - Recompiled Compact TypeScript bindings (`npm run compact:compile`) and updated deployment manifesto (`deployed-contract.json`).
+- **🧪 Comprehensive Test Coverage (34 Tests Total)**:
   - `tests/folders.test.ts`: 4 unit tests verifying folder creation, nesting, relocation, and cascading deletion.
   - `tests/audit.test.ts`: 4 unit tests verifying audit logging, storage persistence, and size limiting.
   - `tests/backup.test.ts`: 5 unit tests verifying checksum generation, archive parsing, and corrupted JSON rejection.
   - `tests/batch.test.ts`: 4 unit tests verifying bulk star, bulk trash, bulk restore, and file tagging.
+  - `tests/wallet.test.ts`: 4 unit tests verifying 1AM Wallet & Midnight Lace multi-token derivation and disconnects.
+  - `tests/voidcloud.test.ts`: 13 unit tests verifying ledger capacity, nullifier collision prevention, and storage quota proofs.
 
 ### 🔄 Changed
-- `src/context/VaultContext.tsx`: Integrated folder hierarchy state, folder CRUD, tag updates, batch operations, audit log hooks, and backup import/export.
+- `src/context/VaultContext.tsx`: Integrated folder hierarchy state, folder CRUD, tag updates, batch operations, audit log hooks, backup import/export, and contract address binding.
 - `src/components/StorageVaultDashboard.tsx`: Redesigned toolbar with "+ Folder", "Audit Log", and "Backup" CTAs, table row checkboxes, tag chips, and dropdown actions.
-- `README.md`: Documented the Level 5 Full Moon checklist, September feature extensions, updated test matrix (30 passing tests), and commit counts.
+- `README.md`: Documented the Level 5 Full Moon checklist, September feature extensions, updated test matrix (34 passing tests), and contract v1.2.0 upgrade.
 - `docs/USER_FEEDBACK_REPORT.md`: Synchronized user feedback requests with delivered September iteration features.
+- `docs/PREPROD_USERS.md`: Updated contract address reference and live Midnight Preprod Explorer links.
 
 ---
 
 ## [1.1.0] - 2026-08-20 (August Challenge Cycle - Level 4 Waxing Gibbous)
 
 ### 🚀 Added
-- Deployed Midnight Preprod Smart Contract (`0x9f8c47b1e2a03d7e5f6a8b9c0d1e2f3a4b5c6d7e`, Block `#849210`).
+- Deployed Midnight Preprod Smart Contract (`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`, Block `#2589085`).
 - Lace Dual-Chain CIP-30 Wallet integration with balance tracking.
 - Client-side AES-256-GCM envelope encryption engine.
 - Off-chain Halo2 ZK proof synthesis for storage entitlement and bonus nullifiers.

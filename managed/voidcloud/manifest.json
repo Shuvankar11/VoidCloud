@@ -1,8 +1,10 @@
 {
   "contractName": "VoidCloud",
-  "version": "1.0.0",
+  "version": "1.2.0",
+  "cycle": "September 2026 (Level 5 Full Moon)",
   "languageVersion": "0.20.4",
-  "compiledAt": "2026-08-15T18:44:24.032Z",
+  "compiledAt": "2026-09-17T12:16:23.250Z",
+  "contractAddress": "0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0",
   "circuits": [
     {
       "name": "initializeUserStorage",
@@ -54,6 +56,101 @@
       ],
       "publicStateModifications": [],
       "constraintsCount": 1850
+    },
+    {
+      "name": "createFolderCommitment",
+      "inputs": [
+        {
+          "name": "parentFolderHash",
+          "type": "Bytes<32>"
+        },
+        {
+          "name": "folderNameCommitment",
+          "type": "Bytes<32>"
+        }
+      ],
+      "witnesses": [
+        "folderSecret"
+      ],
+      "publicStateModifications": [
+        "totalFoldersCreated"
+      ],
+      "constraintsCount": 1650
+    },
+    {
+      "name": "commitBatchFileActions",
+      "inputs": [
+        {
+          "name": "batchNullifier",
+          "type": "Bytes<32>"
+        },
+        {
+          "name": "batchMerkleRoot",
+          "type": "Bytes<32>"
+        },
+        {
+          "name": "fileCount",
+          "type": "Uint<16>"
+        }
+      ],
+      "witnesses": [],
+      "publicStateModifications": [
+        "totalBatchOperationsCommitted"
+      ],
+      "constraintsCount": 2430
+    },
+    {
+      "name": "anchorAuditTrailRoot",
+      "inputs": [
+        {
+          "name": "merkleRoot",
+          "type": "Bytes<32>"
+        }
+      ],
+      "witnesses": [
+        "auditMerkleWitness"
+      ],
+      "publicStateModifications": [
+        "auditTrailMerkleRoots"
+      ],
+      "constraintsCount": 1980
+    },
+    {
+      "name": "verifyVaultBackupCommitment",
+      "inputs": [
+        {
+          "name": "backupNullifier",
+          "type": "Bytes<32>"
+        },
+        {
+          "name": "snapshotHash",
+          "type": "Bytes<32>"
+        }
+      ],
+      "witnesses": [],
+      "publicStateModifications": [
+        "vaultBackupCheckpoints"
+      ],
+      "constraintsCount": 1540
+    },
+    {
+      "name": "upgradeStorageQuota",
+      "inputs": [
+        {
+          "name": "upgradeNullifier",
+          "type": "Bytes<32>"
+        },
+        {
+          "name": "additionalGB",
+          "type": "Uint<16>"
+        }
+      ],
+      "witnesses": [],
+      "publicStateModifications": [
+        "bonusNullifiers",
+        "totalShieldedStorageAllocated"
+      ],
+      "constraintsCount": 1720
     }
   ],
   "stateSchema": {
@@ -66,6 +163,22 @@
       "initial": 0
     },
     "bonusNullifiers": {
+      "type": "Set<Bytes<32>>",
+      "initial": []
+    },
+    "totalFoldersCreated": {
+      "type": "Counter",
+      "initial": 0
+    },
+    "totalBatchOperationsCommitted": {
+      "type": "Counter",
+      "initial": 0
+    },
+    "auditTrailMerkleRoots": {
+      "type": "Set<Bytes<32>>",
+      "initial": []
+    },
+    "vaultBackupCheckpoints": {
       "type": "Set<Bytes<32>>",
       "initial": []
     }
