@@ -8,6 +8,14 @@ export async function computeChecksum(content: string): Promise<string> {
   return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
+export const CURRENT_BACKUP_SCHEMA_VERSION = '1.3.0';
+
+export function isBackupVersionCompatible(version: string): boolean {
+  if (!version) return false;
+  const supported = ['1.0.0', '1.1.0', '1.2.0', '1.3.0'];
+  return supported.some(v => version.startsWith(v.slice(0, 3)));
+}
+
 export async function createVaultBackupArchive(
   session: UserSession,
   files: ShieldedFile[],
@@ -21,7 +29,7 @@ export async function createVaultBackupArchive(
   });
 
   const baseArchive = {
-    version: '1.2.0',
+    version: CURRENT_BACKUP_SCHEMA_VERSION,
     exportedAt: new Date().toISOString(),
     shieldedAddress: session.shieldedAddress,
     totalFiles: sanitizedFiles.length,
