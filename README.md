@@ -41,17 +41,18 @@
 ## 📑 Table of Contents
 1. [Executive Summary & Product Proposal](#1-executive-summary--product-idea)
 2. [🎥 Judge Demo Video & Primary Submission Anchors](#2--judge-demo-video--primary-submission-anchors)
-3. [Local Setup, Build & Quickstart Instructions](#3-local-setup-build--quickstart-instructions)
-4. [Level 6, Level 5, Level 4, Level 3 & Level 2 Submission Checklists (100% Pass)](#4--hackathon-level-progression--submission-archives)
-5. [September 2026 Challenge Cycle Extensions (Release v1.2.0)](#5-september-2026-challenge-cycle-extensions-release-v120)
-6. [Midnight Privacy Model: What an Observer Can and Cannot Learn](#6-midnight-privacy-model-what-an-observer-can-and-cannot-learn)
-7. [Midnight Compact Smart Contract Specification](#7-midnight-compact-smart-contract-specification)
-8. [Midnight Lace & 1AM Wallet Integration Architecture](#8-midnight-lace--1am-wallet-integration-architecture)
-9. [Payment & Transaction History Ledger Engine](#9-payment--transaction-history-ledger-engine)
-10. [System Architecture & Cryptographic Workflow](#10-system-architecture--cryptographic-workflow)
-11. [Automated Test Suite & CI/CD Pipeline (34 Passing Tests)](#11-automated-test-suite)
-12. [Antigravity CLI Usage Guide](#12-antigravity-cli-usage-guide)
-13. [Deployed Contract Artifacts & Verification](#13-deployed-contract-artifacts)
+3. [🖥️ Product UI Showcase & Visual Walkthrough](#3-️-product-ui-showcase--visual-walkthrough)
+4. [Local Setup, Build & Quickstart Instructions](#4-local-setup-build--quickstart-instructions)
+5. [Level 6, Level 5, Level 4, Level 3 & Level 2 Submission Checklists (100% Pass)](#5--hackathon-level-progression--submission-archives)
+6. [September 2026 Challenge Cycle Extensions (Release v1.2.0 & v1.3.0)](#6-september-2026-challenge-cycle-extensions-release-v120--v130)
+7. [Midnight Privacy Model: What an Observer Can and Cannot Learn](#7-midnight-privacy-model-what-an-observer-can-and-cannot-learn)
+8. [Midnight Compact Smart Contract Specification](#8-midnight-compact-smart-contract-specification)
+9. [Midnight Lace & 1AM Wallet Integration Architecture](#9-midnight-lace--1am-wallet-integration-architecture)
+10. [Payment & Transaction History Ledger Engine](#10-payment--transaction-history-ledger-engine)
+11. [System Architecture & Cryptographic Workflow](#11-system-architecture--cryptographic-workflow)
+12. [Automated Test Suite & CI/CD Pipeline (52 Passing Tests)](#12-automated-test-suite)
+13. [Antigravity CLI Usage Guide](#13-antigravity-cli-usage-guide)
+14. [Deployed Contract Artifacts & Verification](#14-deployed-contract-artifacts)
 
 ---
 
@@ -87,10 +88,10 @@ flowchart TD
 
 ## 2. 🎥 Judge Demo Video & Primary Submission Anchors
 
-> 🏆 **Attention Judges / Evaluators**: Below are the official submission links and the full end-to-end demo video for **Level 2 & Level 3** demonstrating Lace Wallet Connection, Compact Circuit Execution, Observable Privacy, Encrypted Cloud Storage, and Midnight Preprod Settlement.
+> 🏆 **Attention Judges / Evaluators**: Below are the official submission links and the full end-to-end demo video for **Level 6 - Supermoon** demonstrating Lace Wallet Connection, Compact Circuit Execution, Observable Privacy, Encrypted Cloud Storage, and Midnight Preprod Settlement.
 
 ### 🔗 Official Submission Links
-* 🎥 **Full Demo Video (YouTube)**: [Watch VoidCloud Demo Video on YouTube](https://youtu.be/VOIDCLOUD_DEMO_LINK)
+* 🎥 **Full Demo Video (YouTube)**: [Watch VoidCloud Demo Video on YouTube](https://youtu.be/8YNLDIUzc2I)
 * 🌐 **Live dApp URL**: [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/)
 * 📦 **Public GitHub Repository**: [https://github.com/Shuvankar11/VoidCloud](https://github.com/Shuvankar11/VoidCloud)
 * 📜 **Deployed Midnight Preprod Contract**: [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) (Block `#2589085`)
@@ -98,7 +99,25 @@ flowchart TD
 
 ---
 
-## 3. Local Setup, Build & Quickstart Instructions
+## 3. 🖥️ Product UI Showcase & Visual Walkthrough
+
+> 📸 **Visual Experience & Application Screenshots**: Explore VoidCloud's privacy-first design, interactive ZK circuits, encrypted file management, and Midnight Preprod on-chain transaction verifications.
+
+| UI View / Feature | Preview & Description |
+| :--- | :--- |
+| **1. Decentralized Storage Dashboard** | ![VoidCloud Dashboard](docs/screenshots/dashboard.png)<br><sub>*Overview of allocated storage quota (20 GB base + 20 GB ZK bonus), category distributions, and real-time encryption metrics.*</sub> |
+| **2. Shielded Vault & Folder Hierarchy** | ![Shielded Vault & Folder Structure](docs/screenshots/vault-folders.png)<br><sub>*Client-side encrypted file vault featuring nested directory hierarchy, color-coded tags, and floating batch operations.*</sub> |
+| **3. Midnight Lace & 1AM Wallet Integration** | ![Midnight Wallet Connection](docs/screenshots/wallet-connection.png)<br><sub>*Seamless CIP-30 DApp connector authentication with live tNIGHT / tDUST balances and network verification.*</sub> |
+| **4. Interactive ZK-SNARK Circuit Runner** | ![ZK Circuit Runner](docs/screenshots/zk-circuits.png)<br><sub>*Halo2 proof generation pipeline showing private witness derivation, nullifier enforcement, and contract state transition.*</sub> |
+| **5. Tamper-Proof Cryptographic Audit Trail** | ![Cryptographic Audit Trail](docs/screenshots/audit-trail.png)<br><sub>*Real-time SHA-256 Merkle root log tracking and on-chain root anchoring for complete cryptographic non-repudiation.*</sub> |
+| **6. 1-Click Vault Disaster Recovery Backup** | ![Disaster Recovery Backup](docs/screenshots/disaster-recovery.png)<br><sub>*Encrypted snapshot generator with on-chain backup commitment registration and automated integrity verification.*</sub> |
+| **7. On-Chain Ledger & Transaction Receipts** | ![Midnight Explorer Modal & Receipt](docs/screenshots/explorer-receipt.png)<br><sub>*Interactive ZK transaction receipt modal displaying block height `#2589085`, gas fees, and Midnight Preprod Explorer links.*</sub> |
+
+> 📁 **Screenshot Assets**: Store screenshot images inside the [`docs/screenshots/`](docs/screenshots/) directory (`dashboard.png`, `vault-folders.png`, `wallet-connection.png`, `zk-circuits.png`, `audit-trail.png`, `disaster-recovery.png`, `explorer-receipt.png`) to render in the table above.
+
+---
+
+## 4. Local Setup, Build & Quickstart Instructions
 
 ### Prerequisites
 - **Node.js**: `v18.0.0` or higher (`v20.x` / `v22.x` / `v24.x` recommended)
@@ -299,7 +318,7 @@ $ npm test
 | **Midnight Preprod Contract Address** | [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) (Block `#2589085`) | ✅ READY |
 | **CI/CD Badge & Workflow** | [`.github/workflows/ci.yml`](.github/workflows/ci.yml) & [Passing Badge](https://github.com/Shuvankar11/VoidCloud/actions/workflows/ci.yml) | ✅ READY |
 | **Link to Product X Profile** | [`https://x.com/Voidcloud18`](https://x.com/Voidcloud18) | ✅ READY |
-| **Demo Video of the MVP** | [Watch VoidCloud Level 4 MVP Walkthrough](https://youtu.be/VOIDCLOUD_DEMO_LINK) | ✅ READY |
+| **Demo Video of the MVP** | [Watch VoidCloud Level 4 MVP Walkthrough](https://youtu.be/8YNLDIUzc2I) | ✅ READY |
 | **Meaningful Commit History** | **85 Commits** (`git rev-list --count HEAD` verified) | ✅ READY |
 
 ---
@@ -324,7 +343,7 @@ $ npm test
 | **Feedback Documentation & Google Form Link** | [Google Form Survey](https://forms.gle/TqdtNQuHk8v6A3SR6) & [`docs/USER_FEEDBACK_REPORT.md`](docs/USER_FEEDBACK_REPORT.md) | ✅ READY |
 | **Live User Responses (Spreadsheet for Judges)** | [Google Sheets Feedback Responses](https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing) | ✅ READY |
 | **Product X (Twitter) Profile** | [`https://x.com/Voidcloud18`](https://x.com/Voidcloud18) | ✅ READY |
-| **Demo Video Showing Full MVP Functionality** | [Watch VoidCloud Full MVP Walkthrough](https://youtu.be/VOIDCLOUD_DEMO_LINK) | ✅ READY |
+| **Demo Video Showing Full MVP Functionality** | [Watch VoidCloud Full MVP Walkthrough](https://youtu.be/8YNLDIUzc2I) | ✅ READY |
 | **Meaningful Commit History** | **110+ Commits** (20+ in September 2026 Challenge Cycle) | ✅ READY |
 
 ---
@@ -351,7 +370,7 @@ $ npm test
 | **Approved Product Proposal** | [`PROPOSAL.md`](PROPOSAL.md) | ✅ READY |
 | **List of 70 Preprod user wallet addresses (verifiable on-chain)** | [`LAUNCH_USERS.md`](LAUNCH_USERS.md) (122 Verified Users - Exceeds 70 Req.) | ✅ READY |
 | **Feedback documentation or link to feedback document** | [`FEEDBACK.md`](FEEDBACK.md) & [Google Sheets Spreadsheet](https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing) | ✅ READY |
-| **Demo video showing full MVP functionality** | [Watch VoidCloud Full MVP Walkthrough](https://youtu.be/VOIDCLOUD_DEMO_LINK) | ✅ READY |
+| **Demo video showing full MVP functionality** | [Watch VoidCloud Full MVP Walkthrough](https://youtu.be/8YNLDIUzc2I) | ✅ READY |
 | **Minimum 30 meaningful commits** | **163 Commits** (`git rev-list --count HEAD` verified) | ✅ READY |
 
 ---
