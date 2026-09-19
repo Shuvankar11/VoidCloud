@@ -1,3 +1,10 @@
+/**
+ * @file VaultContext.tsx
+ * @description Central storage engine for VoidCloud. Manages client-side AES-256-GCM
+ * envelope encryption, off-chain Halo2 zero-knowledge proving cycles, directory hierarchies,
+ * floating batch operations, cryptographic audit logs, and on-chain Midnight Preprod ledger sync.
+ */
+
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import {

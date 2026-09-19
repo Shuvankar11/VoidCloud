@@ -1,3 +1,10 @@
+/**
+ * @file WalletContext.tsx
+ * @description Provides Web3 wallet state, CIP-30 DApp connector integration for
+ * Midnight Lace and 1AM Wallet, live balance synchronization (NIGHT, tDUST, ADA),
+ * and multi-asset testnet checkout flows.
+ */
+
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { WalletState, StoragePlan, BillingCycle, PaymentTransaction } from '../types';
 import confetti from 'canvas-confetti';
