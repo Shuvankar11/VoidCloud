@@ -3,6 +3,8 @@ import {
   createAuditLog,
   getStoredAuditLogs,
   saveStoredAuditLogs,
+  filterAuditLogsByDateRange,
+  sanitizeAuditLogsForExport,
 } from '../src/services/auditLogger';
 import { AuditLogItem } from '../src/types';
 
@@ -82,4 +84,33 @@ describe('VoidCloud Cryptographic Audit Trail Unit Tests', () => {
     const logs = getStoredAuditLogs('corrupted');
     expect(logs).toEqual([]);
   });
+
+  it('filters audit logs by date range accurately', () => {
+    const log1 = createAuditLog('FILE_ENCRYPT_UPLOAD', 'First log');
+    log1.timestamp = '2026-09-01T10:00:00.000Z';
+
+    const log2 = createAuditLog('BONUS_CLAIM', 'Second log');
+    log2.timestamp = '2026-09-15T10:00:00.000Z';
+
+    const log3 = createAuditLog('FILE_SHRED', 'Third log');
+    log3.timestamp = '2026-09-20T10:00:00.000Z';
+
+    const filtered = filterAuditLogsByDateRange(
+      [log1, log2, log3],
+      new Date('2026-09-10T00:00:00.000Z'),
+      new Date('2026-09-18T00:00:00.000Z')
+    );
+
+    expect(filtered.length).toBe(1);
+    expect(filtered[0].action).toBe('BONUS_CLAIM');
+  });
+
+  it('sanitizes audit logs for JSON export without throwing', () => {
+    const log = createAuditLog('INITIALIZE_VAULT', 'Init', { proofHash: '0xabc' });
+    const jsonStr = sanitizeAuditLogsForExport([log]);
+    expect(jsonStr).toContain('"proofHash": "0xabc"');
+    const parsed = JSON.parse(jsonStr);
+    expect(parsed.length).toBe(1);
+  });
 });
+
