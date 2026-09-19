@@ -44,3 +44,29 @@ export function createAuditLog(
     severity: options?.severity || 'info',
   };
 }
+
+export function filterAuditLogsByDateRange(
+  logs: AuditLogItem[],
+  startDate?: Date,
+  endDate?: Date
+): AuditLogItem[] {
+  return logs.filter(log => {
+    const time = new Date(log.timestamp).getTime();
+    if (startDate && time < startDate.getTime()) return false;
+    if (endDate && time > endDate.getTime()) return false;
+    return true;
+  });
+}
+
+export function sanitizeAuditLogsForExport(logs: AuditLogItem[]): string {
+  const sanitized = logs.map(l => ({
+    id: l.id,
+    timestamp: l.timestamp,
+    action: l.action,
+    details: l.details,
+    severity: l.severity,
+    proofHash: l.proofHash || null,
+    txHash: l.txHash || null
+  }));
+  return JSON.stringify(sanitized, null, 2);
+}
