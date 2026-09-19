@@ -3,6 +3,7 @@ import {
   computeChecksum,
   createVaultBackupArchive,
   validateAndParseBackup,
+  isBackupVersionCompatible,
 } from '../src/services/vaultBackup';
 import { ShieldedFile, VaultFolder, AuditLogItem, UserSession } from '../src/types';
 
@@ -83,7 +84,7 @@ describe('VoidCloud Vault Backup & Disaster Recovery Unit Tests', () => {
     );
 
     expect(archive).toBeDefined();
-    expect(archive.version).toBe('1.2.0');
+    expect(archive.version).toBe('1.3.0');
     expect(archive.shieldedAddress).toBe(dummySession.shieldedAddress);
     expect(archive.totalFiles).toBe(2);
     expect(archive.totalFolders).toBe(1);
@@ -111,13 +112,21 @@ describe('VoidCloud Vault Backup & Disaster Recovery Unit Tests', () => {
 
     expect(result.valid).toBe(true);
     expect(result.archive).toBeDefined();
-    expect(result.archive?.version).toBe('1.2.0');
+    expect(result.archive?.version).toBe('1.3.0');
     expect(result.archive?.files.length).toBe(2);
     expect(result.archive?.folders[0].name).toBe('Finance & Compliance');
   });
 
+  it('verifies backward compatibility across 1.x schema versions', () => {
+    expect(isBackupVersionCompatible('1.3.0')).toBe(true);
+    expect(isBackupVersionCompatible('1.2.0')).toBe(true);
+    expect(isBackupVersionCompatible('1.1.0')).toBe(true);
+    expect(isBackupVersionCompatible('2.0.0')).toBe(false);
+    expect(isBackupVersionCompatible('')).toBe(false);
+  });
+
   it('rejects corrupted or malformed JSON backup files', async () => {
-    const malformedJson = '{"version": "1.2.0", "shieldedAddress":';
+    const malformedJson = '{"version": "1.3.0", "shieldedAddress":';
     const result = await validateAndParseBackup(malformedJson);
 
     expect(result.valid).toBe(false);
@@ -127,7 +136,7 @@ describe('VoidCloud Vault Backup & Disaster Recovery Unit Tests', () => {
 
   it('rejects JSON missing required VoidCloud schema fields', async () => {
     const invalidSchema = JSON.stringify({
-      version: '1.2.0',
+      version: '1.3.0',
       // missing shieldedAddress and files
       randomKey: 'randomValue',
     });
