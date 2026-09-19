@@ -240,6 +240,9 @@ export circuit verifyStorageQuotaCommitment(
               {(['claimTestnetBonus', 'initializeUserStorage', 'verifyStorageQuotaCommitment'] as const).map((c) => (
                 <button
                   key={c}
+                  role="tab"
+                  aria-selected={selectedCircuit === c}
+                  aria-label={`Select circuit ${c}`}
                   onClick={() => {
                     setSelectedCircuit(c);
                     setCircuitLogs([]);
