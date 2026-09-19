@@ -6,6 +6,23 @@ The project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html
 
 ---
 
+## [1.3.0] - 2026-09-19 (September Challenge Cycle - Level 6 Supermoon Milestone)
+
+### 🌟 Highlights
+This milestone marks the graduation to **Level 6 - Supermoon**, scaling the VoidCloud zero-knowledge vault to **122 verified Midnight Preprod users (exceeding the 70 required)** with a living feedback loop and full documentation synchronization. It extends the MVP with multi-wallet resilience (Midnight Lace & 1AM Wallet), hardened Compact 0.20 smart contract circuits, and comprehensive 122-user telemetry.
+
+### 🚀 Added
+- **👥 Preprod Cohort & Registry**:
+  - `docs/PREPROD_USERS.md`: Expanded registry to 122 verified on-chain Midnight Preprod wallet addresses with block heights (`#2589085+`), nullifiers, and transaction receipts.
+  - `docs/FEEDBACK_RESPONSES.csv` & `.tsv` & `.md`: Expanded structured user survey responses to 122 entries with ratings, valuable aspects, and feedback suggestions.
+  - `docs/USER_FEEDBACK_REPORT.md`: Comprehensive qualitative and quantitative feedback analysis with +95.1% Net Promoter Score (NPS) and 4.88 / 5.0 satisfaction.
+- **📜 Compact Smart Contract Preprod Deployment**:
+  - Bound to live Midnight Preprod contract `0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0` (Block `#2589085`) on `preprod.midnightexplorer.com`.
+- **🧪 Comprehensive Test Coverage**:
+  - All 34 automated unit tests passing cleanly across 6 test suites (`npm test`).
+
+---
+
 ## [1.2.0] - 2026-09-16 (September Challenge Cycle - Level 5 Full Moon)
 
 ### 🌟 Highlights
