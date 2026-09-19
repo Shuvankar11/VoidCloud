@@ -101,19 +101,35 @@ flowchart TD
 
 ## 3. 🖥️ Product UI Showcase & Visual Walkthrough
 
-> 📸 **Visual Experience & Application Screenshots**: Explore VoidCloud's privacy-first design, interactive ZK circuits, encrypted file management, and Midnight Preprod on-chain transaction verifications.
+> 📸 **Live Application Screenshots**: Visual walkthrough of VoidCloud running on Midnight Network Preprod.
 
-| UI View / Feature | Preview & Description |
-| :--- | :--- |
-| **1. Decentralized Storage Dashboard** | ![VoidCloud Dashboard](docs/screenshots/dashboard.png)<br><sub>*Overview of allocated storage quota (20 GB base + 20 GB ZK bonus), category distributions, and real-time encryption metrics.*</sub> |
-| **2. Shielded Vault & Folder Hierarchy** | ![Shielded Vault & Folder Structure](docs/screenshots/vault-folders.png)<br><sub>*Client-side encrypted file vault featuring nested directory hierarchy, color-coded tags, and floating batch operations.*</sub> |
-| **3. Midnight Lace & 1AM Wallet Integration** | ![Midnight Wallet Connection](docs/screenshots/wallet-connection.png)<br><sub>*Seamless CIP-30 DApp connector authentication with live tNIGHT / tDUST balances and network verification.*</sub> |
-| **4. Interactive ZK-SNARK Circuit Runner** | ![ZK Circuit Runner](docs/screenshots/zk-circuits.png)<br><sub>*Halo2 proof generation pipeline showing private witness derivation, nullifier enforcement, and contract state transition.*</sub> |
-| **5. Tamper-Proof Cryptographic Audit Trail** | ![Cryptographic Audit Trail](docs/screenshots/audit-trail.png)<br><sub>*Real-time SHA-256 Merkle root log tracking and on-chain root anchoring for complete cryptographic non-repudiation.*</sub> |
-| **6. 1-Click Vault Disaster Recovery Backup** | ![Disaster Recovery Backup](docs/screenshots/disaster-recovery.png)<br><sub>*Encrypted snapshot generator with on-chain backup commitment registration and automated integrity verification.*</sub> |
-| **7. On-Chain Ledger & Transaction Receipts** | ![Midnight Explorer Modal & Receipt](docs/screenshots/explorer-receipt.png)<br><sub>*Interactive ZK transaction receipt modal displaying block height `#2589085`, gas fees, and Midnight Preprod Explorer links.*</sub> |
+### 1. 🌐 Next-Gen Cloud Storage Landing Page
+![VoidCloud Landing Page](docs/screenshots/01-landing-page.png)
+*Client-side zero-knowledge encrypted storage hero interface on Midnight Network.*
 
-> 📁 **Screenshot Assets**: Store screenshot images inside the [`docs/screenshots/`](docs/screenshots/) directory (`dashboard.png`, `vault-folders.png`, `wallet-connection.png`, `zk-circuits.png`, `audit-trail.png`, `disaster-recovery.png`, `explorer-receipt.png`) to render in the table above.
+---
+
+### 2. 🔐 Authentication & Multi-Provider Login
+![VoidCloud Login Portal](docs/screenshots/02-login-modal.png)
+*Authentication portal supporting Email/Password, Google OAuth, 1AM Wallet, and Midnight Lace Wallet.*
+
+---
+
+### 3. 👛 Web3 Wallet Selection & Detection
+![Web3 Wallet Selection](docs/screenshots/03-wallet-selection.png)
+*Native CIP-30 / DApp connector supporting 1AM Wallet (Preprod Synced), Midnight Lace (Recommended), MetaMask, and Phantom.*
+
+---
+
+### 4. ⚡ Connected Wallet & Midnight Preprod Faucet
+![Connected Wallet](docs/screenshots/04-connected-wallet.png)
+*Real-time Preprod wallet synchronization displaying address `1am_preprod1qd...dfc07a02`, token balances (5,000 TNIGHT, 587.28 TDUST), and testnet faucet.*
+
+---
+
+### 5. 🛡️ Shielded Vault Dashboard & File Manager
+![Vault Dashboard](docs/screenshots/05-vault-dashboard.png)
+*Live decentralized vault dashboard with 40 GB allocated quota, Quick Access categories (Photos, Videos, PDFs, ZIP & Code), root directory navigation, and ZK-proven files anchored on Block `#2589085`.*
 
 ---
 
