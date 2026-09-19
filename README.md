@@ -28,12 +28,13 @@
 | :--- | :--- | :--- |
 | 🌐 **Live Production dApp** | [**void-cloude.vercel.app**](https://void-cloude.vercel.app/) | Deployed, responsive Web3 MVP on Midnight Preprod |
 | 📜 **Deployed Smart Contract** | [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) | Compact 0.20 storage state ledger (Block `#2589085`) |
+| 💡 **Product Proposal Rubric** | [`PROPOSAL.md`](PROPOSAL.md) | Official problem statement, Midnight ZK solution & tokenomics |
+| 👥 **Preprod Users Rubric** | [`LAUNCH_USERS.md`](LAUNCH_USERS.md) | 122 verifiable on-chain testnet user wallet addresses (Exceeds 70 req.) |
+| 📝 **Feedback Loop Rubric** | [`FEEDBACK.md`](FEEDBACK.md) | Structured survey insights, NPS (+95.1%) & living feedback ledger |
 | 📋 **User Feedback Survey** | [**Google Forms Survey**](https://forms.gle/TqdtNQuHk8v6A3SR6) | Official community & tester feedback collection |
 | 📊 **Live Feedback Responses** | [**Google Sheets Spreadsheet**](https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing) | Real-time 122-response ledger accessible to judges |
-| 👥 **Preprod User Registry** | [`docs/PREPROD_USERS.md`](docs/PREPROD_USERS.md) | 122 verifiable on-chain testnet user wallet addresses (Exceeds 70 req.) |
-| 📝 **Feedback & Iteration Report** | [`docs/USER_FEEDBACK_REPORT.md`](docs/USER_FEEDBACK_REPORT.md) | Structured 122-user survey insights & product roadmap |
 | 🐦 **Product X Profile** | [**@Voidcloud18**](https://x.com/Voidcloud18) | Public product demo updates & announcements |
-| 🛡️ **Hackathon Level Status** | **🌝 Level 6 - Supermoon (100% Pass)** | Extended MVP, 122 Users (70+ Req), Living Feedback Loop, 135+ Commits |
+| 🛡️ **Hackathon Level Status** | **🌝 Level 6 - Supermoon (100% Pass)** | Extended MVP, 122 Users (70+ Req), Living Feedback Loop, 160+ Commits |
 
 ---
 
@@ -347,10 +348,11 @@ $ npm test
 | :--- | :--- | :---: |
 | **Public GitHub repository with updated documentation** | [`https://github.com/Shuvankar11/VoidCloud`](https://github.com/Shuvankar11/VoidCloud) | ✅ READY |
 | **Live demo link** | [`https://void-cloude.vercel.app/`](https://void-cloude.vercel.app/) | ✅ READY |
-| **List of 70 Preprod user wallet addresses (verifiable on-chain)** | [`docs/PREPROD_USERS.md`](docs/PREPROD_USERS.md) (122 Verified Users - Exceeds 70 Req.) | ✅ READY |
-| **Feedback documentation or link to feedback document** | [`docs/USER_FEEDBACK_REPORT.md`](docs/USER_FEEDBACK_REPORT.md) & [Google Sheets Spreadsheet](https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing) | ✅ READY |
+| **Approved Product Proposal** | [`PROPOSAL.md`](PROPOSAL.md) | ✅ READY |
+| **List of 70 Preprod user wallet addresses (verifiable on-chain)** | [`LAUNCH_USERS.md`](LAUNCH_USERS.md) (122 Verified Users - Exceeds 70 Req.) | ✅ READY |
+| **Feedback documentation or link to feedback document** | [`FEEDBACK.md`](FEEDBACK.md) & [Google Sheets Spreadsheet](https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing) | ✅ READY |
 | **Demo video showing full MVP functionality** | [Watch VoidCloud Full MVP Walkthrough](https://youtu.be/VOIDCLOUD_DEMO_LINK) | ✅ READY |
-| **Minimum 30 meaningful commits** | **135 Commits** (`git rev-list --count HEAD` verified) | ✅ READY |
+| **Minimum 30 meaningful commits** | **163 Commits** (`git rev-list --count HEAD` verified) | ✅ READY |
 
 ---
 

@@ -1,7 +1,7 @@
 {
   "contractName": "VoidCloud",
-  "version": "1.2.0",
-  "cycle": "September 2026 (Level 5 Full Moon)",
+  "version": "1.3.0",
+  "cycle": "September 2026 (Level 6 Supermoon Deployment)",
   "network": "preprod",
   "contractAddress": "0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0",
   "rawContractAddress": "89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0",
@@ -9,7 +9,7 @@
   "blockHeight": 2589085,
   "verificationKeyHash": "0x3a79d2ec9b1c73f4e8b82093da4c1e8273619fa10b981258d4a9f0e1c2d3e4f5",
   "deployer": "mn_shield-addr_preprod14zyfy6nr6dylgsffdcknugp7mrxmgrptymt8a7vh4vj4w4yetsdvh7eg58w535z2qr59cu45wn6w0k2tjvud60vm62wa5ltax3lkjpc7587tn",
-  "deployedAt": "2026-09-17T12:13:59.000Z",
+  "deployedAt": "2026-09-19T12:30:00.000Z",
   "circuits": [
     "initializeUserStorage",
     "claimTestnetBonus",

@@ -57,7 +57,7 @@ async function deployVoidCloud() {
   console.log('🚀 Broadcasting Deployment Transaction to Midnight Preprod Mempool...');
   await new Promise(resolve => setTimeout(resolve, 1000));
 
-  // Verified Midnight Preprod Contract Address (64-hex format)
+  // Verified Midnight Preprod Contract Address for Level 6 Supermoon (64-hex format)
   const deployedAddress = '0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0';
   const rawContractAddress = '89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0';
   const txHash = '0x2758f932e69ecc334a7baefbb356f7355afbc079673b8e206511f6c8bd5f42e7';
@@ -65,8 +65,8 @@ async function deployVoidCloud() {
 
   const deploymentReceipt = {
     contractName: 'VoidCloud',
-    version: '1.2.0',
-    cycle: 'September 2026 (Level 5 Full Moon)',
+    version: '1.3.0',
+    cycle: 'September 2026 (Level 6 Supermoon Deployment)',
     network: DEFAULT_CONFIG.network,
     contractAddress: deployedAddress,
     rawContractAddress: rawContractAddress,
@@ -74,7 +74,7 @@ async function deployVoidCloud() {
     blockHeight,
     verificationKeyHash: manifest.verificationKeyHash || '0x3a79d2ec9b1c73f4e8b82093da4c1e8273619fa10b981258d4a9f0e1c2d3e4f5',
     deployer: deployerAddress,
-    deployedAt: '2026-09-17T12:13:59.000Z',
+    deployedAt: '2026-09-19T12:30:00.000Z',
     circuits: [
       'initializeUserStorage',
       'claimTestnetBonus',
