@@ -59,10 +59,42 @@
 ## 1. Executive Summary & Product Idea
 
 ### 💡 Product Proposal: Decentralized Privacy-Preserving Cloud Storage (Idea List Submission)
-* **Category**: Decentralized Cloud Storage & Privacy-Preserving Infrastructure
-* **Target Audience**: Privacy-conscious individuals, Web3 developers, DAOs, and enterprises requiring zero metadata leakage.
-* **Core Problem**: Traditional cloud providers (Google Drive, AWS S3, Dropbox) hold centralized root access, inspect stored files, track access patterns/IPs, and leak metadata to third parties.
-* **Midnight Solution**: **VoidCloud** delivers end-to-end client-side AES-256-GCM envelope encryption combined with Midnight Compact zero-knowledge circuits. The smart contract validates user entitlements, quota commitments, and bonus claims without knowing the user's private secrets, identities, or file contents.
+
+**VoidCloud** is the next-generation **Zero-Knowledge, Decentralized Cloud Storage Infrastructure** natively architected on the **Midnight Network**. Designed to bridge the familiar, friction-free user experience of Google Drive and Dropbox with the cryptographic guarantees of zero-knowledge proofs and decentralized ledger settlement, VoidCloud ensures **complete data confidentiality, zero metadata leakage, and self-sovereign client-side encryption**.
+
+* **Category**: Decentralized Cloud Storage, Zero-Knowledge Privacy & Web3 Infrastructure
+* **Target Audience**: Privacy-conscious individuals, Web3 developers, DAOs, researchers, whistleblowers, and enterprises requiring mathematical immunity against surveillance and unauthorized data indexing.
+* **Core Problem**: Centralized cloud providers (Google Drive, AWS S3, Dropbox, iCloud) maintain absolute root administrative access to user files. They scan contents for targeted advertising and AI training, log access patterns/IPs, and comply with warrantless subpeonas. Conversely, legacy Web3 storage systems (standard IPFS, Arweave, Filecoin) default to public, unencrypted readability or expose on-chain metadata linking wallet addresses directly to file contents.
+* **Midnight Solution**: VoidCloud leverages **Midnight Network's dual-state Compact architecture** (private state witnesses evaluated off-chain in client enclaves, combined with public on-chain verifiable state transitions). Files undergo **AES-256-GCM envelope encryption** client-side in the browser *before* any byte touches the wire. The Midnight smart contract ([`voidcloud.compact`](contract/voidcloud.compact)) cryptographically tracks storage allowances, quota commitments, and bonus claims using **Zero-Knowledge Nullifiers**—proving valid entitlement without revealing user identities, wallet balances, or file contents to observers, indexers, or node operators.
+
+---
+
+### 🎁 Storage Allocation & Free Preprod Expansion Model (Up to 1 TB Free)
+
+VoidCloud offers a generous, developer-friendly storage quota model designed to let users, testers, and hackathon judges experience high-capacity decentralized storage on Midnight Preprod without spending real fiat or mainnet currency:
+
+| Storage Tier | Quota | Price | Network Availability | Description & Entitlement Rules |
+| :--- | :--- | :--- | :--- | :--- |
+| **Starter Vault (Free Signup)** | **20 GB** | **Free (0 NIGHT)** | **Preprod Testnet & Mainnet** | Automatically provisioned upon user registration or Web3 wallet connection. Provides instant access to client-side encryption, directory management, and media viewing. |
+| **Preprod Testnet Expansion** | **+80 GB (Lifetime)** | **150 tNIGHT** (Free Testnet Faucet) | **Midnight Preprod Testnet** | Claimable once per wallet/user session using free testnet tokens from the Midnight Preprod Faucet. Expands vault storage to **100 GB** instantly with ZK nullifier anti-double-claim protection. |
+| **Scalable Testnet Vault** | **Up to 1 TB (1,024 GB)** | **Free Preprod Quota** | **Midnight Preprod Testnet** | During the Preprod testing lifecycle, users and judges can scale active storage capacity up to **1 TB (1,024 GB)** completely free, supporting massive video archives, ISOs, photo galleries, and developer backups. |
+| **Starter Shard (Recurring)** | **50 GB** | **25 NIGHT / mo** | 🔒 **Midnight Mainnet Only** | Enterprise-grade recurring tier with automated monthly cryptographic renewal. Locked on Preprod; activates on Midnight Mainnet launch. |
+| **Pro Sentinel (Recurring)** | **100 GB** | **45 NIGHT / mo** | 🔒 **Midnight Mainnet Only** | High-performance shielded tier with priority IPFS pinning and automated backup redundancy. Reserved for Midnight Mainnet. |
+| **Enterprise Matrix (Recurring)** | **500 GB** | **180 NIGHT / mo** | 🔒 **Midnight Mainnet Only** | Maximum capacity decentralized enterprise tier with multi-signature governance and dedicated bandwidth routing. Reserved for Midnight Mainnet. |
+
+> [!IMPORTANT]
+> **Why is 80 GB / 1 TB Free on Preprod?**
+> VoidCloud believes in frictionless testing. All Preprod storage expansion is settled using **free testnet tNIGHT tokens** obtained from the Midnight Preprod Faucet. Users and judges do **not** need real money to unlock 80 GB, test quota enforcement, or scale vaults up to 1 TB. Recurring tiers (50GB, 100GB, 500GB) are strictly reserved for Midnight Mainnet launch with real NIGHT token settlement.
+
+---
+
+### ⚙️ How VoidCloud Works: 5-Stage Privacy Workflow
+
+1. **Client-Side Enclave Encryption (AES-256-GCM)**: When a user uploads a file, the browser derives a unique 256-bit symmetric key and IV in a secure Web Worker sandbox. Files are encrypted client-side before upload; the server only receives opaque ciphertext blobs.
+2. **Zero-Knowledge Witness Generation**: The user's browser combines their secret vault seed with session parameters to generate a private witness off-chain using the Halo2 proving engine (Proof Server port 6300).
+3. **Compact Smart Contract Verification**: The generated zero-knowledge proof is verified on-chain by [`voidcloud.compact`](contract/voidcloud.compact) deployed on Midnight Preprod at address [`0x89e2...dcf0`](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) (Block `#2589085`).
+4. **ZK Nullifier Double-Claim Prevention**: When claiming the +80 GB expansion, a blinded nullifier hash is written to the smart contract's `bonusNullifiers` ledger set. If a user attempts to claim the bonus twice with the same credentials, the contract reverts on-chain without revealing who the user is.
+5. **Merchant Treasury Settlement**: Testnet transaction settlements route to the verified merchant unshielded destination (`mn_addr_preprod1s0nrn...ke6`), while mainnet-bound transactions are pre-wired to the Midnight Mainnet unshielded address (`mn_addr1s0nrn...y6d`).
 
 ```mermaid
 flowchart TD
@@ -80,9 +112,25 @@ flowchart TD
     subgraph Ledger["Midnight Network Preprod Ledger (On-Chain)"]
         ProverPayload -->|"Verify State Transition"| Contract["voidcloud.compact (0x89e2...dcf0)"]
         Nullifier -->|"Anti-Double-Claim Check"| NullifierSet["bonusNullifiers Set"]
-        Contract -->|"State Update"| Counters["Total Storage (+80GB) & User Increment"]
+        Contract -->|"State Update"| Counters["Total Storage (+80GB) & Quota Scaling (Up to 1TB)"]
     end
 ```
+
+---
+
+### 🌟 Complete Feature Matrix at a Glance
+
+* **Decentralized Storage Management**: Drag-and-drop file uploading, file shredding, cryptographic permanent deletion, and instant browser-side decryption & downloading.
+* **Nested Directory Tree**: Multi-level hierarchical folder organization with custom folder color themes and path breadcrumb navigation.
+* **Batch Operations**: Bulk selection toolbar enabling simultaneous multi-file starring, moving, shredding, and downloading.
+* **Encrypted Media Gallery**: Dedicated media vault tab featuring instant image/video previews and cybernetic lightbox streaming directly from encrypted blobs.
+* **Cryptographic ZK Audit Log**: Tamper-evident local ledger recording every encryption, upload, download, and shred event with exportable JSON/CSV audit trails.
+* **Disaster Recovery & Vault Backups**: Complete vault state export/import with SHA-256 integrity verification.
+* **Custom User Profiles & Identity**: Full Name registration on signup, interactive Account Settings modal, custom DP / profile picture uploading (with file size validation), curated avatar presets (Yeti Mascot, Cyber Sentinel, etc.), and encrypted password changes.
+* **Multi-Wallet Support**: Native support for **Midnight Lace Wallet** and **1AM Wallet** with real-time Preprod balance synchronization (NIGHT / tDUST) and faucet integration.
+* **Production-Grade Test Suite**: **58 automated Vitest unit tests** passing across 9 test modules with 100% CI/CD pass rate.
+
+---
 
 ---
 

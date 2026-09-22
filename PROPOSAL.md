@@ -41,7 +41,7 @@ flowchart TD
     subgraph Ledger["Midnight Network Preprod Ledger (On-Chain)"]
         ProofPayload -->|"Verify State Transition"| Contract["voidcloud.compact (0x89e2...dcf0)"]
         Nullifier -->|"Anti-Double-Claim Check"| NullifierSet["bonusNullifiers Set"]
-        Contract -->|"State Update"| Counters["Total Storage (+20GB) & User Increment"]
+        Contract -->|"State Update"| Counters["Total Storage (+80GB) & Quota Scaling (Up to 1TB)"]
     end
 ```
 
@@ -56,14 +56,16 @@ flowchart TD
 
 ## 3. Product Features (Level 6 Supermoon MVP)
 
-1. **Client-Side Envelope Encryption**: AES-256-GCM file encryption in browser RAM.
-2. **Recursive Folder Hierarchy**: Unlimited parent-child nesting with visual color themes.
+1. **Client-Side Envelope Encryption**: AES-256-GCM file encryption in browser RAM before transmission.
+2. **Recursive Folder Hierarchy**: Unlimited parent-child nesting with visual color themes and breadcrumb navigation.
 3. **Semantic File Tagging**: Color-coded categorization with dynamic filter pills.
 4. **Floating Batch Operations Bar**: Multi-file select, bulk star, bulk trash, and bulk download.
-5. **Zero-Knowledge Cryptographic Audit Trail**: Tamper-resistant SHA-256 hash chains for all vault events.
+5. **Zero-Knowledge Cryptographic Audit Trail**: Tamper-resistant SHA-256 hash chains for all vault events with CSV/JSON export.
 6. **1-Click Encrypted Vault Backup & Disaster Recovery**: Sanitized JSON archive export/import with SHA-256 checksum verification.
-7. **Dual Web3 Wallet Support**: Native connector for 1AM Wallet and Midnight Lace with live balance sync (tNIGHT, tDUST, ADA).
-8. **Compact 0.20 Smart Contract**: On-chain storage quota ledger and double-claim defense deployed on Midnight Preprod.
+7. **Custom User Profile & Identity**: Full Name registration, custom profile picture (DP) uploading, themed avatar presets, and encrypted password changes.
+8. **Dual Web3 Wallet Support**: Native connector for 1AM Wallet and Midnight Lace with live balance sync (tNIGHT, tDUST, ADA).
+9. **Compact 0.20 Smart Contract**: On-chain storage quota ledger and double-claim defense deployed on Midnight Preprod.
+10. **Automated Vitest Test Suite**: 58 passing tests verifying Compact invariants, backups, folders, and wallet logic.
 
 ---
 
@@ -76,13 +78,16 @@ flowchart TD
 
 ---
 
-## 5. Tokenomics & Storage Plans
+## 5. Tokenomics & Storage Plans (Free Testnet Scaling up to 1 TB)
 
-| Storage Tier | Capacity | Testnet Price | Target Mainnet Price | Features Included |
+| Storage Tier | Capacity | Testnet Price | Mainnet Deployment Price | Features Included |
 | :--- | :---: | :---: | :---: | :--- |
-| **Standard Shielded** | 40 GB | **FREE (Testnet Faucet)** | Free (5 GB) | Client AES-256-GCM, ZK Nullifier defense, Web3 wallet sync |
-| **Developer Pro** | 100 GB | 500 tNIGHT | $4.99 / mo | Recursive folder nesting, batch bar, audit trail export |
-| **Enterprise ZK Vault** | 500 GB | 2,000 tNIGHT | $19.99 / mo | Priority proving relay, disaster recovery backup, dedicated shards |
+| **Starter Vault (Free Signup)** | **20 GB** | **FREE (0 NIGHT)** | Free Starter (5 GB) | Client AES-256-GCM, ZK Nullifier defense, Web3 wallet sync, Media Gallery |
+| **Preprod Testnet Expansion** | **+80 GB (Lifetime)** | **150 tNIGHT** (Free Faucet) | Mainnet Tier Reserved | 1-time lifetime expansion, anti-double-claim ZK nullifier, folder trees, batch bar |
+| **Scalable Testnet Capacity** | **Up to 1 TB (1,024 GB)** | **FREE Preprod Quota** | Mainnet Enterprise | Free scaling on testnet for ISOs, media libraries, dataset archives & codebases |
+| **Starter Shard (Recurring)** | **50 GB** | *Mainnet Only* | 25 NIGHT / mo | Monthly cryptographic renewal, dedicated pinning redundancy |
+| **Pro Sentinel (Recurring)** | **100 GB** | *Mainnet Only* | 45 NIGHT / mo | Priority proving relay, disaster recovery backup, dedicated shards |
+| **Enterprise Matrix (Recurring)** | **500 GB** | *Mainnet Only* | 180 NIGHT / mo | Multi-sig governance, dedicated bandwidth routing, audit trail verification |
 
 ---
 
