@@ -4,6 +4,7 @@ import { useVault } from '../context/VaultContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HardDrive, X, Check, Sparkles, ArrowRight, ArrowLeft, Shield, RefreshCw, AlertCircle, Coins, CheckCircle2 } from 'lucide-react';
 import { StoragePlan, BillingCycle } from '../types';
+import { TREASURY_CONFIG } from '../config/treasury';
 
 export const StoragePricingModal: React.FC = () => {
   const {
@@ -396,18 +397,24 @@ export const StoragePricingModal: React.FC = () => {
                   <div className="p-3.5 rounded-xl bg-purple-50 border border-purple-200 text-purple-900 text-xs flex items-start gap-2.5">
                     <AlertCircle className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <span className="font-bold">Midnight Mainnet Reserved:</span> This storage tier requires real Midnight Mainnet NIGHT tokens upon mainnet launch. On Preprod Testnet, only the{' '}
-                      <button
-                        type="button"
-                        className="font-bold text-sky-700 underline hover:text-sky-800 cursor-pointer"
-                        onClick={() => {
-                          setBilling('lifetime');
-                          setSelectedPlan(STORAGE_PLANS[0]);
-                        }}
-                      >
-                        80 GB Testnet Shard (150 NIGHT)
-                      </button>{' '}
-                      is unlockable.
+                      <div>
+                        <span className="font-bold">Midnight Mainnet Reserved:</span> This storage tier requires real Midnight Mainnet NIGHT tokens upon mainnet launch. On Preprod Testnet, only the{' '}
+                        <button
+                          type="button"
+                          className="font-bold text-sky-700 underline hover:text-sky-800 cursor-pointer"
+                          onClick={() => {
+                            setBilling('lifetime');
+                            setSelectedPlan(STORAGE_PLANS[0]);
+                          }}
+                        >
+                          80 GB Testnet Shard (150 NIGHT)
+                        </button>{' '}
+                        is unlockable.
+                      </div>
+                      <div className="mt-1.5 pt-1.5 border-t border-purple-200/60 flex items-center gap-1.5 text-[11px] text-purple-700 font-mono">
+                        <span className="font-sans font-semibold text-purple-800">Mainnet Receiver:</span>
+                        <span className="break-all">{TREASURY_CONFIG.midnightMainnetTreasuryAddress}</span>
+                      </div>
                     </div>
                   </div>
                 )}
