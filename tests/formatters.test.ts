@@ -37,9 +37,9 @@ describe('VoidCloud Formatters Utility Unit Tests', () => {
     });
 
     it('truncates long addresses with ellipsis', () => {
-      const addr = 'mn_unshielded_0x7b4a9c2e1f5d8a0c4e2b6a9d3f1c8e5a7b0c89fd';
+      const addr = 'mn_addr_preprod1v3emfl60hcpmezm53ef83um9cp54wltve56d0yqqvu8h9v7g8lws53thqn';
       const truncated = truncateAddress(addr, 6, 4);
-      expect(truncated).toBe('mn_uns...89fd');
+      expect(truncated).toBe('mn_add...thqn');
       expect(truncated.length).toBeLessThan(addr.length);
     });
   });
