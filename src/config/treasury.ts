@@ -17,7 +17,7 @@ export const TREASURY_CONFIG = {
   // 2. Midnight Network Unshielded Address (NIGHT Token Transfers & Public Ledger)
   midnightUnshieldedAddress:
     import.meta.env.VITE_TREASURY_MIDNIGHT_UNSHIELDED_ADDRESS ||
-    'mn_addr_preprod15gfl98ha5jg2l99awxjww4pzyymnfjljf68nvd74s0r0q2nwy70srzssjm',
+    'mn_addr_preprod1s0nrnljn4t4k6mk2757enepkjtx9qxpn5efvtkfqcxalk29pt2uq4rlke6',
 
   // 3. Midnight DUST Address (tDUST Storage Subsidies & Shielding Gas)
   midnightDustAddress:
@@ -36,5 +36,5 @@ export const TREASURY_CONFIG = {
 
   // Convenience Aliases
   midnightTreasuryAddress:
-    'mn_addr_preprod15gfl98ha5jg2l99awxjww4pzyymnfjljf68nvd74s0r0q2nwy70srzssjm',
+    'mn_addr_preprod1s0nrnljn4t4k6mk2757enepkjtx9qxpn5efvtkfqcxalk29pt2uq4rlke6',
 };
