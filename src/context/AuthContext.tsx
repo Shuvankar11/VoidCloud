@@ -26,10 +26,14 @@ interface AuthContextType {
   loading: boolean;
   isAuthModalOpen: boolean;
   setIsAuthModalOpen: (open: boolean) => void;
+  isProfileModalOpen: boolean;
+  setIsProfileModalOpen: (open: boolean) => void;
   signUpWithEmail: (email: string, pass: string, name?: string) => Promise<void>;
   signInWithEmail: (email: string, pass: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signInWithWallet: (walletName: string, address: string) => Promise<void>;
+  updateUserProfile: (updates: { displayName?: string; photoURL?: string }) => Promise<void>;
+  changePassword: (currentPass: string, newPass: string) => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
@@ -50,6 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [loading, setLoading] = useState(true);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   // Sync Firebase Auth if configured
   useEffect(() => {
@@ -231,6 +236,83 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     console.log('[Auth] Password reset email sent to:', email);
   }, []);
 
+  const updateUserProfile = useCallback(async (updates: { displayName?: string; photoURL?: string }) => {
+    if (!user) throw new Error('No user is currently authenticated.');
+
+    const newDisplayName = updates.displayName !== undefined ? updates.displayName.trim() : user.displayName;
+    const newPhotoURL = updates.photoURL !== undefined ? updates.photoURL : user.photoURL;
+
+    const updatedProfile: UserProfile = {
+      ...user,
+      displayName: newDisplayName || user.email.split('@')[0],
+      photoURL: newPhotoURL,
+    };
+
+    if (isFirebaseConfigured && auth?.currentUser) {
+      try {
+        await updateProfile(auth.currentUser, {
+          displayName: updatedProfile.displayName,
+          photoURL: updatedProfile.photoURL,
+        });
+      } catch (err) {
+        console.warn('[Firebase Auth] Profile sync skipped:', err);
+      }
+    }
+
+    try {
+      const usersRaw = localStorage.getItem(LOCAL_USERS_KEY);
+      const users = usersRaw ? JSON.parse(usersRaw) : [];
+      const idx = users.findIndex((u: any) => u.email.toLowerCase() === updatedProfile.email.toLowerCase() || u.uid === updatedProfile.uid);
+      if (idx >= 0) {
+        users[idx] = {
+          ...users[idx],
+          displayName: updatedProfile.displayName,
+          photoURL: updatedProfile.photoURL,
+        };
+        localStorage.setItem(LOCAL_USERS_KEY, JSON.stringify(users));
+      }
+    } catch (e) {
+      console.error('Failed to update local user list:', e);
+    }
+
+    localStorage.setItem(LOCAL_SESSION_KEY, JSON.stringify(updatedProfile));
+    setUser(updatedProfile);
+  }, [user]);
+
+  const changePassword = useCallback(async (currentPass: string, newPass: string) => {
+    if (!user) throw new Error('No user is currently authenticated.');
+    if (!newPass || newPass.length < 6) {
+      throw new Error('New password must be at least 6 characters long.');
+    }
+
+    const usersRaw = localStorage.getItem(LOCAL_USERS_KEY);
+    const users = usersRaw ? JSON.parse(usersRaw) : [];
+    const idx = users.findIndex((u: any) => u.email.toLowerCase() === user.email.toLowerCase());
+
+    if (idx >= 0) {
+      if (users[idx].password && currentPass && users[idx].password !== currentPass) {
+        throw new Error('Current password does not match.');
+      }
+      if (users[idx].password && !currentPass) {
+        throw new Error('Please enter your current password.');
+      }
+      users[idx].password = newPass;
+      localStorage.setItem(LOCAL_USERS_KEY, JSON.stringify(users));
+    } else {
+      users.push({ ...user, password: newPass });
+      localStorage.setItem(LOCAL_USERS_KEY, JSON.stringify(users));
+    }
+
+    if (isFirebaseConfigured && auth?.currentUser) {
+      try {
+        const { updatePassword: fbUpdatePassword } = await import('firebase/auth');
+        await fbUpdatePassword(auth.currentUser, newPass);
+      } catch (err: any) {
+        console.warn('[Firebase Auth] Password update note:', err?.message || err);
+      }
+    }
+  }, [user]);
+
   const signOut = useCallback(async () => {
     if (isFirebaseConfigured && auth) {
       try {
@@ -248,10 +330,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         loading,
         isAuthModalOpen,
         setIsAuthModalOpen,
+        isProfileModalOpen,
+        setIsProfileModalOpen,
         signUpWithEmail,
         signInWithEmail,
         signInWithGoogle,
         signInWithWallet,
+        updateUserProfile,
+        changePassword,
         resetPassword,
         signOut,
       }}

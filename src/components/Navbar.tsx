@@ -18,7 +18,7 @@ import {
 
 export const Navbar: React.FC = () => {
   const { session, activeView, setActiveView } = useVault();
-  const { user, setIsAuthModalOpen, signOut } = useAuth();
+  const { user, setIsAuthModalOpen, setIsProfileModalOpen, signOut } = useAuth();
   const { wallet, disconnectWallet, setIsWalletModalOpen, setIsPricingModalOpen } = useWeb3Wallet();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -162,20 +162,31 @@ export const Navbar: React.FC = () => {
 
           {/* User Account / Sign In Button (Matching Reference 1) */}
           {user ? (
-            <div className="flex items-center space-x-2 bg-slate-100 border border-slate-200 rounded-full px-2.5 py-1 text-xs font-semibold">
-              <div className="w-5 h-5 rounded-full bg-sky-500 text-white font-bold flex items-center justify-center text-[10px]">
-                {user.displayName ? user.displayName[0].toUpperCase() : 'U'}
-              </div>
-              <span className="text-slate-800 font-bold max-w-[80px] sm:max-w-[110px] truncate">
-                {user.displayName || user.email.split('@')[0]}
-              </span>
+            <div className="flex items-center space-x-1.5 bg-slate-100 hover:bg-slate-200/60 border border-slate-200 rounded-full pl-1 pr-2 py-0.5 text-xs font-semibold transition-colors">
+              <button
+                onClick={() => setIsProfileModalOpen(true)}
+                className="flex items-center space-x-1.5 text-slate-800 hover:text-sky-600 transition-colors cursor-pointer"
+                title="Account Profile, DP & Password Settings"
+              >
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-sky-400 to-blue-600 text-white font-bold flex items-center justify-center text-[10px] overflow-hidden flex-shrink-0 shadow-2xs">
+                  {user.photoURL ? (
+                    <img src={user.photoURL} alt={user.displayName || 'Avatar'} className="w-full h-full object-cover" />
+                  ) : (
+                    user.displayName ? user.displayName[0].toUpperCase() : 'U'
+                  )}
+                </div>
+                <span className="font-bold max-w-[80px] sm:max-w-[110px] truncate">
+                  {user.displayName || user.email.split('@')[0]}
+                </span>
+              </button>
+              <div className="h-3 w-px bg-slate-300" />
               <button
                 onClick={() => {
                   signOut();
                   disconnectWallet();
                   setActiveView('landing');
                 }}
-                title="Sign out"
+                title="Sign out of Vault"
                 className="text-slate-400 hover:text-rose-500 transition-colors p-0.5 cursor-pointer"
               >
                 <LogOut className="w-3.5 h-3.5" />
@@ -228,6 +239,20 @@ export const Navbar: React.FC = () => {
           >
             Ledger History
           </button>
+          {user && (
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setIsProfileModalOpen(true);
+              }}
+              className="w-full text-left py-2 px-3 rounded-xl hover:bg-slate-50 text-slate-800 flex items-center justify-between"
+            >
+              <span>Account Settings & Profile</span>
+              <span className="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-bold">
+                {user.displayName || 'Profile'}
+              </span>
+            </button>
+          )}
           <a
             href="https://forms.gle/TqdtNQuHk8v6A3SR6"
             target="_blank"

@@ -50,7 +50,7 @@
 9. [Midnight Lace & 1AM Wallet Integration Architecture](#9-midnight-lace--1am-wallet-integration-architecture)
 10. [Payment & Transaction History Ledger Engine](#10-payment--transaction-history-ledger-engine)
 11. [System Architecture & Cryptographic Workflow](#11-system-architecture--cryptographic-workflow)
-12. [Automated Test Suite & CI/CD Pipeline (52 Passing Tests)](#12-automated-test-suite)
+12. [Automated Test Suite & CI/CD Pipeline (58 Passing Tests)](#12-automated-test-suite)
 13. [Antigravity CLI Usage Guide](#13-antigravity-cli-usage-guide)
 14. [Deployed Contract Artifacts & Verification](#14-deployed-contract-artifacts)
 
@@ -111,7 +111,7 @@ flowchart TD
 
 ### 2. 🔐 Authentication & Multi-Provider Login
 ![VoidCloud Login Portal](docs/screenshots/02-login-modal.png)
-*Authentication portal supporting Email/Password, Google OAuth, 1AM Wallet, and Midnight Lace Wallet.*
+*Authentication portal supporting Full Name registration, Email/Password, Google OAuth, 1AM Wallet, and Midnight Lace Wallet. Features an interactive Account Settings & Profile modal allowing users to customize their display name, upload custom DP avatars or pick themed presets, and update vault authentication passwords.*
 
 ---
 
@@ -672,12 +672,12 @@ VoidCloud provides a comprehensive **On-Chain Transaction & Payment History** vi
 
 ## 11. Automated Test Suite
 
-VoidCloud features a rigorous **Vitest test suite** with **52 passing unit tests** across 8 modules verifying Compact ledger invariants, directory trees, cryptographic audit trails, encrypted disaster backups, multi-file batch operations, and 1AM / Lace wallet connectors:
+VoidCloud features a rigorous **Vitest test suite** with **58 passing unit tests** across 9 modules verifying Compact ledger invariants, directory trees, cryptographic audit trails, encrypted disaster backups, user profile & avatar management, password security, multi-file batch operations, and 1AM / Lace wallet connectors:
 
 ```bash
 $ npm test
 
-> voidcloud@1.2.0 test
+> voidcloud@1.3.0 test
 > vitest run
 
  RUN  v2.1.9 D:/VoidCloude
@@ -708,22 +708,44 @@ $ npm test
    ✓ 5. Zero-Knowledge File Commitment & Quota Verification
    ✓ 6. Payment & Transaction History Ledger Engine
 
- ✓ tests/backup.test.ts (5 tests)
+ ✓ tests/backup.test.ts (6 tests)
    ✓ computes deterministic SHA-256 checksum for string content
    ✓ creates complete vault backup archive with stripped rawBlobs
    ✓ successfully validates and parses valid backup archive JSON
    ✓ rejects corrupted or malformed JSON backup files
    ✓ rejects JSON missing required VoidCloud schema fields
+   ✓ calculates real backup stats (file counts, total size, folder count)
 
- ✓ tests/audit.test.ts (4 tests)
+ ✓ tests/audit.test.ts (6 tests)
    ✓ creates an audit log item with unique ID, timestamp, and metadata
    ✓ correctly persists and retrieves audit logs from storage per address
    ✓ enforces maximum 150 items limit when saving logs
    ✓ safely handles corrupted storage without throwing
+   ✓ filters audit logs by start and end date boundaries
+   ✓ sanitizes audit logs for export with ISO dates and valid JSON format
 
- Test Files  6 passed (6)
-      Tests  34 passed (34)
-   Duration  1.31s
+ ✓ tests/profile.test.ts (6 tests)
+   ✓ stores full name on user signup
+   ✓ updates user display name and persists to session and user directory
+   ✓ updates user profile picture (DP) and supports removal
+   ✓ validates password minimum length requirement (at least 6 characters)
+   ✓ validates current password before updating to a new password
+   ✓ generates proper initials from user display name or email
+
+ ✓ tests/validation.test.ts (5 tests)
+   ✓ should allow valid files within size threshold
+   ✓ should reject empty 0-byte files
+   ✓ should reject files exceeding 500 MB
+   ✓ should reject dangerous executable extensions
+   ✓ should sanitize illegal filesystem characters from file names
+
+ ✓ tests/formatters.test.ts (10 tests)
+   ✓ formats byte sizes accurately
+   ✓ formats relative and ISO dates cleanly
+
+ Test Files  9 passed (9)
+      Tests  58 passed (58)
+   Duration  930ms
 ```
 
 ---

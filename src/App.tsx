@@ -21,6 +21,7 @@ import { PaymentHistory } from './components/PaymentHistory';
 import { ZKReceiptModal } from './components/ZKReceiptModal';
 import { CompactContractViewer } from './components/CompactContractViewer';
 import { MidnightExplorerModal } from './components/MidnightExplorerModal';
+import { ProfileSettingsModal } from './components/ProfileSettingsModal';
 import { useWeb3Wallet } from './context/WalletContext';
 
 const GlobalFileViewer: React.FC = () => {
@@ -53,7 +54,7 @@ const GlobalFileViewer: React.FC = () => {
 
 const AppContent: React.FC = () => {
   const { activeView, setActiveView } = useVault();
-  const { user, isAuthModalOpen, setIsAuthModalOpen } = useAuth();
+  const { user, isAuthModalOpen, setIsAuthModalOpen, isProfileModalOpen, setIsProfileModalOpen } = useAuth();
   const { isExplorerModalOpen, setIsExplorerModalOpen, selectedExplorerTx, setSelectedExplorerTx } = useWeb3Wallet();
 
   const isDashboardView = Boolean(user) && (activeView === 'dashboard' || (activeView !== 'landing' && activeView !== 'gallery' && activeView !== 'payments'));
@@ -121,6 +122,12 @@ const AppContent: React.FC = () => {
           setSelectedExplorerTx(null);
         }}
         tx={selectedExplorerTx}
+      />
+
+      {/* Account Settings, Profile DP & Password Modal */}
+      <ProfileSettingsModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
       />
 
       {/* Cyberpunk Media Lightbox & File Viewer Modal for Photos/Videos/Docs */}

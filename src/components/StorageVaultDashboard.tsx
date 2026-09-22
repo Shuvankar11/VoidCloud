@@ -77,7 +77,7 @@ export const StorageVaultDashboard: React.FC = () => {
     exportVaultBackup,
     importVaultBackup,
   } = useVault();
-  const { user } = useAuth();
+  const { user, setIsProfileModalOpen } = useAuth();
   const { setIsPricingModalOpen } = useWeb3Wallet();
 
   const [activeTab, setActiveTab] = useState<'home' | 'files' | 'starred' | 'trash'>('home');
@@ -1116,12 +1116,20 @@ export const StorageVaultDashboard: React.FC = () => {
           <div>
             {/* Top User Profile */}
             <div className="flex items-center justify-between pb-5 mb-6 border-b border-slate-200/80">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-sky-400 to-blue-600 text-white font-bold flex items-center justify-center shadow-sm text-sm">
-                  {user?.displayName ? user.displayName.slice(0, 1).toUpperCase() : user?.email ? user.email.slice(0, 1).toUpperCase() : 'U'}
+              <div
+                onClick={() => setIsProfileModalOpen(true)}
+                className="flex items-center space-x-3 cursor-pointer group p-1.5 -m-1.5 rounded-2xl hover:bg-slate-200/60 transition-all"
+                title="Account Profile, DP & Password Settings"
+              >
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-sky-400 to-blue-600 text-white font-bold flex items-center justify-center shadow-sm text-sm overflow-hidden flex-shrink-0 relative group-hover:ring-2 ring-sky-500/40 transition-all">
+                  {user?.photoURL ? (
+                    <img src={user.photoURL} alt={user.displayName || 'Avatar'} className="w-full h-full object-cover" />
+                  ) : (
+                    user?.displayName ? user.displayName.slice(0, 1).toUpperCase() : user?.email ? user.email.slice(0, 1).toUpperCase() : 'U'
+                  )}
                 </div>
                 <div>
-                  <div className="font-bold text-xs text-slate-900 truncate max-w-[140px]">
+                  <div className="font-bold text-xs text-slate-900 truncate max-w-[140px] group-hover:text-sky-600 transition-colors">
                     {user?.displayName || user?.email?.split('@')[0] || 'Authenticated User'}
                   </div>
                   <div className="text-[10px] text-slate-400 truncate max-w-[140px]">
@@ -1130,9 +1138,9 @@ export const StorageVaultDashboard: React.FC = () => {
                 </div>
               </div>
               <button
-                onClick={() => setIsPricingModalOpen(true)}
+                onClick={() => setIsProfileModalOpen(true)}
                 className="p-2 rounded-xl hover:bg-slate-200/60 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
-                title="Account Settings & Upgrades"
+                title="Account Settings & Profile"
               >
                 <Settings className="w-4 h-4" />
               </button>

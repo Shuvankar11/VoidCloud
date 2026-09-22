@@ -25,6 +25,7 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
   const { setActiveView } = useVault();
 
   const [mode, setMode] = useState<'signin' | 'signup' | 'forgot'>(initialMode);
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -35,6 +36,7 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
 
   useEffect(() => {
     setMode(initialMode);
+    setFullName('');
     setError(null);
     setSuccessMessage(null);
   }, [initialMode, isOpen]);
@@ -64,13 +66,16 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
         setActiveView('dashboard');
         onClose();
       } else if (mode === 'signup') {
+        if (!fullName.trim()) {
+          throw new Error('Please enter your full name.');
+        }
         if (password !== confirmPassword) {
           throw new Error('Passwords do not match.');
         }
         if (password.length < 6) {
           throw new Error('Password must be at least 6 characters.');
         }
-        await signUpWithEmail(email, password);
+        await signUpWithEmail(email, password, fullName.trim());
         setActiveView('dashboard');
         onClose();
       } else if (mode === 'forgot') {
@@ -169,6 +174,23 @@ export const YetiAuthModal: React.FC<YetiAuthModalProps> = ({
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Full Name Field (Signup Only) */}
+              {mode === 'signup' && (
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 mb-1">
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="e.g. Alex Vance"
+                    className="w-full bg-transparent border-b border-slate-300 focus:border-slate-900 pb-1.5 text-sm text-slate-900 outline-none transition-colors"
+                  />
+                </div>
+              )}
+
               {/* Email Underline Field (Matching Reference) */}
               <div>
                 <label className="block text-xs font-semibold text-slate-500 mb-1">
