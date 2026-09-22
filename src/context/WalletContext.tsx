@@ -13,18 +13,18 @@ import { formatRealLaceAddress, parseCborAssets } from '../utils/cardanoBech32';
 
 export const STORAGE_PLANS: StoragePlan[] = [
   {
-    id: 'plan_20gb',
-    name: '20 GB Testnet Shard',
-    capacityGB: 20,
+    id: 'plan_80gb',
+    name: '80 GB Testnet Shard',
+    capacityGB: 80,
     badge: '1-TIME UNLOCK',
-    description: '1-Time testnet expansion unlock to expand your shielded vault from 20 GB to 40 GB.',
+    description: '1-Time testnet expansion unlock to expand your shielded vault by +80 GB (100 GB Total).',
     pricing: {
       monthly: { USD: 1.99, NIGHT: 10, tDUST: 5, ADA: 5, USDT: 1.99, ETH: 0.0008 },
       yearly: { USD: 15.00, NIGHT: 80, tDUST: 40, ADA: 40, USDT: 15.00, ETH: 0.006 },
       lifetime: { USD: 30.00, NIGHT: 150, tDUST: 75, ADA: 80, USDT: 30.00, ETH: 0.012 },
     },
     features: [
-      '+20 GB Additional Shielded Storage (40 GB Total)',
+      '+80 GB Additional Shielded Storage (100 GB Total)',
       'Halo2 ZK-Proof Nullifier Double-Claim Defense',
       'Client-Side AES-256-GCM Envelope Encryption',
       'Midnight Preprod On-Chain Cryptographic Receipt',

@@ -16,20 +16,22 @@ export const StoragePricingModal: React.FC = () => {
 
   const { session, upgradeStorageQuota, setActiveView } = useVault();
 
-  const [selectedPlan, setSelectedPlan] = useState<StoragePlan>(() => {
-    return session.bonusClaimed ? STORAGE_PLANS[1] : STORAGE_PLANS[0];
-  });
   const [billing, setBilling] = useState<BillingCycle>('monthly');
+  const [selectedPlan, setSelectedPlan] = useState<StoragePlan>(() => {
+    return STORAGE_PLANS[1];
+  });
   const [paymentToken, setPaymentToken] = useState<'NIGHT' | 'tDUST' | 'ADA' | 'USDT' | 'ETH'>('NIGHT');
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
   const [successTx, setSuccessTx] = useState<string | null>(null);
 
   useEffect(() => {
-    if (session.bonusClaimed && selectedPlan.id === 'plan_20gb') {
+    if (billing !== 'lifetime' && (selectedPlan.id === 'plan_80gb' || selectedPlan.id === 'plan_20gb')) {
+      setSelectedPlan(STORAGE_PLANS[1]);
+    } else if (session.bonusClaimed && (selectedPlan.id === 'plan_80gb' || selectedPlan.id === 'plan_20gb')) {
       setSelectedPlan(STORAGE_PLANS[1]);
     }
-  }, [session.bonusClaimed, isPricingModalOpen]);
+  }, [session.bonusClaimed, billing, isPricingModalOpen, selectedPlan.id]);
 
   // Close on Escape key
   useEffect(() => {
@@ -60,8 +62,8 @@ export const StoragePricingModal: React.FC = () => {
     setError('');
     setSuccessTx(null);
 
-    if (selectedPlan.id === 'plan_20gb' && session.bonusClaimed) {
-      setError('You have already claimed this 1-time 20GB Testnet bonus!');
+    if ((selectedPlan.id === 'plan_80gb' || selectedPlan.id === 'plan_20gb') && session.bonusClaimed) {
+      setError('You have already claimed this 1-time 80GB Testnet bonus!');
       return;
     }
 
@@ -141,7 +143,12 @@ export const StoragePricingModal: React.FC = () => {
             <div className="flex justify-center">
               <div className="bg-slate-100 p-1 rounded-2xl border border-slate-200 flex items-center gap-1 text-xs">
                 <button
-                  onClick={() => setBilling('monthly')}
+                  onClick={() => {
+                    setBilling('monthly');
+                    if (selectedPlan.id === 'plan_80gb' || selectedPlan.id === 'plan_20gb') {
+                      setSelectedPlan(STORAGE_PLANS[1]);
+                    }
+                  }}
                   className={`px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
                     billing === 'monthly'
                       ? 'bg-white text-slate-900 font-bold shadow-xs'
@@ -151,7 +158,12 @@ export const StoragePricingModal: React.FC = () => {
                   Monthly
                 </button>
                 <button
-                  onClick={() => setBilling('yearly')}
+                  onClick={() => {
+                    setBilling('yearly');
+                    if (selectedPlan.id === 'plan_80gb' || selectedPlan.id === 'plan_20gb') {
+                      setSelectedPlan(STORAGE_PLANS[1]);
+                    }
+                  }}
                   className={`px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
                     billing === 'yearly'
                       ? 'bg-emerald-500 text-white font-bold shadow-xs'
@@ -164,7 +176,12 @@ export const StoragePricingModal: React.FC = () => {
                   </span>
                 </button>
                 <button
-                  onClick={() => setBilling('lifetime')}
+                  onClick={() => {
+                    setBilling('lifetime');
+                    if (!session.bonusClaimed) {
+                      setSelectedPlan(STORAGE_PLANS[0]);
+                    }
+                  }}
                   className={`px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1 cursor-pointer ${
                     billing === 'lifetime'
                       ? 'bg-sky-500 text-white font-bold shadow-xs'
@@ -213,11 +230,17 @@ export const StoragePricingModal: React.FC = () => {
               </div>
             ) : (
               /* Plans Grid */
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                {STORAGE_PLANS.map((plan) => {
-                  const isAlreadyClaimedBonus = plan.id === 'plan_20gb' && session.bonusClaimed;
-                  const isSelected = selectedPlan.id === plan.id && !isAlreadyClaimedBonus;
-                  const price = plan.pricing[billing][paymentToken];
+              (() => {
+                const displayedPlans = billing === 'lifetime'
+                  ? STORAGE_PLANS
+                  : STORAGE_PLANS.filter((p) => p.id !== 'plan_80gb' && p.id !== 'plan_20gb');
+
+                return (
+                  <div className={`grid grid-cols-1 ${displayedPlans.length <= 3 ? 'md:grid-cols-3' : 'md:grid-cols-4'} gap-4`}>
+                    {displayedPlans.map((plan) => {
+                      const isAlreadyClaimedBonus = (plan.id === 'plan_80gb' || plan.id === 'plan_20gb') && session.bonusClaimed;
+                      const isSelected = selectedPlan.id === plan.id && !isAlreadyClaimedBonus;
+                      const price = plan.pricing[billing][paymentToken];
 
                   return (
                     <div
@@ -298,8 +321,10 @@ export const StoragePricingModal: React.FC = () => {
                     </div>
                   );
                 })}
-              </div>
-            )}
+                </div>
+              );
+            })()
+          )}
 
             {/* Payment Currency & Execution Box */}
             {!successTx && (
