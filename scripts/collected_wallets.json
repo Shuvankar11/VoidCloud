@@ -1,0 +1,954 @@
+[
+  {
+    "address": "mn_addr_preprod1tulkgkmdzxnakfy4f50gpwvwg7cmv66n2ua4mm4tenqesqfqv56qgkd6l4",
+    "txCount": 336,
+    "netBalance": "-420000000000",
+    "sampleTx": "0x7e2da10bc97c2d313effb94ca66e369335d7207c69faa3d200aeae6e9bb629a1",
+    "blockHeight": 2660872
+  },
+  {
+    "address": "mn_addr_preprod1yw0a5svy0s22gtczyyc74sxjm54xy7cgqm4krv2ezwyr0q80f5hs7hks9m",
+    "txCount": 152,
+    "netBalance": "-190000000000",
+    "sampleTx": "0x2d3b9391ad0f709768bb258bb127cbc838e96dbaa2a29d484822e16930c126fd",
+    "blockHeight": 2660852
+  },
+  {
+    "address": "mn_addr_preprod18d733aulfgfsqanhxmj3sdv8hfxmpasrnhzu8q02xzcl2ta2lyqq0vs0z2",
+    "txCount": 60,
+    "netBalance": "-75000000000",
+    "sampleTx": "0x34551adeea9ca739f18c07e92fab2e14081aa996ec3cc5a01d4292cbf83b03b1",
+    "blockHeight": 2660886
+  },
+  {
+    "address": "mn_addr_preprod138l96zf8pga7cc5y5gq6ge6ce2drqns2ceyfrtdrfn2gh3334lusk8u37w",
+    "txCount": 8,
+    "netBalance": "15000000000",
+    "sampleTx": "0x2d20f2404dbb8577436b64f688e5db8b785ca710e12d586998067deeac1c1d98",
+    "blockHeight": 2660710
+  },
+  {
+    "address": "mn_addr_preprod17edm3edrk86yzya2cr9gxad495g34jxansry65lgypur54xcl8jq6feev3",
+    "txCount": 8,
+    "netBalance": "0",
+    "sampleTx": "0xd169b74ddf60593ffe76fe351794e710db07d0e951ffd786ded9a3d9f09ee4fa",
+    "blockHeight": 2658331
+  },
+  {
+    "address": "mn_addr_preprod1vp6c2fzl572yg9hhnlwrlvs77d8le8ekhaqzlyp2lghgaf8tv54qaemrlc",
+    "txCount": 6,
+    "netBalance": "10000000000",
+    "sampleTx": "0xeac82e6e1cf9f68e57eb8452a9268b5d47e97ad9937b6b4e444ce3c894f8c1b1",
+    "blockHeight": 2660432
+  },
+  {
+    "address": "mn_addr_preprod18e20fuj9ydmjwgt7xxahgmc93g59779p2c050vhgzupwdmxf4tdqk6rlle",
+    "txCount": 3,
+    "netBalance": "5000000000",
+    "sampleTx": "0xff7a365b255a6d7f51f90d9a4b34e9a3e71c81863de19fed71f9a91eb19a7ebe",
+    "blockHeight": 2660776
+  },
+  {
+    "address": "mn_addr_preprod1ggyjefcfhwegtnxssr49pg4zffru8p5h6waesdsq4ekzuqcsqvjsyl593f",
+    "txCount": 3,
+    "netBalance": "5000000000",
+    "sampleTx": "0x299d3a740c00b44c8c03e55c451baad8b88b747fdc7b903ce96d6daf92938f40",
+    "blockHeight": 2659682
+  },
+  {
+    "address": "mn_addr_preprod13n4q82u3jc34kg4p3dtlrzusjncze6ve8sam428005rxq3capwvssn96xa",
+    "txCount": 3,
+    "netBalance": "5000000000",
+    "sampleTx": "0x30a745d04aaf45069b7046f3d6d5557d734d81bab107838134685b7011807f1e",
+    "blockHeight": 2659530
+  },
+  {
+    "address": "mn_addr_preprod14wh98wwwp8mcl0707m25vr7dzz2en9tfwfaf0yt0f7p2wf9ys23qnhszx8",
+    "txCount": 3,
+    "netBalance": "5000000000",
+    "sampleTx": "0x3c2c821ad41e3e83db1cd9e572fc6e23fda47f9e3fe2f862bf9d176b2dd0cf08",
+    "blockHeight": 2659225
+  },
+  {
+    "address": "mn_addr_preprod1rtz8s34apgvj9c4ase2jumws7c2h9upjkk87npw95nkaw8hngr3s93f8pp",
+    "txCount": 3,
+    "netBalance": "5000000000",
+    "sampleTx": "0x138008cc12f60023e6049668f353308e3bd3e11c86fce1f3aa7702fcac62173d",
+    "blockHeight": 2659046
+  },
+  {
+    "address": "mn_addr_preprod12wrsdayght00jnnvt5ma9ux79dz0ytdahrgqhjzfxr68z5fw7m6q9lnpzk",
+    "txCount": 3,
+    "netBalance": "5000000000",
+    "sampleTx": "0xea97b078bcc01afd461cae17a49be3aaf2c5564d8af08a57ea21ed3f403d5b6a",
+    "blockHeight": 2657909
+  },
+  {
+    "address": "mn_addr_preprod1dzt0kyvapmwdsajuxgk25dyfvlkn9wcpmrw6r8nhws5czcrl0mdqeyed9q",
+    "txCount": 3,
+    "netBalance": "5000000000",
+    "sampleTx": "0xf4d1e37e4e7f6b870b800a1a886ad5e6706ecaf705e763587d85c525d30c51d4",
+    "blockHeight": 2657328
+  },
+  {
+    "address": "mn_addr_preprod1sjesrxgwhamy9z27dfnu2cyy9f880q3h0dzq378k6gp053hd42ssz4rtz8",
+    "txCount": 3,
+    "netBalance": "5000000000",
+    "sampleTx": "0x45d346ef95bd2ba8078ff0c96bba5e3d94a430510fa80349fb26b45f2288b0d6",
+    "blockHeight": 2656033
+  },
+  {
+    "address": "mn_addr_preprod1a2jk268renlfhhz3elmzsu3v850frpxcqwmvh2xllut42qn07qasewpfqg",
+    "txCount": 3,
+    "netBalance": "5000000000",
+    "sampleTx": "0x71e3c2449529169f5ebb84372fc507c0404962b2b68436ba34dcbc5a11b53985",
+    "blockHeight": 2655477
+  },
+  {
+    "address": "mn_addr_preprod1zuxf2mn9r0ggc0ler7j3fhwy4fhk86c8rv870jtrkhz2ddff5fqs3q85up",
+    "txCount": 2,
+    "netBalance": "0",
+    "sampleTx": "0x2a6d5be36fb6b2583ea36613c031ad66786c441e37aeeb6645782254374496b3",
+    "blockHeight": 2660489
+  },
+  {
+    "address": "mn_addr_preprod1qdv8rkxftqlzra4gprcxt2fzzrdtznaejgxmw8cqvl4uyl9ujenqlrn3yj",
+    "txCount": 2,
+    "netBalance": "10000000000",
+    "sampleTx": "0x401aa3ce6a279701bc1778e25436edd12323efe711f33e3dfb6a1fa50d8cd032",
+    "blockHeight": 2659845
+  },
+  {
+    "address": "mn_addr_preprod18a8atgd7smrppxl6wfvvzx2a529646emn5c8lyzd9zc0za0pvwyqaz2457",
+    "txCount": 2,
+    "netBalance": "10000000000",
+    "sampleTx": "0x3c09e7a106fc432da876212bfca08f16c07556a4d9027b0ff833c3f2ea783ade",
+    "blockHeight": 2659802
+  },
+  {
+    "address": "mn_addr_preprod10uht4wttlrwql0esrknws3hayqhj6p06hdexgy6796fqt864z29s4vtkzw",
+    "txCount": 2,
+    "netBalance": "0",
+    "sampleTx": "0x4e2001c0583e446b873bcc44c601d3797f5da66b54fdbccbe4dcd1f18541dcce",
+    "blockHeight": 2658956
+  },
+  {
+    "address": "mn_addr_preprod18g99aec0nzfl0p57hlvwmah8f5q0zh8qrvamg3dyukj054jyyxts9szd40",
+    "txCount": 2,
+    "netBalance": "10000000000",
+    "sampleTx": "0x02d10d9010b7e7526eb98d4c9a07c1701afb8ee294e3b24c714a21d773209a82",
+    "blockHeight": 2658314
+  },
+  {
+    "address": "mn_addr_preprod1msur7r7nrpmvdj3u4ev94rpm9el6sf78ydnn0eqymdrtfwrmfhhqcpqy0f",
+    "txCount": 2,
+    "netBalance": "10000000000",
+    "sampleTx": "0xeb3a240bf1c0189c9d74329ebf92c3edff19321f349ff6b5936d57767d55d041",
+    "blockHeight": 2658079
+  },
+  {
+    "address": "mn_addr_preprod1pnvh8undk0hmdawut92w96xazmjvpezwt3kkt54y56qkxjqttegsmq6utn",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x34551adeea9ca739f18c07e92fab2e14081aa996ec3cc5a01d4292cbf83b03b1",
+    "blockHeight": 2660886
+  },
+  {
+    "address": "mn_addr_preprod1k428qg2pdpvkrwcp0ct8qgkgjqk7xm33rmyv2zenfj3fvfgfw47q4063nl",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x7e2da10bc97c2d313effb94ca66e369335d7207c69faa3d200aeae6e9bb629a1",
+    "blockHeight": 2660872
+  },
+  {
+    "address": "mn_addr_preprod16fc44vn4fz6zn4jpa9vgadh3jmk5xkr67gw5zj3zd24wucc03czqyemad5",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x2d3b9391ad0f709768bb258bb127cbc838e96dbaa2a29d484822e16930c126fd",
+    "blockHeight": 2660852
+  },
+  {
+    "address": "mn_addr_preprod17gvn76v4z595ckc4e8tycnzl2242fpm4cdhdhyw8z5eunh7gyyds7uy34l",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x9d0421c3d549dd9c9cdc1748f92f885229aff1f4b0bb1177e759ab70b475dfe2",
+    "blockHeight": 2660804
+  },
+  {
+    "address": "mn_addr_preprod1talf9e53xuy5ufjluyks3c220p80y8c4xklktmnt2uq55nllklnslcwwsp",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x7c0276b1843a001bcd3fc22eac1381d4324c4191e4339f6ae787c58c47dfbf15",
+    "blockHeight": 2660791
+  },
+  {
+    "address": "mn_addr_preprod1atanynd5nzskwn5e6m2pqv6esgdudmv92n0sdvuvhap0khwkwquqpfl28s",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xf1440f62b7f14b68857832e770399b6d86648be6aba9dbe4246711626eb76ecf",
+    "blockHeight": 2660744
+  },
+  {
+    "address": "mn_addr_preprod1u92vu7tq7qzpdu3zppy0ua02gjgvn2zpgyw8p2ytpthw70q9k9equxwlt0",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x0afcef230da4f80be5c23666c5299b3d858b5303a1dbc1bc43bc8ca88212ff7e",
+    "blockHeight": 2660602
+  },
+  {
+    "address": "mn_addr_preprod1nyd6v9futt9v3vpvkn07apyd7fl8s884d2edscxef3taexneegmqdfmn6e",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x378551480590f6665289f53d6fd714306e1e352068e6edc51cf6f7bd32bab178",
+    "blockHeight": 2660582
+  },
+  {
+    "address": "mn_addr_preprod1zqsm0ze3dy5y7s3gwfadjspgwzfwgcjh2t65fue82kawp30w4r9qlreqqg",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x188be5e30470d3ddd72168eee0c0c8e158c910fb1ee3a90535bb470fcd4b9746",
+    "blockHeight": 2660575
+  },
+  {
+    "address": "mn_addr_preprod1pag8u6a52f3ncjaxge5jgpx0cs2sd2c2h3hs99ydzy2cuxjmnfjsllnsla",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xe5362d3fc87e855f92f92e00166591e995cb6cc1fc57fce08002e78d32b5c98b",
+    "blockHeight": 2660551
+  },
+  {
+    "address": "mn_addr_preprod1frcdh490mryjpy4ef55mxhl7mlx6s0g2j9qz5pv6y49rkxx7vcvsgn3dak",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x5589b7890b1b0306c990b7f8ea1e25b7898141d1a979d5b9cfdffe0060e86274",
+    "blockHeight": 2660535
+  },
+  {
+    "address": "mn_addr_preprod14jmydmz4eha8t285zatzr75522lw7myy5w5umh5x8wvczq2z9jaqtv6q95",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xf3560948f9efdc8771363b0b9b49ee180511336e63ea7beef4e85e21c2833052",
+    "blockHeight": 2660517
+  },
+  {
+    "address": "mn_addr_preprod1879zggrsq6jl27veljwjtushc7rverwxh9gza2tpq89z7wp5ydrqf5laul",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xe24decc83c28da2142b884cc9c79d284ecbfc215303382c62521786200896831",
+    "blockHeight": 2660479
+  },
+  {
+    "address": "mn_addr_preprod1025zmd4k4cur05p9n27jeehfc78w67jpjs73dvglx6zq7lujfv9q4pph9p",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xc33a8532be4bfde07bdf37769e9563d8d4dd940c96a250b24ac581a5554a8f01",
+    "blockHeight": 2660462
+  },
+  {
+    "address": "mn_addr_preprod18qd2ttdcqzdhqcwcdh3yznh5vyes8pxgy6hcacvd693yz654zeuqvlq0cj",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x62ed9ca209acc57c5094bbda4cd50c0af9f8ffc89104b6aaf8d7d7d4d9247aa5",
+    "blockHeight": 2660447
+  },
+  {
+    "address": "mn_addr_preprod1v6662a3jtlg837znw6dqexy7rmnw82d92y399nsdfj4amz0tjwsqdx3cr2",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x9e1acf1a91e7978e6b72012bfeb14a03c301fafb361062772ca095e36f26525e",
+    "blockHeight": 2660425
+  },
+  {
+    "address": "mn_addr_preprod1g9tjncqaxwutm6nwc36dqvx3q75r79advcmpjepu5x6ft09alqgssp7yl6",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xc7c7cf3a99967448e3c608d423e21dc4d912ebb0f12806f6239a62501bdfaad2",
+    "blockHeight": 2660303
+  },
+  {
+    "address": "mn_addr_preprod126plssmyfh2ene5z4p6820fs82h5l3earkt8z4gq4v90wvkxlg0s78ggk2",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x4dcd1816b4b038a09b923a2be3ced8f5bb0937583a59e20a6d21703e45d4c97e",
+    "blockHeight": 2660208
+  },
+  {
+    "address": "mn_addr_preprod17xc9vdngf2tfjfy3h52j900qmacsvrxnxp4legs5xjpnrvq62y3s7ychak",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x3c0002cf6acba37db8e1335a0a7e45bb99f7b7860e94d871c9c3ac766b52658c",
+    "blockHeight": 2660194
+  },
+  {
+    "address": "mn_addr_preprod1hd23ev06tl2ywqnvrvhxw0n85lkx6els3qphwxzrsk8pu8e4wc3q5gqa5p",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x5e5622adcfd06cad3f48889efaf55eac40c0c0bb1e8bff2061e8831e32d9221d",
+    "blockHeight": 2660177
+  },
+  {
+    "address": "mn_addr_preprod1zxjcxevcx8wyunk8k0q7kc6534y6qn9yejrup6zxhc0uvqmdxfdqmlv85j",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x6c4b7cdba76ed08245c661ef93240fbbf719c51a38c0f34ee1e7047c9953965a",
+    "blockHeight": 2660176
+  },
+  {
+    "address": "mn_addr_preprod1kz86ktz9j5ckalqcsa0825ldcc5j9vkdr08tc24hvdtln7c8upss0m849p",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x908fd52635b88cffb57ab8dffe69c9f8d6a6f27afd726022e6cd8dc4a7478ebd",
+    "blockHeight": 2660145
+  },
+  {
+    "address": "mn_addr_preprod1mps8d2g4l0zzfylxtvtlrelcv0xf9rjlrrgzskj4elewkx444wnqls3pvs",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x1d6d3f26154122d8905610552d7107b083489adc3ff87000d3b27fbcb1f97844",
+    "blockHeight": 2660117
+  },
+  {
+    "address": "mn_addr_preprod1m3l3e7yd75j2nfxky7z93zfpxns9erzdarn4e2zzdjuadg9grehseh4tsz",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x9485d67ddd818763a6911340c3f43256348211efcdb66aefe40aa00a08649212",
+    "blockHeight": 2660086
+  },
+  {
+    "address": "mn_addr_preprod1vd38hajtxygew0xge5g5w6xw626st5kxnpah4mkhhk36kqd2nh9s697k2u",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x09e885ac0547535fe2d735ad0559abbbbb25a93be08537e7aaf0777cf6ab287a",
+    "blockHeight": 2660075
+  },
+  {
+    "address": "mn_addr_preprod1t73zluhyn0mtzu2ayugwea4hkxczyrfkf75f7spxhrwpwylpy70qx8awua",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x674eb679719fba615977cce44d947c71318a609ae0aa278a8f3ee818ceba91a8",
+    "blockHeight": 2660068
+  },
+  {
+    "address": "mn_addr_preprod1gkchxaajreqedepx2m9jheqkxxcj7dkx5ka35d9f72kj9k9xzx0smuy3s4",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xeca5449313cd5ae2a9e985956a0570d06000ab3bab7ef6a52dda1008847a5c56",
+    "blockHeight": 2660048
+  },
+  {
+    "address": "mn_addr_preprod17cu6jsd5d83qagsv9zcdflp353zg8yu0srjh4d2pttlv3vfg5eesqqesx8",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x4931cd816155492021250add2324ee1136d2c85552cb539109b9abdb3f0ae25e",
+    "blockHeight": 2660018
+  },
+  {
+    "address": "mn_addr_preprod1gegnn6mtjcf6kf8nz8hd37529u2s2l9aruxl38geevl065sm33esn5hhs5",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xa151febff26a87550dfbae301a52ea925241482e5c31e814b319a87fea858878",
+    "blockHeight": 2659940
+  },
+  {
+    "address": "mn_addr_preprod15a7n3jwpsldffuws7xgysakymmj58tsj6yjazzvsafceeyanurvs8c6w7v",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x4e0ca5d79d6e842766a940a1e8312b4679298ecafdc13fc0fed085b95161a82a",
+    "blockHeight": 2659882
+  },
+  {
+    "address": "mn_addr_preprod1xlvl3qjklrwqj0j94n55pd8w4vdctzhag5lpug82yv4hz8n5uwssl24rv9",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xdaae89b84cea70743b5abeabfb7d87675995f2226c662499660f429399b0a93b",
+    "blockHeight": 2659862
+  },
+  {
+    "address": "mn_addr_preprod1jcnu893w7nl09crxjydnyh4fz2dtztyfvpg672yjtu32h6mkd27s8hghv5",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x7f815139c46e8457f581b2a5c1948af238a4318431b88b4156dd2fda76711c1e",
+    "blockHeight": 2659703
+  },
+  {
+    "address": "mn_addr_preprod1d5c9cx8crfu66l8ss488qt45ctpvf7fzmp0ulkwqjpvg4ut44taqdl62wp",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x518a823dedb5e992d691a2fd1e693b3479b54a3476e625af3716d0598819f3b8",
+    "blockHeight": 2659651
+  },
+  {
+    "address": "mn_addr_preprod1py9angvdnh2puyjdd27r9y2qyhyawj3uujk487qhcfha4gz8mrpsucu9mt",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x7f45312171ae6b617fedb5e94d31c625625e2f69fae629c05fdd185db8d28db5",
+    "blockHeight": 2659593
+  },
+  {
+    "address": "mn_addr_preprod1dlun0ll0sfwmc26cw464kyja3a80clfsqpqh9qdmshshr4m0848qh8zpla",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x38ae73336a8f9d22fe293529f4d4c7e09030e5ff058c902780ee1b81b59d112a",
+    "blockHeight": 2659503
+  },
+  {
+    "address": "mn_addr_preprod13wzcf3l9n0uzxv8vc85gzxv89pl9299uws4w2fzrs95xlr2uqx9qxtwtyn",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x1aaf67e0a41d9f182f690a61b74ebe47767e9fde4d71486ec5525289e77db112",
+    "blockHeight": 2659362
+  },
+  {
+    "address": "mn_addr_preprod1338m27cvxwww6pywxhczskkjgw3q6r0w8j25r87jwza9vadj3hhslt8g9u",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x98a2eda809de9303b6165c86aaa6717dbd4471fb4bdb885bd794bdeaed7ca041",
+    "blockHeight": 2659357
+  },
+  {
+    "address": "mn_addr_preprod1xkm02ku40sx0paks7m7w7gve8uwfvk439cpfkmx8t4jrf37fznnqxrcrwl",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x3398a284235de21f1a9ad3c862095cc3226b0863eb2fa4a5d342e7ae1f6a452b",
+    "blockHeight": 2659304
+  },
+  {
+    "address": "mn_addr_preprod1a6zhx47m07z54jgvyesqs3guqz3z846czjrn3dqg4asp753wwxqqrhmdrq",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x1946e9bd6f5d172226c0d06fb28a2d9eead0f43cda4c970914211310de492214",
+    "blockHeight": 2659285
+  },
+  {
+    "address": "mn_addr_preprod1v35s87gv73w7qq9x36hsf5p6y6ksjk683yk6jy35l3ll2hphhueqtyyvta",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x143b57bdc7c7fa06fd7a64cbe0761a2b0d7da5268dbde0231fef9c87ac52a55d",
+    "blockHeight": 2659282
+  },
+  {
+    "address": "mn_addr_preprod1a00fs5dj8j97d4jkru6cpn6xm5pal0s69dwp2hd0tz27egzvmhtsjfadrr",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x96d521c3adac8f47b64538f1c7504a1dd21e04c306071f7cfdff2e2987f67b65",
+    "blockHeight": 2659272
+  },
+  {
+    "address": "mn_addr_preprod1vwrqayze6ljdt9j36fpfc90j2zygjrg6swj8jk6897mn8fufde2qn76rml",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x774cafd6175e8740fc81cfddef355ccaa7aa68d0f69aaeb31da678359de2f510",
+    "blockHeight": 2659268
+  },
+  {
+    "address": "mn_addr_preprod1nxu0qswxgshky3phaldxqmpqjk0ygmcnmcs85ve92jnsj67zfcdskqmsa5",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xdab3ad6e5b5734fddec5025d195ffe8d696ea781d3ff2a803e1293ba355e1e19",
+    "blockHeight": 2659258
+  },
+  {
+    "address": "mn_addr_preprod1manzp4vky0nv84tpudz93w5tktshjjlk67k0v4dl5aqfgzr6cnyqg5f5f8",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xdbb75cf1d21702630c207d6e6916285d7b98fa284a4bfafdcc2c86178370de3a",
+    "blockHeight": 2659253
+  },
+  {
+    "address": "mn_addr_preprod13exgae98p6m634czg9gy2cy3qs2w7flxy3l6y0lfn2daxttg35dsh5pxrs",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xf99e71a58d4be2354bb576682efd4821762b4951f32c0283a4f3cf8bc27a0c64",
+    "blockHeight": 2659252
+  },
+  {
+    "address": "mn_addr_preprod18uzwut266wf0dvzqaw5z9l6zjqtvdltuzgujxkwm0wj0mln8uaaqyz53hx",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xa187cfcfb76e55ee4d840d3251a6517b8f1acef5e7a22144069eec9ad69bf6ce",
+    "blockHeight": 2659248
+  },
+  {
+    "address": "mn_addr_preprod17j7pqv97ettlw06vrmr059hfg4jfkvme39ngaagdkq6lrzg6n5csn7qltg",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x5d86a21554d79c4bd723eca8980a45cf46855d882e1295ca4dc8c16746ffe227",
+    "blockHeight": 2659242
+  },
+  {
+    "address": "mn_addr_preprod1eav5m56wjdj3ufxp3fnxjz33pqadugccarer8d5dcecsj66zms5qke0atn",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x9605d2b44c77bf50a57bae44443481753471196df80742031e4a372981c88445",
+    "blockHeight": 2659240
+  },
+  {
+    "address": "mn_addr_preprod1qwpcyf9pdyc5arfwgmyrnruhl3zvs39yg8s0s9cpey0zgqh34evq7pn3gw",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x4178375a805d254e7709c6fb1bedfaf74654c9bc4c56eb7d9638e0a052f7f76d",
+    "blockHeight": 2658575
+  },
+  {
+    "address": "mn_addr_preprod164u7qn4sgl5l7qn5qf5lzuve8y0wxmg06v78p2a474x70gceskkqhvd6js",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xd833997494f7ab77acb31dbd22d0b91eed8a51c8ad9796a716ae23e0c5e1da2c",
+    "blockHeight": 2658570
+  },
+  {
+    "address": "mn_addr_preprod16z49n55hqswz6qv45ztl7plflx4vt8udegpdm0c0h7wnv4cw3ecquc709g",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x6d16b1e0e86b9541269e17510dd9cd82c77f0674275957d1007df07139f1c47d",
+    "blockHeight": 2658162
+  },
+  {
+    "address": "mn_addr_preprod1ym8r98xj4kr79zfxanx9rp3mrnegr2f0g7c4fnx2waz67nd2ptdsg8yf4s",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xac5490014540b7ee478ade1aba8a7fd8a7e8c4e8e1ac77d54216b10b19de3d2d",
+    "blockHeight": 2658110
+  },
+  {
+    "address": "mn_addr_preprod1sjmqcqsxav0hjp8n6whhs3tnp5m4yv9hvenfyfmqgqr6w7zf3mfsnhv5cu",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xfc7b5e67c46cfb94f1476a002354dc71c83cbba3db37831f00be77c05e5245a1",
+    "blockHeight": 2656742
+  },
+  {
+    "address": "mn_addr_preprod12ssuwhplhtskljcwne27w6gjxrpyumd9js4v7dqwkpygpevnwtpsjakuwl",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x299fd793b06fa4374797902ddaebeaac9864cb0e1210afda2165f6d75fdd4c5b",
+    "blockHeight": 2656728
+  },
+  {
+    "address": "mn_addr_preprod13xjwauq7yylycvmqeyqy64607v5gfc6c055y4zmkpam0upml0n2se6n0yq",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x3c29c63493de366d46d9fb8c580e4b9784665ae224b666eb4fb59871eb3af3f3",
+    "blockHeight": 2656724
+  },
+  {
+    "address": "mn_addr_preprod18ceretghv3q7q6sqp5ddfs44uky2c9vf5npxyznnvanqtxhvg2kqnpeul6",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xa677a15a3b8b3aaba253b3c3b118abd315ee00cf2d9ce2d10e693dd5603f575a",
+    "blockHeight": 2656675
+  },
+  {
+    "address": "mn_addr_preprod18xgxktly2h7zvugwm2zm3n63f2l27kuyhj0y0fxxtk30dfr6n6hsgnpsh5",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x4d4193a7f4b17af024cf22d96a31c66c7face0daedfee26c0222ef31dae6e19c",
+    "blockHeight": 2656305
+  },
+  {
+    "address": "mn_addr_preprod1kapg9ufg8uc4d002gczxmlvx6dqnca0k8j6nw9wnktaan99dq4hqrsp8dy",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x2e8dde15f02f07c3b2b95b1e6dac414bb16dfe9cbf7aeb2056fb8d3c4bbfbdcc",
+    "blockHeight": 2656218
+  },
+  {
+    "address": "mn_addr_preprod147q4uljwtkf3utpnc80u78aksd7sjmwjlxfnjvnu4jalgztwmjhq7hndwu",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xc7396efbabf30c29daef64eb836ab3e9d6ee081115de0f93183b06384fdb8a80",
+    "blockHeight": 2655981
+  },
+  {
+    "address": "mn_addr_preprod1a3g2q9yzd43gf29s2c7lf9kpr2j4mmx4k0we7vleyqnt8ypaylqsn0w52z",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x3bdddf975931c93f9177be629fcaefb60ffdf343cdb2aa14b565f59f260d37b0",
+    "blockHeight": 2655900
+  },
+  {
+    "address": "mn_addr_preprod1jzqq9q8s53dd7wt3xg4euxexnxcq97k6suws4hssamvxl0gegxeq3eetej",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xaa4cda79b0da279e18ec87f02be17ab312ef99188afc5ab81a319a83e9a94f90",
+    "blockHeight": 2655894
+  },
+  {
+    "address": "mn_addr_preprod19g6gce6kt4nsknur7sczm8n5d4xnyyg60xqyfuz7ltkhaj8qrv5qqld86s",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xc15a19d8ec786a4903fe8b96526fb6282bcba315bfbb4f4bb16d07a31da089b9",
+    "blockHeight": 2655815
+  },
+  {
+    "address": "mn_addr_preprod1rplv4ewpgxrsqga0xqdl55dna4lxce8mtw3hf78vu6sxylhwf9zqp9mhr3",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xbbb8a142e12d1ff83a92ea1cec46c104e7d274f0237e97933fffcc4bb6824554",
+    "blockHeight": 2655803
+  },
+  {
+    "address": "mn_addr_preprod1qxa8e4d646pthtqwg08lz9e027revflyf55lc4zytyhjcktxjqcsp85974",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x7638a6a51b96088886f3c390a90a3d432d3d77040a0c1c37196515b434232110",
+    "blockHeight": 2655742
+  },
+  {
+    "address": "mn_addr_preprod1x7zv6jw0hn53m3l9uvaxjp0gw0nqhwd5adn370dmgt0wfg7h4u7qtj5jvr",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x5df16484983dc90d43eaca61d18480db5fc7152ae939b5d1fae99e133be61451",
+    "blockHeight": 2655697
+  },
+  {
+    "address": "mn_addr_preprod15zaan8tr84ukhgsrdzr78ty2dha9te2xd25fnsn5c3j0hus96p0sa7eez9",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xbaddbb00f80e11c9dd5e10e8302a41037f5ea9e28b268b8a2b41bb62a7b0cce3",
+    "blockHeight": 2655682
+  },
+  {
+    "address": "mn_addr_preprod1kvxertt3tpj2mgpl932dj4jt2t8yssh5xyv002apw4k4kqpr4kasvdhzdx",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x3a89b1a5e3c8b9ff2fdb42f90282d17b8cf0457492e20c7ea8791d2dce11c463",
+    "blockHeight": 2655606
+  },
+  {
+    "address": "mn_addr_preprod1mp2tjwvu0jku9amqsv0tpsvac2fa4e53sqfvar9hdp6yy6edvz0qtl5hm7",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x8ca9861a9fa462a636f09ed69d4535b5eb4386d7f85132f671dc396f6766794f",
+    "blockHeight": 2655566
+  },
+  {
+    "address": "mn_addr_preprod1rl0xp3m67xf2wqywaunl59ggv4ucfydd3pn8sg6httnkcxs9tfxqnjpjgu",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x0746beefaf176c48f0da974332bfef2d605283c2b5accec8025da90422a67f5c",
+    "blockHeight": 2655543
+  },
+  {
+    "address": "mn_addr_preprod19d972vqgwxuag7r5cze9ccce0wgwwdcqat9kp34l5c8gzmmvgs9satm7eq",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x6d06081216da14742264f81c3c684e702eec6ac1e5a5252f12d17561fe478cd9",
+    "blockHeight": 2655444
+  },
+  {
+    "address": "mn_addr_preprod1dn7hleckr98ralmzklt0fg25wegss6hucgvxj5d5vn3d7xzz4wysz5qu3u",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x24a924d5a7a4c1fb576df31f30d17821903cfba9115e16a3c23e085a6d6186ff",
+    "blockHeight": 2655422
+  },
+  {
+    "address": "mn_addr_preprod1r4cd0x2txs9gfcx20mw8f228y0tuf6vjr82cnh7np80qfad04frs0emd68",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x02d23bb00a935992fecc834bb9a41649ebe2b2db9eca27c64494feffa5130558",
+    "blockHeight": 2655358
+  },
+  {
+    "address": "mn_addr_preprod1dg8r64n4sgh0khytz7qpzdp92ahwuves5uf654k0thlfpnfgqhhszd57j6",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xa2398408eb143b1d7a854893cf4d830e8af3367e67f4166fb52450a21341cbef",
+    "blockHeight": 2655262
+  },
+  {
+    "address": "mn_addr_preprod1dzqepkzxsdp03730watcktrzg2flwumxn0v990g63kvp2dcyuzdqr8wa4u",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xfc4576b748f1f00e02298293f4c118f1ae68b6b0f712288f3dbe718ecdf66a38",
+    "blockHeight": 2655238
+  },
+  {
+    "address": "mn_addr_preprod1tp7lkmsg95ax8jkmrwv42v6eu3avte8g5nhkmf9katda6t2ackfqwu72g0",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x4e3613599bb6dc7b4a5ae0295ef63ab358ca2b57750f9d85ee10d6d828bbec3c",
+    "blockHeight": 2655062
+  },
+  {
+    "address": "mn_addr_preprod1fqnmtjk7x0n7x0ywmk9mny22ac3epprd74h2z6eurttpp7t32xaqjs23xk",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xd23f95036bd8c30f9583fa1b15c0b1af6d3388ac7f31a298a7e5a48af221ffb6",
+    "blockHeight": 2654966
+  },
+  {
+    "address": "mn_addr_preprod1z2utggtzmdhfmfakwa3m4sn926crd7k8wspz2dkwz77y26v95y7q3ceef9",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x8ab89114fbd3fc51e9b2fc83c96fec2fce8721d667226e01804a019d7771c251",
+    "blockHeight": 2654943
+  },
+  {
+    "address": "mn_addr_preprod1udeu6usn7v2dssnz56cr25t925zq4ywyfnh2qsv9uqyl4sjc88uqpcm6cz",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xb971291b609509b40f19a7a10a3854e76f4ca804b36db75568111e4fd8091f21",
+    "blockHeight": 2654903
+  },
+  {
+    "address": "mn_addr_preprod1uj9ksvg3vxm3k355yzpm5sra03jffml7h4hl483repcpwy6e6wusfgxudj",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x0bc4bd3ecd320e7eed14b777a0bd7ebf6be3bacd33fa9b9e831908dfe39e3651",
+    "blockHeight": 2654783
+  },
+  {
+    "address": "mn_addr_preprod1u8w6vu9kjxrw2p6gs224cwvp5z54hkpffq84z907u3uxltzwrwdsp4e83u",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x10ff4899a25f7e12ba99e9ca5dfbea117a533a870197071f08e9717a3661fa11",
+    "blockHeight": 2654722
+  },
+  {
+    "address": "mn_addr_preprod1u53w649s3camhvkr3ut9xh8mnrg6vfsk8qlf9q376fjjzdty3j0q4ncmd0",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x187893a06bca3719d9a339d7581a67176c55887ca28d6e2cee37f9c8f5509137",
+    "blockHeight": 2654659
+  },
+  {
+    "address": "mn_addr_preprod1up6u9l5flktl904hdtj46nkn75yt9aq49l2k33v00r9gn52kgfxq96m3nl",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x5041885ccc4e3f1d3ee1f4706255fa03794b5e67e5376c2a98a0387c004c5ae3",
+    "blockHeight": 2654568
+  },
+  {
+    "address": "mn_addr_preprod1r0jz9wu33s6455hew2cvspd57a4w8vguw85u9tds5rmq33r4gngskqw5mf",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x9b85c7debe43ccb2c01fa331f1a438352f4fa2af14a45322cc2f665ca4a450d3",
+    "blockHeight": 2654502
+  },
+  {
+    "address": "mn_addr_preprod1uhh8yrnw6gde32jtn30n7s8czuq4r70furt6knr6vrd9aa4elqhq9cyjgy",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xe28a6d1fc7e0ca48368e9cedbd9fc0f8180a69a6d1be853b4083bbbf568fade7",
+    "blockHeight": 2654472
+  },
+  {
+    "address": "mn_addr_preprod1t3v7vq56u6mdu65fps8uvlcyzp5nar6dk4cnns9p8dmrq6q6s6lqx9v3yh",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x9de70dfb768fcb35296ac4263e0de1de2324a9b88bfc5a76db3f468f1d56e469",
+    "blockHeight": 2654428
+  },
+  {
+    "address": "mn_addr_preprod1jsfa3yqg5nsjl0d45kj3hn6jeahrwljry7a7p353axyhjc5d7d9qss8rvz",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xd1a7528daf77bac0cdff06853ad10add8dfc1e5f022852e2c8ade71b980d6fec",
+    "blockHeight": 2654364
+  },
+  {
+    "address": "mn_addr_preprod1nyly73jddv83pr26a6dk98a7eevssq9zy7607l4dn7zxz2sjkj3ss9jzgg",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xdb77ac8e0ca051be0a3036df389ecd9b33a233d23109bf6aa085d445f03f4030",
+    "blockHeight": 2654324
+  },
+  {
+    "address": "mn_addr_preprod14x7m085a4sza3m8ejlwv9j2nm5dmkzfuke2rkshaq68mfyp3fftq2un5na",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xf6c8077f9d0dfaf242eb8a0e8656822adacea6152f1c103d629ad015db8ebff9",
+    "blockHeight": 2654304
+  },
+  {
+    "address": "mn_addr_preprod1y83425fcr0yuc9qxnn75juz5yace4rseg5tp8gs5mx7z2t3jz35q976e7s",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xa36eb22e4fc7899925859e9d723b6db4b32e75d17f36e75dc82908e323672462",
+    "blockHeight": 2654256
+  },
+  {
+    "address": "mn_addr_preprod13hntxsan58zyhdme2thvcl7w4ha4en5j58xx2jp52wgtfe2ed5gqj50xja",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xfee620f80105326ea9576042f6a4b5428d4a730a6ef00eb3a7be0ec3226219d3",
+    "blockHeight": 2654191
+  },
+  {
+    "address": "mn_addr_preprod1x5kczjk27ankh2tyahny4d27sjug2ejt05zm940x0mrgqvxt33us90hhln",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xfb9cf447ba0d9fd32edcb71ace9d97f475c41a60d53348fe6e045fd1c68bace4",
+    "blockHeight": 2654130
+  },
+  {
+    "address": "mn_addr_preprod1xq0qkf9jr4f6c6a9pfpkx0v37wm0srcr3wqe3y9gns6vuvq7xd2s098tud",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x8f6557554b4488b05b928294b0448cdc88503179ec3801d71cdcc3fc0cc03b63",
+    "blockHeight": 2654074
+  },
+  {
+    "address": "mn_addr_preprod1g7jqksgx4amktr75frtprhshf3hcx3st6v6gn7tul9d3ze2vducsahzdke",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xe550ac4429e3bab23e78a1080fda995262b9035ecc1045c2f70062b2ef45d0ff",
+    "blockHeight": 2654069
+  },
+  {
+    "address": "mn_addr_preprod1kxlseduk9rpypf4wx4km49qq9k0rr0ulpvdvrferj0dexrdp85zs42v9pn",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xc7856c460c4cedaa478e6075959c6c4a53a210a6f90f8bea1423ca590368098a",
+    "blockHeight": 2654038
+  },
+  {
+    "address": "mn_addr_preprod1n06yy8gpup27sgj63c202m8dwjwy44w007jf4studf0frjtx5j6q2fxe5h",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xfabb8e7118acaf3abc45b9bcf28db457278f650983f8946a1ce5eee6eeda9e32",
+    "blockHeight": 2653984
+  },
+  {
+    "address": "mn_addr_preprod1zxsd9s8gqmsd2ey0k2ded93ugze44vp4fsplfjnes75l4j4ckzdq888htj",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x7d1022975242095f78b8b8e2fd8766f0e5008a80f23fcc3288d480927f625d74",
+    "blockHeight": 2653866
+  },
+  {
+    "address": "mn_addr_preprod188mevrv8l9e0ahmr7p0a85lclxls0njsquvnca8fzd6kyu9ckxgqqpr26e",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x972465908aaae8cce6a567d19e2820e31467313c5b4f093a0192cc00e2aac2ed",
+    "blockHeight": 2653799
+  },
+  {
+    "address": "mn_addr_preprod1ddm6f45amptlaprd888jd903hh3sd2amglsr9wzw673rx0jhd4fstszdul",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x62aa0814643a96d1f41db529a2e0729c1a35051c4a261318c97081b4e032a7c8",
+    "blockHeight": 2653722
+  },
+  {
+    "address": "mn_addr_preprod1q2uz90k8d0al4rpf02a4a4vuz89f46psapdkq9ntmu6nvg6euzwq6uvme5",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xe417acdd4555ada8373d094009f94a24e787af250429990fcf63c6fc72cb6042",
+    "blockHeight": 2653712
+  },
+  {
+    "address": "mn_addr_preprod1ny2c0uas9fpka5wkk95xw3zhfdfyhed8ep00yu3m4qv983ewygsqmmjzcv",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xf90fc4b1d4c6d4563c0afeedfa6b24f90dde3d2427fad6a07019abc69936dec8",
+    "blockHeight": 2653650
+  },
+  {
+    "address": "mn_addr_preprod12ujyuyt45q8dxtarr6sst0kk74uudrf0ldeku7t2r56u2aa8g9jsp9w6ll",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xcaffaf2a7bfd077f491fc4560483bc904db4921527ef5bfafe645ccb8842d179",
+    "blockHeight": 2653587
+  },
+  {
+    "address": "mn_addr_preprod1w0uyf7m042k8sf0szj69mptj6uuwkuywkrxf7eqzy6d6urc8gjssrca9th",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x607e6308737a301fcad4f285e1a6168be8959eb5c074faee4e9d2aa4bdbb4fce",
+    "blockHeight": 2653579
+  },
+  {
+    "address": "mn_addr_preprod19g4xcakcndsduefucrjjceh6783pdjer7dp26wpjela7zntdpk8qntc60e",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xe2b8867ca7fb2661d1a92394565fdf04e9db929b23979900e04323bafc66a21f",
+    "blockHeight": 2653527
+  },
+  {
+    "address": "mn_addr_preprod1tdjql6rzunaq7ccx3s0wlfp4y5ehekxj6neg579adwlpsjksp9sqvcmg5e",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x87bcc593663ea8f6958a7cc82b296b3751752a6f5c8b19a764d8bae153298904",
+    "blockHeight": 2653493
+  },
+  {
+    "address": "mn_addr_preprod1l545edplj3rkzkrcj9qslcx2kjwj07mmwpgl0ql8umcueek48zrqp8cl40",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x8e183b4bf882a29b34dc0a882acae65a84ff980c4556849a0636f06d99742139",
+    "blockHeight": 2653465
+  },
+  {
+    "address": "mn_addr_preprod153yh7yxagdxv2m0cz4q3vvnvnz9end8zhutcea6cx7ludqlsy2dq0xj3pq",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xc66b08d948bbddc025ff9bfa7a5c7c07d5067c9935eb636704de0c6f99f0ac98",
+    "blockHeight": 2653459
+  },
+  {
+    "address": "mn_addr_preprod187nucq3tzj0gc0z8peu2n98fe6h7tlcjeys5shlst0296gkp0s8scv94fl",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xdbe12f11ce23d814863f9d4ef6cc33451e907a4e6064a9bceb62f1185078c5d7",
+    "blockHeight": 2653421
+  },
+  {
+    "address": "mn_addr_preprod1jmdc8pjfj2zw0kxvrzcfhaeatm26tmqj8l8xuywe23yclenxh2tqw8m4f3",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x1ad1caba858fb7b0f9fabd2830c2a6c62e26701937da5ee0156d6675d586d1d1",
+    "blockHeight": 2653420
+  },
+  {
+    "address": "mn_addr_preprod12f7vst466jukm2f2v62jhpy76jqs4mnrm8dr3sgtcw8jv2syzz7sl3jk82",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xf92be8d11ffc9da3103b0791822414d7c4434eea012cc5e5d12361ea1550b27a",
+    "blockHeight": 2653333
+  },
+  {
+    "address": "mn_addr_preprod1aycqpyfy46tjcwqqqyfq4kty7zkt4ap9e5jq6p83xzckrc2qglrqr3d4yk",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xa9409eb0724d307d90accabdc4ef61e5ff74eb05353e7a56b08aea9e768e6486",
+    "blockHeight": 2653311
+  },
+  {
+    "address": "mn_addr_preprod1uau2h3g2zyv84yet64wptpq06ef8nt8jjh7pa29676kvqcqne3zsh2xqpd",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x224542a3c508f76dce4c8c63ed4610c234d0e3d3d60d1449eed864427154ba9b",
+    "blockHeight": 2653271
+  },
+  {
+    "address": "mn_addr_preprod1z3vhsl6u0y79k3qtq9djnxwfx4xx28ly2qpgfxng7vulqwesrfpserwlxw",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x5061d008475270b28a96cef35fa47f9e171dedf1f82c524e8d620d65a31dc4c6",
+    "blockHeight": 2653224
+  },
+  {
+    "address": "mn_addr_preprod1agysl85mm48pmtrwjk43paggkghfjy3m9vw0ewcl7mr4vljyzsxqmwrmy6",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x1286fb24fdccf2486ce88d13203658b4e3e1ca4f8a92d638ab3f83ea59df2528",
+    "blockHeight": 2653217
+  },
+  {
+    "address": "mn_addr_preprod155h2c36r3q5c5z5rz6fqm5dh3p67nkmqzw69xd4dmwfu0p9xk53qgu4fac",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0xd852023182bc584624c3a97dcd4bf0d79aee550f982425583337cba10227e8bf",
+    "blockHeight": 2653161
+  },
+  {
+    "address": "mn_addr_preprod1y6f6j0gtlfhjth65d95hy7ealpycqav02alufewq8rc5rv4zhunswex7j5",
+    "txCount": 1,
+    "netBalance": "5000000000",
+    "sampleTx": "0x831d8147584e303d2f5b4b3c9d889ebd6cb53f5c8ab761dd51e3b5b95a4119b2",
+    "blockHeight": 2653155
+  }
+]
