@@ -80,7 +80,7 @@ flowchart TD
     subgraph Ledger["Midnight Network Preprod Ledger (On-Chain)"]
         ProverPayload -->|"Verify State Transition"| Contract["voidcloud.compact (0x89e2...dcf0)"]
         Nullifier -->|"Anti-Double-Claim Check"| NullifierSet["bonusNullifiers Set"]
-        Contract -->|"State Update"| Counters["Total Storage (+20GB) & User Increment"]
+        Contract -->|"State Update"| Counters["Total Storage (+80GB) & User Increment"]
     end
 ```
 
@@ -429,7 +429,7 @@ In direct response to feedback collected from our **70 Preprod testnet users**, 
 - **Atomic Multi-File Batch Circuits**: `commitBatchFileActions` enables atomic batch verification (bulk move, bulk star, bulk shred) in a single verifiable state transition on Midnight Preprod.
 - **Cryptographic Audit Trail Anchors**: `anchorAuditTrailRoot` commits local SHA-256 Merkle roots to the immutable on-chain ledger, ensuring cryptographic non-repudiation for audit trails.
 - **Disaster Recovery Checkpoints**: `verifyVaultBackupCommitment` registers verifiable backup snapshot hashes on-chain to detect any tampering during backup restoration.
-- **Storage Tier Upgrades**: `upgradeStorageQuota` provides on-chain tracking for multi-token quota expansions.
+- **Storage Tier Upgrades**: `upgradeStorageQuota` provides on-chain tracking for multi-token quota expansions (80 GB 1-Time Testnet Shard at 150 NIGHT, Starter 50 GB, Pro 100 GB, Enterprise Matrix 500 GB, scalable up to 1 TB total shielded capacity).
 - **Live Preprod Contract**: Deployed and verified on Midnight Preprod at [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) (Block `#2589085`).
 
 ---
@@ -447,7 +447,7 @@ In direct response to feedback collected from our **70 Preprod testnet users**, 
 | **Stored Files & Data** | • Raw file bytes & document contents<br>• File names, mime types, and original metadata<br>• File encryption symmetric keys (AES-256-GCM) | • File commitment hashes (`persistent_hash(secret)`)<br>• Total shielded bytes counter (aggregated) |
 | **Circuit Proofs & Quotas** | • Secret input values used during proof synthesis<br>• Intermediate R1CS constraint assignments | • Halo2 ZK-SNARK proof validity (`true` / `false`)<br>• Blinded nullifier hash (`Set.insert`) |
 | **Decentralized Relays** | • Telegram bot tokens & backend channel secrets<br>• Which physical shard chunk belongs to which file | • Shard delivery confirmation timestamps<br>• Encrypted chunk digest integrity |
-| **Settlement Ledger** | • Individual user storage consumption history | • Global storage allocated counter (`+20 GB`)<br>• Deployed contract bytecode & state |
+| **Settlement Ledger** | • Individual user storage consumption history | • Global storage allocated counter (`+80 GB` / up to `1 TB`)<br>• Deployed contract bytecode & state |
 
 ---
 
@@ -657,7 +657,7 @@ VoidCloud provides a comprehensive **On-Chain Transaction & Payment History** vi
       │
       ├─► 2. Quota Check ──► ZK Quota Circuit (Halo2 Proof) ──► Smart Contract (0x89e2...dcf0)
       │
-      ├─► 3. Testnet Unlock ─► 10 tNIGHT Payment + Blinded Nullifier ──► On-Chain Set Insertion (+20GB)
+      ├─► 3. Testnet Unlock ─► 150 NIGHT Payment + Blinded Nullifier ──► On-Chain Set Insertion (+80GB / up to 1 TB Quota)
       │
       ├─► 4. Storage Upgrade ──► Multi-Token Payment (NIGHT/ADA) ──► Cryptographic ZK Receipt
       │
@@ -672,7 +672,7 @@ VoidCloud provides a comprehensive **On-Chain Transaction & Payment History** vi
 
 ## 11. Automated Test Suite
 
-VoidCloud features a rigorous **Vitest test suite** with **34 passing unit tests** across 6 modules verifying Compact ledger invariants, directory trees, cryptographic audit trails, encrypted disaster backups, multi-file batch operations, and 1AM / Lace wallet connectors:
+VoidCloud features a rigorous **Vitest test suite** with **52 passing unit tests** across 8 modules verifying Compact ledger invariants, directory trees, cryptographic audit trails, encrypted disaster backups, multi-file batch operations, and 1AM / Lace wallet connectors:
 
 ```bash
 $ npm test
