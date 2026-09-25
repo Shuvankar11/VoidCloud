@@ -80,19 +80,19 @@ flowchart TD
 Based on direct suggestions from ongoing user feedback submissions in late August and early September 2026:
 * **Nested Folder Organization**:
   * *User Request*: *"I have dozens of research papers and contracts. Having all files in one flat list is hard to navigate; we need folders and subfolders."*
-  * *Delivery*: Implemented recursive parent-child directory trees with color customization, interactive breadcrumbs ([`BreadcrumbNav.tsx`](src/components/BreadcrumbNav.tsx)), and single/bulk file relocation.
+  * *Delivery*: Implemented recursive parent-child directory trees with color customization, interactive breadcrumbs ([`BreadcrumbNav.tsx`](../src/components/BreadcrumbNav.tsx)), and single/bulk file relocation.
 * **Semantic File Tagging**:
   * *User Request*: *"Can we tag files with custom labels like #Financial, #Confidential, #Contract so we can filter across categories?"*
-  * *Delivery*: Built [`FileTagModal.tsx`](src/components/FileTagModal.tsx) and interactive tag filter pills supporting multi-tag assignment and instant classification.
+  * *Delivery*: Built [`FileTagModal.tsx`](../src/components/FileTagModal.tsx) and interactive tag filter pills supporting multi-tag assignment and instant classification.
 * **Batch Operations for High-Volume Users**:
   * *User Request*: *"Selecting and deleting or starring files one by one takes too long when organizing many documents."*
-  * *Delivery*: Built the floating bottom batch bar ([`FloatingBatchBar.tsx`](src/components/FloatingBatchBar.tsx)) with multi-select checkboxes, Select All, bulk star, bulk trash, and bulk download.
+  * *Delivery*: Built the floating bottom batch bar ([`FloatingBatchBar.tsx`](../src/components/FloatingBatchBar.tsx)) with multi-select checkboxes, Select All, bulk star, bulk trash, and bulk download.
 * **Verifiable Cryptographic Audit Trail**:
   * *User Request*: *"For enterprise and privacy auditing, I want to see a verifiable log of when my files were encrypted, shredded, or when my quota changed."*
-  * *Delivery*: Created [`auditLogger.ts`](src/services/auditLogger.ts) and [`ZKAuditLogModal.tsx`](src/components/ZKAuditLogModal.tsx) recording tamper-resistant SHA-256 telemetry events with JSON export.
+  * *Delivery*: Created [`auditLogger.ts`](../src/services/auditLogger.ts) and [`ZKAuditLogModal.tsx`](../src/components/ZKAuditLogModal.tsx) recording tamper-resistant SHA-256 telemetry events with JSON export.
 * **1-Click Encrypted Vault Backup & Restore**:
   * *User Request*: *"What happens if I change browsers or devices? I need an easy way to export an encrypted snapshot of my vault and restore it."*
-  * *Delivery*: Implemented [`vaultBackup.ts`](src/services/vaultBackup.ts) and [`VaultBackupModal.tsx`](src/components/VaultBackupModal.tsx) supporting 1-click sanitized archive downloads and restore with SHA-256 integrity checksum verification.
+  * *Delivery*: Implemented [`vaultBackup.ts`](../src/services/vaultBackup.ts) and [`VaultBackupModal.tsx`](../src/components/VaultBackupModal.tsx) supporting 1-click sanitized archive downloads and restore with SHA-256 integrity checksum verification.
 
 ### 6. 🌝 September 2026 Level 6 Supermoon Milestone Delivery (Release v1.3.0)
 Based on onboarding 20 new high-volume testnet users (Users 51–70):
