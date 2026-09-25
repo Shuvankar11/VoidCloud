@@ -47,7 +47,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<UserProfile | null>(() => {
     try {
       const saved = localStorage.getItem(LOCAL_SESSION_KEY);
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed?.email) {
+          const cachedDp = localStorage.getItem(`voidcloud_user_dp_${parsed.email.toLowerCase()}`);
+          if (cachedDp) {
+            parsed.photoURL = cachedDp;
+          }
+          const cachedName = localStorage.getItem(`voidcloud_user_name_${parsed.email.toLowerCase()}`);
+          if (cachedName) {
+            parsed.displayName = cachedName;
+          }
+        }
+        return parsed;
+      }
     } catch {}
     return null;
   });
@@ -56,18 +69,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
-  // Sync Firebase Auth if configured
+  // Sync Firebase Auth if configured while preserving local DP and profile edits
   useEffect(() => {
     if (isFirebaseConfigured && auth) {
       const unsubscribe = onAuthStateChanged(auth, (fbUser: FirebaseUser | null) => {
         if (fbUser) {
+          let localSession: UserProfile | null = null;
+          try {
+            const saved = localStorage.getItem(LOCAL_SESSION_KEY);
+            if (saved) localSession = JSON.parse(saved);
+          } catch {}
+
+          const emailKey = (fbUser.email || localSession?.email || '').toLowerCase();
+          const cachedDp = emailKey ? localStorage.getItem(`voidcloud_user_dp_${emailKey}`) : null;
+          const cachedName = emailKey ? localStorage.getItem(`voidcloud_user_name_${emailKey}`) : null;
+
+          const resolvedPhotoURL = cachedDp || localSession?.photoURL || fbUser.photoURL || undefined;
+          const resolvedDisplayName = cachedName || localSession?.displayName || fbUser.displayName || fbUser.email?.split('@')[0] || 'Cloud Runner';
+
           const profile: UserProfile = {
             uid: fbUser.uid,
-            email: fbUser.email || 'user@voidcloud.io',
-            displayName: fbUser.displayName || fbUser.email?.split('@')[0] || 'Cloud Runner',
-            createdAt: new Date().toISOString(),
+            email: fbUser.email || localSession?.email || 'user@voidcloud.io',
+            displayName: resolvedDisplayName,
+            createdAt: localSession?.createdAt || new Date().toISOString(),
             isAnonymous: fbUser.isAnonymous,
-            photoURL: fbUser.photoURL || undefined,
+            photoURL: resolvedPhotoURL,
           };
           setUser(profile);
           localStorage.setItem(LOCAL_SESSION_KEY, JSON.stringify(profile));
@@ -241,6 +267,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const newDisplayName = updates.displayName !== undefined ? updates.displayName.trim() : user.displayName;
     const newPhotoURL = updates.photoURL !== undefined ? updates.photoURL : user.photoURL;
+    const emailKey = user.email.toLowerCase();
+
+    // Cache to dedicated persistent keys so page reloads NEVER lose the DP or custom name
+    if (newPhotoURL) {
+      try {
+        localStorage.setItem(`voidcloud_user_dp_${emailKey}`, newPhotoURL);
+      } catch (e) {
+        console.warn('Failed to cache DP in localStorage:', e);
+      }
+    } else if (updates.photoURL === '') {
+      try {
+        localStorage.removeItem(`voidcloud_user_dp_${emailKey}`);
+      } catch {}
+    }
+
+    if (newDisplayName) {
+      try {
+        localStorage.setItem(`voidcloud_user_name_${emailKey}`, newDisplayName);
+      } catch {}
+    }
 
     const updatedProfile: UserProfile = {
       ...user,
@@ -250,9 +296,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (isFirebaseConfigured && auth?.currentUser) {
       try {
+        // Only pass photoURL to Firebase if it's a standard web URL (data: URLs cause Firebase to fail)
+        const fbPhoto = updatedProfile.photoURL && !updatedProfile.photoURL.startsWith('data:')
+          ? updatedProfile.photoURL
+          : undefined;
+
         await updateProfile(auth.currentUser, {
           displayName: updatedProfile.displayName,
-          photoURL: updatedProfile.photoURL,
+          ...(fbPhoto ? { photoURL: fbPhoto } : {}),
         });
       } catch (err) {
         console.warn('[Firebase Auth] Profile sync skipped:', err);

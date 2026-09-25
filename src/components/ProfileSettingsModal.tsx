@@ -127,8 +127,46 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOp
     const reader = new FileReader();
     reader.onload = () => {
       if (typeof reader.result === 'string') {
-        setPhotoURL(reader.result);
-        setProfileSuccess('Custom photo loaded! Click "Save Changes" to apply.');
+        const img = new Image();
+        img.onload = () => {
+          try {
+            const canvas = document.createElement('canvas');
+            const maxDim = 256;
+            let width = img.width;
+            let height = img.height;
+            if (width > height) {
+              if (width > maxDim) {
+                height = Math.round((height * maxDim) / width);
+                width = maxDim;
+              }
+            } else {
+              if (height > maxDim) {
+                width = Math.round((width * maxDim) / height);
+                height = maxDim;
+              }
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+              ctx.drawImage(img, 0, 0, width, height);
+              const compressed = canvas.toDataURL('image/jpeg', 0.88);
+              setPhotoURL(compressed);
+              setProfileSuccess('Custom photo loaded! Click "Save Changes" to apply.');
+            } else {
+              setPhotoURL(reader.result as string);
+              setProfileSuccess('Custom photo loaded! Click "Save Changes" to apply.');
+            }
+          } catch {
+            setPhotoURL(reader.result as string);
+            setProfileSuccess('Custom photo loaded! Click "Save Changes" to apply.');
+          }
+        };
+        img.onerror = () => {
+          setPhotoURL(reader.result as string);
+          setProfileSuccess('Custom photo loaded! Click "Save Changes" to apply.');
+        };
+        img.src = reader.result;
       }
     };
     reader.onerror = () => {

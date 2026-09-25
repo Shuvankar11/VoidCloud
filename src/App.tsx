@@ -3,7 +3,6 @@ import { AuthProvider } from './context/AuthContext';
 import { VaultProvider, useVault } from './context/VaultContext';
 import { WalletProvider } from './context/WalletContext';
 import { CustomCursor } from './components/CustomCursor';
-import { TopMarquee } from './components/TopMarquee';
 import { Navbar } from './components/Navbar';
 import { useAuth } from './context/AuthContext';
 import { HeroLanding3D } from './components/HeroLanding3D';
@@ -72,8 +71,6 @@ const AppContent: React.FC = () => {
       {/* Futuristic High-Visibility Cloud Cursor */}
       <CustomCursor />
 
-      {/* Top Live Midnight Network Status Marquee */}
-      <TopMarquee />
 
       {/* Navigation Bar with User Profile, Web3 Wallet & Auth Status */}
       <Navbar />
