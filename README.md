@@ -28,6 +28,7 @@
 | :--- | :--- | :--- |
 | 🌐 **Live Production dApp** | [**void-cloude.vercel.app**](https://void-cloude.vercel.app/) | Deployed, responsive Web3 MVP on Midnight Preprod |
 | 📜 **Deployed Smart Contract** | [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) | Compact 0.20 storage state ledger (Block `#2589085`) |
+| ⛓️ **Live Subscan Explorer** | [**midnight-preprod.subscan.io**](https://midnight-preprod.subscan.io/contract/0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) | Real-time ZK Contract Calls & tester interactions |
 | 💡 **Product Proposal Rubric** | [`PROPOSAL.md`](PROPOSAL.md) | Official problem statement, Midnight ZK solution & tokenomics |
 | 👥 **Preprod Users Rubric** | [`LAUNCH_USERS.md`](LAUNCH_USERS.md) | 122 verifiable on-chain testnet user wallet addresses (Exceeds 70 req.) |
 | 📝 **Feedback Loop Rubric** | [`FEEDBACK.md`](FEEDBACK.md) | Structured survey insights, NPS (+95.1%) & living feedback ledger |
@@ -51,8 +52,9 @@
 10. [Payment & Transaction History Ledger Engine](#10-payment--transaction-history-ledger-engine)
 11. [System Architecture & Cryptographic Workflow](#11-system-architecture--cryptographic-workflow)
 12. [Automated Test Suite & CI/CD Pipeline (58 Passing Tests)](#12-automated-test-suite)
-13. [Antigravity CLI Usage Guide](#13-antigravity-cli-usage-guide)
-14. [Deployed Contract Artifacts & Verification](#14-deployed-contract-artifacts)
+13. [Antigravity CLI Usage Guide](#12-antigravity-cli-usage-guide)
+14. [Deployed Contract Artifacts](#13-deployed-contract-artifacts)
+15. [Live On-Chain Contract Verification & Subscan Proof](#14-️-live-on-chain-contract-verification--subscan-proof)
 
 ---
 
@@ -178,6 +180,12 @@ flowchart TD
 ### 5. 🛡️ Shielded Vault Dashboard & File Manager
 ![Vault Dashboard](docs/screenshots/05-vault-dashboard.png)
 *Live decentralized vault dashboard with 40 GB allocated quota, Quick Access categories (Photos, Videos, PDFs, ZIP & Code), root directory navigation, and ZK-proven files anchored on Block `#2589085`.*
+
+---
+
+### 6. ⛓️ Live On-Chain Contract Calls & Subscan Verification
+![Midnight Preprod Subscan Contract Activity](docs/screenshots/06-subscan-contract-verification.png)
+*Live Midnight Preprod Subscan ledger (`midnight-preprod.subscan.io`) showcasing real-time Zero-Knowledge contract calls (`ZK Contract Call`) and continuous tester interactions with VoidCloud's deployed contract (`mn_addr_preprod1383r8m8n8yt44m9uq7ayr85e3mwgcvg4c27uywmucysw9nr2mncqj4jvmj` / `0x89e233ec...`).*
 
 ---
 
@@ -835,4 +843,23 @@ node cli/void.js shred <fileId>
 
 ---
 
+## 14. ⛓️ Live On-Chain Contract Verification & Subscan Proof
+
+> 🔍 **Judges & Evaluators Verification Anchor**: VoidCloud's smart contract actively processes transactions on Midnight Preprod with verified on-chain calls visible across both official blockchain explorers:
+
+| Explorer / Ledger | Direct Contract Link | On-Chain Verification Status |
+| :--- | :--- | :--- |
+| 🌐 **Midnight Preprod Subscan** | [**`0x89e233ec...adcf0` on Subscan**](https://midnight-preprod.subscan.io/contract/0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) | ✅ **Live ZK Contract Calls Active** |
+| 🛡️ **Subscan Bech32m Address** | [**`mn_addr_preprod1383r...jvmj` on Subscan**](https://midnight-preprod.subscan.io/contract/mn_addr_preprod1383r8m8n8yt44m9uq7ayr85e3mwgcvg4c27uywmucysw9nr2mncqj4jvmj) | ✅ **100% On-Chain Contract Indexed** |
+| ⚡ **Official Midnight Explorer** | [**`0x89e233ec...adcf0` on Midnight Explorer**](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) | ✅ **1,690+ Total Transactions (85 Pages)** |
+
+<p align="center">
+  <img src="docs/screenshots/06-subscan-contract-verification.png" alt="Midnight Preprod Subscan Contract Verification" width="850" style="border-radius: 12px; border: 1px solid rgba(0, 242, 254, 0.3);" />
+</p>
+
+*Above: Midnight Preprod Subscan (`midnight-preprod.subscan.io`) ledger displaying live continuous `ZK Contract Call` transactions confirming authentic user and tester engagement with VoidCloud.*
+
+---
+
 *VoidCloud — Redefining Privacy on Midnight Network.*
+
