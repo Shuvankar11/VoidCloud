@@ -45,6 +45,10 @@ import {
   Tag as TagIcon,
   CheckSquare,
   Square,
+  ExternalLink,
+  ShieldCheck,
+  ArrowUpRight,
+  Cpu,
 } from 'lucide-react';
 
 export const StorageVaultDashboard: React.FC = () => {
@@ -78,7 +82,7 @@ export const StorageVaultDashboard: React.FC = () => {
     importVaultBackup,
   } = useVault();
   const { user, setIsProfileModalOpen } = useAuth();
-  const { setIsPricingModalOpen } = useWeb3Wallet();
+  const { wallet, setIsPricingModalOpen, setIsWalletModalOpen, setIsExplorerModalOpen } = useWeb3Wallet();
 
   const [activeTab, setActiveTab] = useState<'home' | 'files' | 'starred' | 'trash'>('home');
   const [searchQuery, setSearchQuery] = useState('');
@@ -273,12 +277,12 @@ export const StorageVaultDashboard: React.FC = () => {
   return (
     <section
       id="vault-dashboard"
-      className="min-h-screen py-6 sm:py-8 px-3 sm:px-6 lg:px-8 bg-cover bg-center bg-no-repeat transition-all select-none"
-      style={{
-        backgroundImage: 'url(/aurora-bg.jpg)',
-        backgroundColor: '#EBF4FF',
-      }}
+      className="min-h-screen py-6 sm:py-8 px-3 sm:px-6 lg:px-8 bg-gradient-to-br from-[#F8FAFC] via-[#F0F7FF] to-[#EBF3FC] relative overflow-hidden transition-all"
     >
+      {/* Subtle Ambient Radial Glow Orbs */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-200/25 rounded-full blur-3xl pointer-events-none -z-0" />
+      <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-indigo-200/20 rounded-full blur-3xl pointer-events-none -z-0" />
+
       {/* Hidden File Input */}
       <input
         type="file"
@@ -288,8 +292,8 @@ export const StorageVaultDashboard: React.FC = () => {
         className="hidden"
       />
 
-      {/* Main Dashboard Card Container (Matching Reference 3) */}
-      <div className="max-w-7xl mx-auto rounded-3xl bg-white/95 backdrop-blur-2xl border border-white/80 shadow-[0_25px_80px_rgba(30,60,140,0.16)] flex flex-col lg:flex-row overflow-hidden min-h-[820px] text-slate-800">
+      {/* Main Dashboard Card Container */}
+      <div className="max-w-7xl mx-auto rounded-3xl bg-white/95 backdrop-blur-2xl border border-slate-200/80 shadow-[0_20px_60px_-15px_rgba(15,23,42,0.08)] flex flex-col lg:flex-row overflow-hidden min-h-[820px] text-slate-800 relative z-10">
         
         {/* ============================================================ */}
         {/* 1. LEFT SIDEBAR: LOGO & NAV LINKS (Matching Reference 3)     */}
@@ -493,21 +497,84 @@ export const StorageVaultDashboard: React.FC = () => {
 
           {/* Announcement Banner */}
           {showAnnouncement && (
-            <div className="p-3.5 rounded-2xl bg-sky-50 border border-sky-200/80 flex items-center justify-between text-xs text-sky-800">
-              <div className="flex items-center space-x-2">
-                <span className="w-2 h-2 rounded-full bg-sky-500 animate-pulse" />
+            <div className="p-3.5 rounded-2xl bg-sky-50/80 border border-sky-200/80 flex items-center justify-between text-xs text-sky-900 shadow-2xs backdrop-blur-xs">
+              <div className="flex items-center space-x-2.5">
+                <span className="w-2 h-2 rounded-full bg-sky-500 animate-pulse flex-shrink-0" />
                 <span>
                   <strong className="font-bold">Notice:</strong> Your zero-knowledge shielded vault is live on Midnight Preprod with {session.quotaGB} GB allocated capacity!
                 </span>
               </div>
               <button
                 onClick={() => setShowAnnouncement(false)}
-                className="text-sky-600 hover:text-sky-900 p-1 cursor-pointer"
+                className="text-sky-600 hover:text-sky-900 p-1 cursor-pointer transition-colors"
+                title="Dismiss notice"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
             </div>
           )}
+
+          {/* Midnight Preprod Smart Contract On-Chain Verification Card */}
+          <div className="p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-[#0C162D] to-slate-900 text-white shadow-md border border-sky-500/25 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center space-x-3.5">
+              <div className="w-10 h-10 rounded-xl bg-sky-500/15 border border-sky-400/30 flex items-center justify-center text-sky-400 flex-shrink-0 shadow-inner">
+                <Cpu className="w-5 h-5 animate-pulse" />
+              </div>
+              <div>
+                <div className="flex items-center space-x-2">
+                  <span className="font-bold text-xs tracking-wide text-white">Midnight Preprod Smart Contract</span>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping mr-1" />
+                    LIVE ON-CHAIN
+                  </span>
+                </div>
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-slate-300 font-mono mt-0.5">
+                  <span className="text-slate-400">Contract:</span>
+                  <a
+                    href="https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-sky-400 hover:text-sky-300 underline font-mono inline-flex items-center gap-1 transition-colors"
+                    title="Inspect deployed contract on Midnight Preprod Explorer"
+                  >
+                    <span>0x89e2...dcf0</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                  <span className="text-slate-600 hidden sm:inline">•</span>
+                  <span className="text-slate-300">Block #2589085</span>
+                  <span className="text-slate-600 hidden sm:inline">•</span>
+                  <span className="text-slate-400">Compact 0.20</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+              {wallet.isConnected ? (
+                <div className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/60 text-[11px] font-mono text-slate-300">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0" />
+                  <span className="text-slate-400">{wallet.walletName}:</span>
+                  <span className="text-sky-400 font-bold">{wallet.address ? `${wallet.address.slice(0, 8)}...${wallet.address.slice(-4)}` : 'Connected'}</span>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setIsWalletModalOpen(true)}
+                  className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold text-xs transition-colors flex items-center space-x-1.5 cursor-pointer shadow-xs"
+                >
+                  <Lock className="w-3.5 h-3.5 text-sky-400" />
+                  <span>Connect Wallet</span>
+                </button>
+              )}
+
+              <button
+                onClick={() => claimBonusWithZKProof()}
+                className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 active:scale-95 text-white font-bold text-xs shadow-md shadow-sky-500/25 transition-all flex items-center space-x-1.5 cursor-pointer whitespace-nowrap"
+                title="Verify Zero-Knowledge Quota Proof on Midnight Ledger"
+              >
+                <ShieldCheck className="w-4 h-4 text-white" />
+                <span>Verify ZK Quota</span>
+              </button>
+            </div>
+          </div>
 
           {/* Upload Progress Bar if Uploading */}
           {isUploading && (
@@ -739,31 +806,55 @@ export const StorageVaultDashboard: React.FC = () => {
             {filteredFiles.length === 0 ? (
               <div
                 onClick={() => activeTab !== 'trash' && activeTab !== 'starred' && fileInputRef.current?.click()}
-                className="p-10 rounded-2xl border-2 border-dashed border-slate-200 hover:border-sky-400 bg-slate-50/50 hover:bg-sky-50/30 text-center transition-all cursor-pointer space-y-2"
+                className="p-12 rounded-3xl border-2 border-dashed border-slate-200 hover:border-sky-400 bg-white/60 hover:bg-sky-50/30 text-center transition-all cursor-pointer space-y-3 group shadow-2xs"
               >
-                <div className="w-12 h-12 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center mx-auto shadow-xs">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-sky-100 to-blue-50 text-sky-600 flex items-center justify-center mx-auto shadow-xs group-hover:scale-110 transition-transform">
                   {activeTab === 'starred' ? (
-                    <Star className="w-6 h-6 text-amber-500 fill-amber-400" />
+                    <Star className="w-7 h-7 text-amber-500 fill-amber-400" />
                   ) : activeTab === 'trash' ? (
-                    <Trash2 className="w-6 h-6 text-rose-500" />
+                    <Trash2 className="w-7 h-7 text-rose-500" />
                   ) : (
-                    <UploadCloud className="w-6 h-6" />
+                    <UploadCloud className="w-7 h-7 text-sky-500" />
                   )}
                 </div>
-                <div className="font-bold text-xs text-slate-800">
+                <div className="font-bold text-sm text-slate-800">
                   {activeTab === 'trash'
                     ? 'Trash is empty'
                     : activeTab === 'starred'
                     ? 'No starred files yet'
-                    : 'No files in this view'}
+                    : 'Your Shielded Vault is Ready'}
                 </div>
-                <p className="text-[11px] text-slate-400 max-w-sm mx-auto">
+                <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
                   {activeTab === 'trash'
-                    ? 'Revoked and shredded files will appear here. You can restore them anytime!'
+                    ? 'Revoked and shredded files will appear here. You can safely restore them anytime!'
                     : activeTab === 'starred'
                     ? 'Click the star icon (⭐) on any file in your vault to bookmark it for instant access.'
-                    : 'Click here or drag and drop any image, video, PDF, or document to upload with zero-knowledge envelope encryption.'}
+                    : 'Drag and drop any files here or click to browse. Files are encrypted client-side with AES-256-GCM before zero-knowledge verification.'}
                 </p>
+                {activeTab !== 'trash' && activeTab !== 'starred' && (
+                  <div className="pt-2 flex items-center justify-center gap-3">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        fileInputRef.current?.click();
+                      }}
+                      className="px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs shadow-md shadow-sky-500/20 transition-all flex items-center space-x-1.5 cursor-pointer"
+                    >
+                      <Plus className="w-4 h-4" />
+                      <span>Select Files to Upload</span>
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsCreateFolderOpen(true);
+                      }}
+                      className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-all flex items-center space-x-1.5 cursor-pointer"
+                    >
+                      <FolderPlus className="w-4 h-4 text-sky-500" />
+                      <span>Create Folder</span>
+                    </button>
+                  </div>
+                )}
               </div>
             ) : viewLayout === 'grid' ? (
               /* Grid Layout */
