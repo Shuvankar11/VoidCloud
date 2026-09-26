@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://github.com/Shuvankar11/VoidCloud/actions/workflows/ci.yml"><img src="https://github.com/Shuvankar11/VoidCloud/actions/workflows/ci.yml/badge.svg" alt="CI/CD Pipeline" /></a>
-  <a href="https://void-cloude.vercel.app/"><img src="https://img.shields.io/badge/Live%20dApp-void--cloude.vercel.app-00F2FE?style=for-the-badge&logo=vercel" alt="Live dApp" /></a>
+  <a href="https://voidcloud.bbroot.com/"><img src="https://img.shields.io/badge/Live%20dApp-voidcloud.bbroot.com-00F2FE?style=for-the-badge&logo=googlechrome" alt="Live dApp" /></a>
   <a href="https://forms.gle/TqdtNQuHk8v6A3SR6"><img src="https://img.shields.io/badge/Feedback%20Survey-Google%20Forms-4285F4?style=for-the-badge&logo=googleforms&logoColor=white" alt="Feedback Survey" /></a>
   <a href="https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing"><img src="https://img.shields.io/badge/Feedback%20Responses-Google%20Sheets-34A853?style=for-the-badge&logo=googlesheets&logoColor=white" alt="Feedback Responses" /></a>
   <a href="docs/PREPROD_USERS.md"><img src="https://img.shields.io/badge/Preprod%20Users-122%20Verified%20(70%2B%20Req)-10B981?style=for-the-badge&logo=shield" alt="Preprod Users" /></a>
@@ -26,7 +26,7 @@
 
 | 🎯 Deliverable / Resource | 🔗 Link & Access Anchor | 📋 Purpose / Details |
 | :--- | :--- | :--- |
-| 🌐 **Live Production dApp** | [**void-cloude.vercel.app**](https://void-cloude.vercel.app/) | Deployed, responsive Web3 MVP on Midnight Preprod |
+| 🌐 **Live Production dApp** | [**voidcloud.bbroot.com**](https://voidcloud.bbroot.com/) | Deployed, responsive Web3 MVP on Midnight Preprod (Mirror: [void-cloude.vercel.app](https://void-cloude.vercel.app/)) |
 | 📜 **Deployed Smart Contract** | [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) | Compact 0.20 storage state ledger (Block `#2589085`) |
 | ⛓️ **Live Subscan Explorer** | [**midnight-preprod.subscan.io**](https://midnight-preprod.subscan.io/contract/0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) | Real-time ZK Contract Calls & tester interactions |
 | 💡 **Product Proposal Rubric** | [`PROPOSAL.md`](PROPOSAL.md) | Official problem statement, Midnight ZK solution & tokenomics |
@@ -142,7 +142,7 @@ flowchart TD
 
 ### 🔗 Official Submission Links
 * 🎥 **Full Demo Video (YouTube)**: [Watch VoidCloud Demo Video on YouTube](https://youtu.be/8YNLDIUzc2I)
-* 🌐 **Live dApp URL**: [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/)
+* 🌐 **Live dApp URL**: [https://voidcloud.bbroot.com/](https://voidcloud.bbroot.com/) (Mirror: [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/))
 * 📦 **Public GitHub Repository**: [https://github.com/Shuvankar11/VoidCloud](https://github.com/Shuvankar11/VoidCloud)
 * 📜 **Deployed Midnight Preprod Contract**: [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) (Block `#2589085`)
 * 🔍 **Official Midnight Preprod Explorer**: [https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0)
@@ -228,7 +228,7 @@ npm run dev
 ```
 Navigate to [http://localhost:5173](http://localhost:5173) in your browser.
 
-> 🌐 **Live Cloud Production URL**: [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/)
+> 🌐 **Live Cloud Production URL**: [https://voidcloud.bbroot.com/](https://voidcloud.bbroot.com/) (Mirror: [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/))
 
 ---
 

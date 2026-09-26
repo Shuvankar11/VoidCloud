@@ -88,7 +88,7 @@ flowchart TD
 
 ## 6. Official Resources & Verification Anchors
 
-* 🌐 **Live Production dApp**: [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/)
+* 🌐 **Live Production dApp**: [https://voidcloud.bbroot.com/](https://voidcloud.bbroot.com/) (Mirror: [https://void-cloude.vercel.app/](https://void-cloude.vercel.app/))
 * 📜 **Deployed Midnight Preprod Contract**: [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) (Block `#2589085`)
 * 👥 **Launch Users Registry**: [`LAUNCH_USERS.md`](LAUNCH_USERS.md) (122 Verified Preprod Users)
 * 📊 **Tester Feedback Ledger**: [`FEEDBACK.md`](FEEDBACK.md) & [Google Sheets](https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing)
