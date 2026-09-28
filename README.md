@@ -30,7 +30,7 @@
 | 📜 **Deployed Smart Contract (Subscan)** | [**`0x89e233ec...6adcf0` (Subscan)**](https://midnight-preprod.subscan.io/contract/0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) | **Deployed: 2026-09-15 19:21:24 UTC** (Block `#2589085`, 1,690+ calls) |
 | ⛓️ **Midnight Explorer Mirror** | [`0x89e233ec...6adcf0` (Explorer)](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) | Compact 0.20 ledger state (Latest call: `attest`) |
 | 💡 **Product Proposal Rubric** | [`PROPOSAL.md`](PROPOSAL.md) | Official problem statement, Midnight ZK solution & tokenomics |
-| 👥 **Preprod Users Rubric** | [`LAUNCH_USERS.md`](LAUNCH_USERS.md) & [`docs/LEVEL5_ONBOARDING_50_USERS.csv`](docs/LEVEL5_ONBOARDING_50_USERS.csv) | 122 verifiable on-chain testnet user wallet addresses (Exceeds 70 req.) |
+| 👥 **Preprod Users Rubric** | [`LAUNCH_USERS.md`](LAUNCH_USERS.md) & [`docs/ONBOARDING_AND_FEEDBACK_MASTER.csv`](docs/ONBOARDING_AND_FEEDBACK_MASTER.csv) | 122 verifiable on-chain testnet user wallet addresses (Fulfills Level 5 & Level 6) |
 | 📝 **Feedback Loop Rubric** | [`FEEDBACK.md`](FEEDBACK.md) | Structured survey insights, NPS (+95.1%) & living feedback ledger |
 | 📋 **User Feedback Survey** | [**Google Forms Survey**](https://forms.gle/TqdtNQuHk8v6A3SR6) | Official community & tester feedback collection |
 | 📊 **Live Feedback Responses** | [**Google Sheets Master Spreadsheet**](https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing) | Real-time 122-user onboarding registry & feedback ledger |
