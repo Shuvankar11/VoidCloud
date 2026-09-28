@@ -119,13 +119,24 @@ export const MidnightExplorerModal: React.FC<MidnightExplorerModalProps> = ({
 
             <div className="flex items-center space-x-2">
               <a
+                href="https://midnight-preprod.subscan.io/contract/0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 text-xs font-bold transition-colors"
+                title="View Official Midnight Preprod Subscan (Deployed Sep 15, 2026 - Block #2589085)"
+              >
+                <span>Subscan (Verified)</span>
+                <ExternalLink className="w-3.5 h-3.5 text-sky-500" />
+              </a>
+
+              <a
                 href="https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors"
                 title="View Official Midnight Network Preprod Explorer"
               >
-                <span>Midnight Preprod Explorer</span>
+                <span>Midnight Explorer</span>
                 <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
               </a>
 

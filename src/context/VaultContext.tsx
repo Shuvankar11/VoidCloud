@@ -123,6 +123,69 @@ function isRealUserFile(f: any): boolean {
   return true;
 }
 
+function getInitialStarterFiles(userId: string): ShieldedFile[] {
+  return [
+    {
+      id: `vc_${userId}_init_1`,
+      name: 'VoidCloud_ZK_Architecture_Overview.pdf',
+      sizeBytes: 2516582,
+      mimeType: 'application/pdf',
+      status: 'shielded',
+      uploadedAt: '2026-09-24T10:15:00.000Z',
+      encryptedCid: 'bafybeihdwdcefgh4dqkjzk63nh4m80rqzsdmymh5init1',
+      zkCommitment: '0x833a8686943e08424df00b82aeefe74afd803e672d1efe93f2a59d961804b54c',
+      encryptionAlgo: 'AES-256-GCM',
+      tags: ['Architecture', 'Midnight ZK'],
+      isStarred: true,
+      folderId: `folder_${userId}_preprod`,
+      ownerId: userId,
+    },
+    {
+      id: `vc_${userId}_init_2`,
+      name: 'Midnight_Preprod_Smart_Contract_Audit.json',
+      sizeBytes: 188416,
+      mimeType: 'application/json',
+      status: 'shielded',
+      uploadedAt: '2026-09-25T14:30:00.000Z',
+      encryptedCid: 'bafybeifk4zqjwvl6v5q3a8q48init2audit',
+      zkCommitment: '0xa41f84a55803a67fe02779c7a0a51cd2d393bbb78063c4687ddaaead7caea59c',
+      encryptionAlgo: 'AES-256-GCM',
+      tags: ['Security', 'Contract'],
+      isStarred: false,
+      folderId: `folder_${userId}_preprod`,
+      ownerId: userId,
+    },
+    {
+      id: `vc_${userId}_init_3`,
+      name: 'Shielded_Vault_Security_Manifest.png',
+      sizeBytes: 1945600,
+      mimeType: 'image/png',
+      status: 'shielded',
+      uploadedAt: '2026-09-26T09:45:00.000Z',
+      encryptedCid: 'bafybeic75e932a9d9f430be57350c712333cb1cb9init3',
+      zkCommitment: '0x1c723677b71b36d84fe3ed63440a03dc249d458954f54acb7e8bc0c37da42742',
+      encryptionAlgo: 'AES-256-GCM',
+      tags: ['Security', 'Verified'],
+      isStarred: true,
+      folderId: null,
+      ownerId: userId,
+    },
+  ];
+}
+
+function getInitialStarterFolders(userId: string): VaultFolder[] {
+  return [
+    {
+      id: `folder_${userId}_preprod`,
+      name: 'Midnight Preprod Contracts & Specs',
+      color: '#0284c7',
+      parentId: null,
+      createdAt: '2026-09-24T10:00:00.000Z',
+      updatedAt: '2026-09-24T10:00:00.000Z',
+    },
+  ];
+}
+
 function createInitialSessionForUser(userId: string, userEmail: string): UserSession {
   const hash = Array.from(new Uint8Array(32));
   for (let i = 0; i < userId.length; i++) {
@@ -230,12 +293,17 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const saved = localStorage.getItem(`voidcloud_v2_files_${activeUserId}`);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          return parsed.filter(isRealUserFile);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const filtered = parsed.filter(isRealUserFile);
+          if (filtered.length > 0) return filtered;
         }
       }
     } catch {}
-    return [];
+    const initial = getInitialStarterFiles(activeUserId);
+    try {
+      localStorage.setItem(`voidcloud_v2_files_${activeUserId}`, JSON.stringify(initial));
+    } catch {}
+    return initial;
   });
 
   const [folders, setFolders] = useState<VaultFolder[]>(() => {
@@ -243,10 +311,14 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const saved = localStorage.getItem(`voidcloud_v2_folders_${activeUserId}`);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
     } catch {}
-    return [];
+    const initial = getInitialStarterFolders(activeUserId);
+    try {
+      localStorage.setItem(`voidcloud_v2_folders_${activeUserId}`, JSON.stringify(initial));
+    } catch {}
+    return initial;
   });
 
   const [activeFolderId, setActiveFolderId] = useState<string | null>(null);
@@ -278,28 +350,37 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (savedFiles) {
       try {
         const parsed = JSON.parse(savedFiles);
-        if (Array.isArray(parsed)) {
-          setFiles(parsed.filter(isRealUserFile));
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const filtered = parsed.filter(isRealUserFile);
+          setFiles(filtered.length > 0 ? filtered : getInitialStarterFiles(activeUserId));
         } else {
-          setFiles([]);
+          setFiles(getInitialStarterFiles(activeUserId));
         }
       } catch {
-        setFiles([]);
+        setFiles(getInitialStarterFiles(activeUserId));
       }
     } else {
-      setFiles([]);
+      const initial = getInitialStarterFiles(activeUserId);
+      setFiles(initial);
+      try {
+        localStorage.setItem(`voidcloud_v2_files_${activeUserId}`, JSON.stringify(initial));
+      } catch {}
     }
 
     const savedFolders = localStorage.getItem(`voidcloud_v2_folders_${activeUserId}`);
     if (savedFolders) {
       try {
         const parsed = JSON.parse(savedFolders);
-        setFolders(Array.isArray(parsed) ? parsed : []);
+        setFolders(Array.isArray(parsed) && parsed.length > 0 ? parsed : getInitialStarterFolders(activeUserId));
       } catch {
-        setFolders([]);
+        setFolders(getInitialStarterFolders(activeUserId));
       }
     } else {
-      setFolders([]);
+      const initial = getInitialStarterFolders(activeUserId);
+      setFolders(initial);
+      try {
+        localStorage.setItem(`voidcloud_v2_folders_${activeUserId}`, JSON.stringify(initial));
+      } catch {}
     }
 
     setActiveFolderId(null);

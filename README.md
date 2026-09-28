@@ -27,15 +27,20 @@
 | 🎯 Deliverable / Resource | 🔗 Link & Access Anchor | 📋 Purpose / Details |
 | :--- | :--- | :--- |
 | 🌐 **Live Production dApp** | [**voidcloud.bbroot.com**](https://voidcloud.bbroot.com/) | Deployed, responsive Web3 MVP on Midnight Preprod (Mirror: [void-cloude.vercel.app](https://void-cloude.vercel.app/)) |
-| 📜 **Deployed Smart Contract** | [`0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0`](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) | Compact 0.20 storage state ledger (Block `#2589085`) |
-| ⛓️ **Live Subscan Explorer** | [**midnight-preprod.subscan.io**](https://midnight-preprod.subscan.io/contract/0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) | Real-time ZK Contract Calls & tester interactions |
+| 📜 **Deployed Smart Contract (Subscan)** | [**`0x89e233ec...6adcf0` (Subscan)**](https://midnight-preprod.subscan.io/contract/0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) | **Deployed: 2026-09-15 19:21:24 UTC** (Block `#2589085`, 1,690+ calls) |
+| ⛓️ **Midnight Explorer Mirror** | [`0x89e233ec...6adcf0` (Explorer)](https://preprod.midnightexplorer.com/contracts/89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0) | Compact 0.20 ledger state (Latest call: `attest`) |
 | 💡 **Product Proposal Rubric** | [`PROPOSAL.md`](PROPOSAL.md) | Official problem statement, Midnight ZK solution & tokenomics |
-| 👥 **Preprod Users Rubric** | [`LAUNCH_USERS.md`](LAUNCH_USERS.md) | 122 verifiable on-chain testnet user wallet addresses (Exceeds 70 req.) |
+| 👥 **Preprod Users Rubric** | [`LAUNCH_USERS.md`](LAUNCH_USERS.md) & [`docs/LEVEL5_ONBOARDING_50_USERS.csv`](docs/LEVEL5_ONBOARDING_50_USERS.csv) | 122 verifiable on-chain testnet user wallet addresses (Exceeds 70 req.) |
 | 📝 **Feedback Loop Rubric** | [`FEEDBACK.md`](FEEDBACK.md) | Structured survey insights, NPS (+95.1%) & living feedback ledger |
 | 📋 **User Feedback Survey** | [**Google Forms Survey**](https://forms.gle/TqdtNQuHk8v6A3SR6) | Official community & tester feedback collection |
-| 📊 **Live Feedback Responses** | [**Google Sheets Spreadsheet**](https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing) | Real-time 122-response ledger accessible to judges |
+| 📊 **Live Feedback Responses** | [**Google Sheets Master Spreadsheet**](https://docs.google.com/spreadsheets/d/1LUHm-b8250gzKtpWVDf4yTmQCbSMUf24Tt__gSM59tU/edit?usp=sharing) | Real-time 122-user onboarding registry & feedback ledger |
 | 🐦 **Product X Profile** | [**@Voidcloud18**](https://x.com/Voidcloud18) | Public product demo updates & announcements |
 | 🛡️ **Hackathon Level Status** | **🌝 Level 6 - Supermoon (100% Pass)** | Extended MVP, 122 Users (70+ Req), Living Feedback Loop, 160+ Commits |
+
+> [!IMPORTANT]
+> **Midnight Blockchain Explorer Verification Notice for Judges**:
+> - **Official Deployment Date & Block**: The VoidCloud smart contract was deployed on **`2026-09-15 19:21:24 (UTC)`** at Block **`#2589085`**, as immutably recorded on official [Subscan Explorer](https://midnight-preprod.subscan.io/contract/0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0). Over 1,690+ on-chain contract calls have been successfully indexed.
+> - **Midnight Explorer Frontend UI Behavior**: On `preprod.midnightexplorer.com/contracts/...`, the overview card dynamically reflects the *latest caller interaction* (e.g. Block `#2747195` / `#2747240` Entry Point: `attest` Type: `CALL`) under the "Deployment Tx" header rather than the genesis deployment transaction. For verifiable immutable genesis deployment timestamp (`2026-09-15`) and complete indexed caller history, please check [Subscan](https://midnight-preprod.subscan.io/contract/0x89e233ecf339175aecbc07ba419e998edc8c3115c2bdc23b7cc120e2cc6adcf0).
 
 ---
 
